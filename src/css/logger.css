@@ -1,0 +1,40 @@
+table {
+	margin-left: 25px;
+	margin-right: 25px;
+	background-color: white;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table,
+h1 {
+	margin-left: 35px !important;
+	/* Adjust the margin value according to your needs */
+}
+
+th,
+td {
+	border: 1px solid black;
+	padding: 8px;
+	text-align: left;
+}
+
+.info {
+	background-color: lightblue;
+}
+
+.warn {
+	background-color: yellow;
+}
+
+.error {
+	background-color: lightcoral;
+}
+
+#logTable {
+	width: 90%;
+}
+
+#Logs {
+	overflow: auto;
+}

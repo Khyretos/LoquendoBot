@@ -1,0 +1,143 @@
+#tstx {
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    margin-left: 50px;
+}
+
+.optionrow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 10px;
+}
+
+.LabelText {
+    margin-bottom: 5px;
+    color: var(--main-color2);
+    margin: 0px 0px 5px 0px;
+}
+
+#volume-icon {
+    color: var(--main-color2);
+    width: 50px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#image {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.TTSVolume {
+    color: var(--main-color2);
+    font-size: 12pt;
+    text-align: center;
+}
+
+#SoundVolume {
+    color: var(--main-color2);
+    font-size: 12pt;
+}
+
+.testLabel {
+    color: var(--main-color2);
+    font-size: 12pt;
+}
+
+#TTSTest {
+    width: 296px;
+    height: 85px;
+}
+
+textarea {
+    font-size: 14pt;
+    resize: none;
+    background: var(--main-color3);
+    color: var(--main-color2);
+    font-family: 'xxii_avenmedium';
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.SaveConfig {
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--main-color2);
+    margin-bottom: 10px;
+    margin-top: 40px;
+}
+
+.SaveButton {
+    text-shadow: 0 0 5px #070607, 0 0 5px #070607, 0 0 5px #070607;
+    transition: all 0.15s ease-in-out;
+}
+
+.SaveButton:hover {
+    /* color: var(--main-color1); */
+    cursor: pointer;
+    /* filter: brightness(150%); */
+}
+
+.SaveButton:active {
+    color: var(--main-color1);
+    transform: translateY(4px);
+    text-shadow: 0 0 5px #000, 0 0 5px #000, 0 0 5px #000;
+}
+
+.SmallButton {
+    color: var(--main-color2);
+    width: 50px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #070607, 0 0 5px #070607, 0 0 5px #070607;
+    transition: all 0.15s ease-in-out;
+    text-align: center;
+}
+
+.SmallButton:hover {
+    /* color: var(--main-color1); */
+    width: 50px;
+    cursor: pointer;
+    /* filter: brightness(150%); */
+}
+
+.SmallButton:active {
+    color: var(--main-color1);
+    transform: translateY(4px);
+    text-shadow: 0 0 5px #000, 0 0 5px #000, 0 0 5px #000;
+}
+
+.AdvancedMenuButton {
+    width: 300px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: var(--main-color3);
+    color: var(--main-color2);
+    padding: 0;
+    border: none;
+    font-family: 'xxii_avenmedium';
+    font-size: 14pt;
+}
+
+.AdvancedMenuButton:hover {
+    /* background-color: var(--main-color1); */
+    cursor: pointer;
+    /* filter: brightness(150%); */
+}
+
+.AdvancedMenuButton:active {
+    transform: translateY(4px);
+}
+
+.AdvancedMenuIcon {
+    /* filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(350deg) brightness(104%) contrast(101%); */
+    align-items: flex-start;
+    margin: auto;
+}

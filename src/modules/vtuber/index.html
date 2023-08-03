@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html window-frame="transparent">
+    <head>
+        <title>TransTube</title>
+        <script
+            src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"
+        ></script>
+        <link href="./css/main.css" rel="stylesheet" />
+        <script src="./js/main.js" type="module"></script>
+    </head>
+
+    <body>
+        <img id="avatar" src="./png/avatars/crab/closed.png" width="900" height="900" />
+        <div id="controls">
+            <div id="controls-left">
+                <div id="meters">
+                    <input id="meter-microphone" value="50" min="0" max="100" title="microphone volume sensitivity" />
+                    <input id="meter-delay" value="95" min="0" max="100" title="microphone delay sensitivity" />
+                </div>
+                <div id="buttons-left">
+                    <button id="microphone-device" title="microphone device"></button>
+                    <button id="background-color" title="background color"></button>
+                    <button id="open-file" title="open file"></button>
+                    <button id="save-file" title="save file"></button>
+                </div>
+            </div>
+            <div id="controls-top">
+                <div id="buttons-top">
+                    <div>
+                        <button class="mouth-image.border-default" id="closed-mouth-image" title="closed mouth image">
+                            <div class="avatar-change"></div>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="mouth-image.border-default" id="open-mouth-image" title="open mouth image">
+                            <div class="avatar-change"></div>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="mouth-image.border-default" id="closed-mouth-blinking-image" title="closed mouth blinking image">
+                            <div class="avatar-change"></div>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="mouth-image.border-default" id="open-mouth-blinking-image" title="open mouth blinking image">
+                            <div class="avatar-change"></div>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="motion closed-mouth-motion" id="closed-mouth-motion" title="closed mouth motion" counter="1"></button>
+                            <div class="border"></div>
+                    </div>
+                    <div>
+                        <button class="motion open-mouth-motion" id="open-mouth-motion" title="open mouth motion" counter="4"></button>
+                            <div class="border"></div>
+                    </div>
+                    <div>
+                        <button class="motion mouth-transition" id="mouth-transition" title="mouth transition"></button>
+                            <div class="border"></div>
+                    </div>
+
+                    <button id="set-hotkey" title="set hotkey"></button>
+                    <button id="hotkey-mode" title="hotkey mode"></button>
+                    <button id="delete-state" title="delete state"></button>
+                </div>
+            </div>
+        </div>
+
+        <menu class="popup">
+            <li id="change-image">change image</li>
+            <li id="remove-image">remove image</li>
+        </menu>
+    </body>
+</html>

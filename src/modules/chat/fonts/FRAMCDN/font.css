@@ -1,0 +1,10 @@
+@font-face {
+	font-family: 'FRAMDCN';
+	src: local('FRAMDCN'), url('./FRAMDCN.woff') format('woff');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_1381">Text with this font applied</p> */
+.fontsforweb_fontid_1381 {
+	font-family: 'FRAMDCN' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */

@@ -1,0 +1,353 @@
+.viewer-list {
+    background-color: var(--main-color4);
+    height: 100%;
+    flex: 1;
+    font-size: 14px;
+    height: 100%;
+    display: block;
+}
+
+ul.no-bullets {
+    list-style-type: none;
+    list-style-position: outside;
+    margin: 0%;
+    padding: 0%;
+    padding-left: 5px;
+    text-align: left;
+}
+
+li {
+    line-height: 1em;
+}
+
+h1.titles {
+    margin: 0px;
+    padding: 0%;
+    text-align: left;
+    padding-left: 5px;
+}
+
+main {
+    background: var(--main-color1);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    height: 32px;
+}
+
+main label {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    font-size: 13px;
+}
+
+main input {
+    display: none;
+}
+
+section {
+    clear: both;
+    padding-top: 10px;
+    display: none;
+    height: calc(100% - 60px);
+}
+
+.Basiclabel {
+    font-weight: bold;
+    font-size: 14px;
+    display: block;
+    float: left;
+    flex: auto;
+    font-size: 20px;
+    padding: 0px 10px;
+    width: 50px;
+    align-self: baseline;
+    text-align: center;
+}
+
+.scale {
+    height: 2em;
+    width: 2em;
+    vertical-align: bottom
+}
+
+.tab {
+    /* filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(350deg) brightness(104%) contrast(101%); */
+    align-items: flex-start;
+    margin: auto;
+    cursor: pointer;
+}
+
+input:checked+label {
+    border-top-color: #FFB03D;
+    border-right-color: #DDD;
+    border-left-color: #DDD;
+    border-bottom-color: transparent;
+    text-decoration: none;
+}
+
+
+/* --------------------------------- */
+
+.radius {
+    border-radius: 5px;
+}
+
+.radius .tabx:active::before {
+    border-radius: 5px !important;
+}
+
+.tabx-bar {
+    background-color: var(--main-color1);
+    /* padding: 5px; */
+    box-shadow: 1px 4px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    /* margin: 10px; */
+    color: black;
+    height: 50px;
+}
+
+.tabx-bar .tabx {
+    box-sizing: border-box;
+    text-decoration: none;
+    color: inherit;
+    width: 70px;
+    height: 50px;
+    background: inherit;
+    display: inherit;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.tabx-bar .tabx::before {
+    position: absolute;
+    content: "";
+    width: 26%;
+    height: 13%;
+    border-top-left-radius: 200px;
+    border-top-right-radius: 200px;
+    border-bottom: none;
+    background-color: #607D8B;
+    /* bottom: -8px; */
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.tabx-bar .tabx:active::before {
+    width: 100%;
+    height: 100%;
+    background-color: #5fef8d;
+    border-radius: 0;
+}
+
+.tabx-bar .tabx:hover::before {
+    opacity: 1;
+    bottom: 0px;
+}
+
+.tabx-bar .tabx::after {}
+
+.tabx-bar .tabx:hover {
+    padding-bottom: 10px;
+}
+
+.tabx-bar .tabx:hover::after {
+    opacity: 1;
+    top: 6px;
+}
+
+.tabx-bar .tabx.selected {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: inherit;
+    padding-top: 0px;
+}
+
+.tabx-bar .tabx.selected::after {
+    opacity: 1;
+    top: -10px;
+}
+
+.tabx-bar .tabx.selected::before {
+    opacity: 1;
+    bottom: 0px;
+}
+
+.tabx-bar .tabx .icon {
+    color: inherit;
+    font-size: 24px;
+    display: inherit;
+}
+
+.tabx-bar .tabx .icon img {
+    margin: auto;
+    height: 32 px;
+}
+
+select {
+    font-size: .9rem;
+    height: 40px;
+    border-radius: 20px;
+    background-color: var(--main-color3);
+    color: var(--main-color2);
+    align-items: center;
+    border: 0px;
+    padding-left: 20px;
+    width: 300px;
+}
+
+#AdvancedMenu_mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-top: 0px;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    overflow: auto;
+    overflow-x: hidden;
+    background-color: var(--mid-section);
+    font-family: 'xxii_avenmedium';
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+#ThemeCreator_mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-top: 0px;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    flex-direction: column;
+    justify-content: center;
+    overflow: auto;
+    overflow-x: hidden;
+    background-color: var(--mid-section);
+    font-family: 'xxii_avenmedium';
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.fname {
+    background: var(--main-color3);
+    border: none;
+    height: 40px;
+    border-radius: 40px;
+    width: 300px;
+    outline: none;
+    color: var(--main-color2);
+    font-size: 10pt;
+    padding-left: 10px;
+}
+
+#toasts {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+.toast {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 1rem 2rem;
+    margin: 0.5rem;
+}
+
+.toast.info {
+    color: rebeccapurple;
+}
+
+.toast.success {
+    color: green;
+}
+
+.toast.warning {
+    background-color: orange;
+    color: white;
+}
+
+.toast.error {
+    color: red;
+}
+
+.menu-icon {
+    font-size: 17pt;
+}
+
+[tip] .tooltip {
+    position: fixed;
+    font-size: 12px;
+    line-height: 20px;
+    padding: 5px;
+    background: var(--main-color3);
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s, visibility 0s;
+    color: var(--main-color2);
+    z-index: 101;
+    font-family: 'xxii_avenmedium';
+}
+
+[tip]:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+input[type=text]:disabled {
+    background: #dddddd;
+}

@@ -1,0 +1,222 @@
+.container {
+    display: flex;
+    height: calc(100vh - 32px);
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    /* will contain if #first is longer than #second */
+}
+
+.mid {
+    flex: 3;
+    display: block;
+    position: relative;
+}
+
+.OptionPanel {
+    /* visibility: hidden; */
+    background-color: var(--mid-section);
+    flex: 3;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.OptionPanel.show {
+    display: block;
+}
+
+.menu {
+    height: 100%;
+    display: block;
+    width: 100%;
+    background: var(--main-color1);
+}
+
+.menu .items {
+    list-style: none;
+    margin: auto;
+    padding: 0;
+}
+
+#rpe {
+    font-size: 8pt;
+    margin: 2px 0px 0px 0px
+}
+
+.menu .items .item {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--main-color1);
+    color: var(--main-color2);
+}
+
+.hdp:hover {
+    position: fixed;
+    /* filter: brightness(150%); */
+}
+
+.menu .items .item-active {
+    transition: 0.3s;
+    background: -webkit-linear-gradient(left, var(--main-color2) 10%, var(--main-color2), var(--main-color1) 10%, var(--main-color1) 10%);
+    color: var(--main-color2);
+    transition: all 0.15s ease-out;
+}
+
+.menu .items .item:hover {
+    cursor: pointer;
+    /* filter: brightness(150%); */
+    color: var(--main-color2);
+    transition: all 0.15s ease-in-out;
+}
+
+.sidepanel-left {
+    position: relative;
+    width: 50px;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    font-family: Helvetica;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    transition: .3s ease-in-out;
+    z-index: 1;
+}
+
+.sidepanel-right {
+    position: relative;
+    width: 200px;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    font-family: Helvetica;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    transition: .3s ease-in-out;
+}
+
+.collapse-menu {
+    width: 0px;
+}
+
+.sidepanel-left span {
+    position: relative;
+    display: block;
+}
+
+.sidepanel-right span {
+    position: relative;
+    display: block;
+}
+
+.circle-left {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    -webkit-clip-path: polygon(100% 0, 0 0, 0 100%);
+    clip-path: ellipse(68% 50% at 6% 50%);
+    font-size: 20px;
+    background-color: var(--main-color3);
+    color: var(--main-color2);
+    justify-content: left;
+    top: 0px;
+    left: 50px;
+    cursor: pointer;
+    display: flex;
+    z-index: 9;
+    transition: .3s ease-in-out;
+}
+
+.collapse-circle-left {
+    left: 0px;
+}
+
+.circle-right {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    -webkit-clip-path: polygon(100% 100%, 0 0, 100% 0);
+    clip-path: ellipse(68% 50% at 94% 50%);
+    font-size: 20px;
+    background-color: var(--main-color3);
+    color: var(--main-color2);
+    justify-content: right;
+    top: 0px;
+    right: 199px;
+    cursor: pointer;
+    display: flex;
+    z-index: 9;
+    transition: .3s ease-in-out;
+}
+
+.collapse-circle-right {
+    right: 0px;
+}
+
+.fa-cog {
+    align-items: center;
+    align-self: center;
+    margin-left: 7px;
+}
+
+.fa-eye {
+    align-self: center;
+    margin-right: 7px;
+}
+
+#min-button {
+    grid-column: 1;
+}
+
+#max-button,
+#restore-button {
+    grid-column: 2;
+}
+
+#close-button {
+    grid-column: 3;
+}
+
+#mini-container {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+}
+
+#mini-main {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+}
+
+#mini-top-bar {
+    height: 30px;
+    background-color: var(--top-bar-temp);
+    /* border-top-left-radius: 20px;
+    border-top-right-radius: 20px; */
+}
+
+#mini-left {
+    flex: 1;
+    background-color: var(--main-color1-temp);
+    height: 100%;
+}
+
+#mini-mid {
+    flex: 8;
+    background-color: var(--mid-section-temp);
+    height: 100%;
+}
+
+#mini-right {
+    flex: 2;
+    background-color: var(--main-color4-temp);
+    height: 100%;
+}

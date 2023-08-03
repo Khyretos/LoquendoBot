@@ -1,0 +1,494 @@
+@font-face {
+    font-family: 'FRAMDCN';
+
+}
+
+h1 {
+    font-family: 'FRAMDCN';
+}
+
+.message-window {
+    height: calc(100% - 60px);
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--mid-section);
+    margin-left: 50px;
+    margin-right: 50px;
+    font-family: 'FRAMDCN';
+}
+
+.input-box {
+    display: flex;
+    border: none;
+    width: 100%;
+    height: 30px;
+    font-size: 16px;
+}
+
+.userText {
+    color: var(--chat-bubble-message);
+    font-family: Helvetica;
+    font-size: 16px;
+    text-align: right;
+    clear: both;
+}
+
+.userText span {
+    line-height: 1.5em;
+    display: inline-block;
+    background: #5ca6fa;
+    padding: 10px;
+    border-radius: 8px;
+    border-bottom-right-radius: 2px;
+    max-width: 80%;
+    margin-right: 10px;
+    animation: floatup .5s forwards;
+}
+
+.botText {
+    color: #000;
+    font-family: Helvetica;
+    font-weight: normal;
+    font-size: 16px;
+    text-align: left;
+}
+
+.botText span {
+    line-height: 1.5em;
+    display: inline-block;
+    background: #e0e0e0;
+    padding: 10px;
+    border-radius: 8px;
+    border-bottom-left-radius: 2px;
+    max-width: 80%;
+    margin-left: 10px;
+    animation: floatup .5s forwards
+}
+
+@keyframes floatup {
+    from {
+        transform: translateY(14px);
+        opacity: .0;
+    }
+
+    to {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width:600px) {
+    .full-chat-block {
+        width: 100%;
+        border-radius: 0px;
+    }
+
+    .chat-bar-collapsible {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+    }
+
+    .collapsible {
+        width: 100%;
+        border: 0px;
+        border-radius: 0px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #4c4c6a;
+    border-radius: 2px;
+}
+
+.chatBox {
+    width: 300px;
+    height: 400px;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 0 4px var(--main-color4);
+}
+
+.chat-window {
+    flex: auto;
+    max-height: calc(100% - 60px);
+    background: #2f323b;
+    overflow: auto;
+}
+
+.chat-input {
+    height: 30px;
+    display: flex;
+    flex: 0 0 auto;
+    height: 60px;
+    background: var(--main-color3);
+}
+
+.chat-input input {
+    height: 59px;
+    line-height: 60px;
+    outline: 0 none;
+    border: none;
+    width: calc(100% - 60px);
+    color: var(--chat-bubble-message);
+    text-indent: 10px;
+    font-size: 12pt;
+    padding: 0;
+    background: var(--main-color3);
+}
+
+.chat-input button {
+    float: right;
+    outline: 0 none;
+    border: none;
+    background: var(--main-color3);
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    padding: 2px 0 0 0;
+    margin: 10px;
+}
+
+.chat-input input[good]+button {
+    box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
+}
+
+.chat-input input[good]+button:hover {
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* filter: brightness(150%); */
+}
+
+.chat-input input[good]+button path {
+    fill: var(--chat-bubble-message);
+}
+
+.msg-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 10px 0;
+    padding: 0;
+}
+
+.msg-box {
+    display: flex;
+    background: var(--chat-bubble);
+    padding: 5px 5px 5px 5px;
+    border-radius: 6px 6px 6px 6px;
+    margin-left: -20px;
+    margin-right: 10px;
+    margin-top: 10px;
+    max-width: 80%;
+    width: auto;
+    float: left;
+    word-wrap: break-word;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
+}
+
+.msg-box-user {
+    display: flex;
+    background: var(--chat-bubble);
+    padding: 5px 5px 5px 5px;
+    border-radius: 6px 6px 6px 6px;
+    margin-right: -20px;
+    margin-top: 10px;
+    max-width: 80%;
+    width: auto;
+    float: right;
+    word-wrap: break-word;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
+}
+
+.msg-box-user-temp {
+    background: var(--chat-bubble-temp);
+}
+
+.user-img {
+    display: inline-block;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    margin: 0 10px 10px 0;
+}
+
+.user-img-user {
+    display: inline-block;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    margin: 0 0px 10px 10px;
+}
+
+.flr {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 50px);
+}
+
+.messages {
+    margin-left: 20px;
+    min-width: 200px;
+}
+
+.messages-user {
+    margin-right: 20px;
+    min-width: 200px;
+}
+
+.msg {
+    font-size: 11pt;
+    line-height: 13pt;
+    color: var(--chat-bubble-message);
+    margin: 0 0 4px 0;
+    display: flex;
+    align-items: self-end;
+}
+
+.msg-temp {
+    color: var(--chat-bubble-message-temp);
+}
+
+.msg:first-of-type {
+    margin-top: 8px;
+}
+
+.timestamp {
+    color: var(--chat-bubble-header);
+    font-size: 10pt;
+    align-items: center;
+    font-family: "xxii_avenmedium";
+}
+
+.timestamp-temp {
+    color: var(--chat-bubble-header-temp);
+}
+
+.username {
+    float: left;
+    color: var(--chat-bubble-header);
+    font-weight: bold;
+}
+
+.username-temp {
+    color: var(--chat-bubble-header-temp);
+}
+
+.post-time {
+    float: right;
+    font-weight: bold;
+}
+
+.msg-self .msg-box {
+    border-radius: 6px 6px 6px 6px;
+    background: var(--main-color1);
+    float: right;
+}
+
+.msg-self .user-img {
+    align-items: center;
+}
+
+.msg-self .msg {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.mmg {
+    display: flex;
+}
+
+.icon-container {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    float: left;
+    display: flex;
+    align-items: center;
+}
+
+.icon-container-user {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    float: right;
+    display: flex;
+    align-items: center;
+}
+
+.img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.status-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    bottom: 0;
+    right: 0;
+    margin-left: -20px;
+    margin-top: 10px;
+}
+
+.status-circle-user {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    bottom: 0;
+    right: 0;
+    margin-left: -50px;
+    margin-top: 10px;
+}
+
+select {
+    font-size: 100%;
+    padding: 10px;
+    padding-right: 40px;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='34' viewBox='0 0 24 24' width='32' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: 5px;
+}
+
+.AdvancedMenu {
+    border: 1px var(--main-color2) solid;
+    margin-top: 10px;
+    width: 300px;
+    border-radius: 5px;
+    border-radius: 5px;
+}
+
+.legendStyle {
+    margin-left: 1em;
+    padding: 0.2em 0.8em;
+}
+
+.AdvancedMenuRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 10px;
+}
+
+.AdvancedMenuLabel {
+    width: 120px;
+    font-size: 10pt;
+    padding-right: 5px;
+}
+
+#SaveAdvancedSettingsButton {
+    margin-left: 10px;
+}
+
+
+/* Big toggle */
+
+
+/* toggle in label designing */
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 40px;
+    background-color: var(--main-color3);
+    border-radius: 20px;
+}
+
+
+/* After slide changes */
+
+.toggle:after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--main-color2);
+    left: 5px;
+    top: 5px;
+    transition: all 0.2s;
+}
+
+
+/* Checkbox checked effect */
+
+.checkbox:checked+.toggle::after {
+    left: 25px;
+}
+
+
+/* Checkbox checked toggle label bg color */
+
+.checkbox:checked+.toggle {
+    background-color: var(--main-color1);
+}
+
+
+/* Checkbox vanished */
+
+.checkbox {
+    display: none;
+}
+
+
+/* Small toggle */
+
+
+/* toggle in label designing */
+
+.toggle-small {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    background-color: var(--main-color3);
+    border-radius: 10px;
+}
+
+
+/* After slide changes */
+
+.toggle-small:after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: white;
+    left: 2px;
+    top: 2px;
+    transition: all 0.2s;
+}
+
+
+/* Checkbox checked effect */
+
+.checkbox:checked+.toggle-small::after {
+    left: 13px;
+}
+
+
+/* Checkbox checked toggle label bg color */
+
+.checkbox:checked+.toggle-small {
+    background-color: var(--main-color1);
+}
