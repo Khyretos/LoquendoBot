@@ -203,6 +203,11 @@ select {
     width: 300px;
 }
 
+.language {
+    width: 80px;
+    margin-left: 10px;
+}
+
 #AdvancedMenu_mask {
     position: absolute;
     top: 0;
@@ -253,91 +258,151 @@ select {
     padding-left: 10px;
 }
 
+input[type="password"] {
+    background: var(--main-color3);
+    border: none;
+    height: 40px;
+    border-radius: 40px;
+    width: 300px;
+    outline: none;
+    color: var(--main-color2);
+    font-size: 10pt;
+    padding-left: 10px;
+    padding-right: 40px;
+    /* To make space for the reveal button */
+}
+
+input[type="lol"] {
+    background: var(--main-color3);
+    border: none;
+    height: 40px;
+    border-radius: 40px;
+    width: 300px;
+    outline: none;
+    color: var(--main-color2);
+    font-size: 10pt;
+    padding-left: 10px;
+    padding-right: 40px;
+    /* To make space for the reveal button */
+}
+
+/* Style for the reveal button */
+.password-toggle-btn {
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    left: 450px;
+}
+
+/* Hide the default appearance of the button */
+.password-toggle-btn::-moz-focus-inner {
+    border: 0;
+}
+
+/* Style the reveal icon (you can use your preferred icon or font) */
+.password-toggle-icon {
+    font-size: 16px;
+    color: #555;
+}
+
 #toasts {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
+    bottom: 20px;
+    /* Adjust the distance from the bottom of the screen */
+    right: 50%;
+    /* Center the toasts horizontally */
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    z-index: 1;
-    transition: all 0.3s ease-in-out;
+    align-items: center;
+    /* Center the toasts horizontally */
+    z-index: 999;
 }
 
 .toast {
-    background-color: #fff;
+    background-color: #333;
+    color: white;
     border-radius: 5px;
     padding: 1rem 2rem;
     margin: 0.5rem;
+    opacity: 0;
+    transform: translateY(100%);
+    animation: toastAnimation 0.5s ease-in-out forwards, toastDisappear 0.5s ease-in-out 9s forwards;
 }
 
+/* Apply different colors based on the toast type */
 .toast.info {
-    color: rebeccapurple;
+    background-color: #3498db;
 }
 
 .toast.success {
-    color: green;
+    background-color: #2ecc71;
 }
 
 .toast.warning {
-    background-color: orange;
-    color: white;
+    background-color: #f39c12;
 }
 
 .toast.error {
-    color: red;
+    background-color: #e74c3c;
+}
+
+/* CSS animation for the toast appearance */
+@keyframes toastAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* CSS animation for the toast disappearance */
+@keyframes toastDisappear {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 .menu-icon {
     font-size: 17pt;
 }
 
-[tip] .tooltip {
-    position: fixed;
+.tooltip {
+    position: absolute;
+    display: inline-block;
+    visibility: hidden;
     font-size: 12px;
     line-height: 20px;
     padding: 5px;
     background: var(--main-color3);
     border-radius: 5px;
     visibility: hidden;
-    opacity: 0;
+    opacity: 1;
     box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s, visibility 0s;
     color: var(--main-color2);
-    z-index: 101;
     font-family: 'xxii_avenmedium';
 }
 
-[tip]:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
+/* .tooltip .tooltiptext {
     width: 120px;
     background-color: black;
     color: #fff;
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 150%;
-    left: 50%;
-    margin-left: -60px;
 }
 
 .tooltip .tooltiptext::after {
     content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
@@ -346,8 +411,21 @@ select {
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
-}
+} */
 
 input[type=text]:disabled {
     background: #dddddd;
+}
+
+input[type2=text]:disabled {
+    background: #dddddd;
+}
+
+button[type=text]:disabled {
+    background: #dddddd;
+}
+
+div:disabled {
+    background: #dddddd;
+    filter: brightness(200%);
 }

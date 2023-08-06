@@ -7,7 +7,6 @@ const request = require('request');
 const langdetect = require('langdetect');
 const io = require('socket.io-client');
 
-const socket = io('http://localhost:9000'); // Connect to your Socket.IO server
 const fs = require('fs');
 
 const util = require('util');
@@ -27,21 +26,21 @@ const googleVoices = fs.readFileSync(path.join(__dirname, './config/googleVoices
 // TODO: remove amazon voices txt and use api instead (sakura project has it)
 const amazonVoices = fs.readFileSync(path.join(__dirname, './config/amazonVoices.txt')).toString().split('\r\n');
 
+const languagesObject = fs.readFileSync(path.join(__dirname, './config/languages.txt')).toString().split('\r\n');
+
 // html elements
 const root = document.documentElement;
 const ttsSelector = document.body.querySelector('#TTSSelector');
-const googleVoiceSelect = document.querySelector('#googleVoice'); // obtain the html reference of the google voices comboBox
 const amazonVoiceSelect = document.querySelector('#amazonVoice'); // obtain the html reference of the amazon voices comboBox
-const installedTTS = document.querySelector('#installedTTS'); // obtain the html reference of the installedTTS comboBox
-const ttsAudioDevices = document.querySelector('#ttsAudioDevice'); // obtain the html reference of the installedTTS comboBox
 const notificationAudioDevices = document.querySelector('#notificationAudioDevice'); // obtain the html reference of the installedTTS comboBox
 const devicesDropdown = document.querySelector('#devicesDropdown');
 const notificationSound = document.querySelector('#notification'); // obtain the html reference of the sound comboBox
+const ttsAudioDevices = document.querySelector('#ttsAudioDevice'); // obtain the html reference of the installedTTS comboBox
+
 
 // laod local javascript files
 const chat = require(path.join(__dirname, './js/chat'));
 
-const Polly = require(path.join(__dirname, './js/amazon'));
 const messageTemplates = require(path.join(__dirname, './js/messageTemplates'));
 const logger = require(path.join(__dirname, './js/logger'));
 const sound = require(path.join(__dirname, './js/sound'));
@@ -55,15 +54,25 @@ if (envInfo.env) {
 	notificationSounds = path.join(__dirname, './sounds/notifications');
 }
 
-const server = require(path.join(__dirname, './js/server'));
+const twitch = config.settings.TWITCH.USE_TWITCH ? require(path.join(__dirname, './js/twitch')) : '';
+
+let server;
+let socket;
+
+if (config.settings.SERVER.USE_SERVER) {
+	server = require(path.join(__dirname, './js/server'));
+	socket = io(`http://localhost:${config.settings.SERVER.PORT}`); // Connect to your Socket.IO server
+}
+
+const Polly = config.settings.AMAZON.USE_AMAZON ? require(path.join(__dirname, './js/amazon')) : '';
+const google = config.settings.GOOGLE.USE_GOOGLE ? require(path.join(__dirname, './js/amazon')) : '';
+
 const theme = require(path.join(__dirname, './js/theme'));
-const twitch = require(path.join(__dirname, './js/twitch'));
 
 // initialize values
 config.getGeneralSettings();
-config.getTwitchSettings();
 config.setCustomThemeToggle();
-config.setTwitchToggle();
+
 
 let selectedVoiceIndex;
 let selectedEncodingIndex;
@@ -115,68 +124,149 @@ async function getAudioDevices() {
 	});
 
 	ttsAudioDevices.selectedIndex = config.settings.AUDIO.SELECTED_TTS_AUDIO_DEVICE;
-	// devicesDropdown.selectedIndex = 0;
-
-	// Create an audio context
-	// audioContext = new (window.AudioContext || window.webkitAudioContext)();
 }
 
 getAudioDevices();
 
-say.getInstalledVoices((err, voices) => {
-	voices.forEach((voice, i) => {
+function setLanguagesinSelect(languageSelector, setting) {
+	let languageSelect = document.querySelector(languageSelector); // obtain the html reference of the google voices comboBox
+
+	const languages = Object.keys(languagesObject);
+	languages.forEach((language) => {
 		const option = document.createElement('option');
 
-		option.value = i;
-		option.innerHTML = voice;
+		option.value = language;
+		option.innerHTML = languagesObject[language];
 
-		installedTTS.appendChild(option);
+		languageSelect.appendChild(option);
 	});
-	installedTTS.selectedIndex = config.settings.TTS.INTERNAL_TTS_VOICE;
+
+	languageSelect.selectedIndex = setting;
+}
+
+setLanguagesinSelect("#primaryLanguage", config.settings.TTS.PRIMARY_TTS_LANGUAGE_INDEX);
+setLanguagesinSelect("#secondaryLanguage", config.settings.TTS.SECONDARY_TTS_LANGUAGE_INDEX);
+
+function getInstalledVoices(callback) {
+	say.getInstalledVoices((err, voices) => {
+
+		function setVoicesinSelect(voiceSelector) {
+			let voiceSelect = document.querySelector(voiceSelector); // obtain the html reference of the google voices comboBox
+
+			const internalTTSHeader = document.createElement('optgroup');
+			internalTTSHeader.label = "Internal TTS";
+			voiceSelect.appendChild(internalTTSHeader);
+
+			// const installedTTS = document.querySelector('#installedTTS'); // obtain the html reference of the installedTTS comboBox
+			voices.forEach((voice, i) => {
+				const option = document.createElement('option');
+
+				option.value = i;
+				option.innerHTML = voice;
+
+				// installedTTS.appendChild(option);
+				internalTTSHeader.appendChild(option);
+			});
+		}
+		setVoicesinSelect("#primaryVoice");
+		setVoicesinSelect("#secondaryVoice");
+
+		callback();
+	});
+}
+
+function getAmazonVoices(callback) {
+	if (!config.settings.AMAZON.USE_AMAZON) {
+		callback();
+		return;
+	}
+
+	function setVoicesinSelect(voiceSelector) {
+		let voiceSelect = document.querySelector(voiceSelector); // obtain the html reference of the google voices comboBox
+
+		const internalTTSHeader = document.createElement('optgroup');
+		internalTTSHeader.label = "Amazon TTS";
+		voiceSelect.appendChild(internalTTSHeader);
+
+		const voices = Object.keys(amazonVoices);
+		voices.forEach((voice) => {
+			const option = document.createElement('option');
+
+			option.value = voice;
+			option.innerHTML = amazonVoices[voice];
+
+			internalTTSHeader.appendChild(option);
+		});
+	}
+
+	setVoicesinSelect("#primaryVoice");
+	setVoicesinSelect("#secondaryVoice");
+
+	callback();
+}
+
+function getGoogleVoices(callback) {
+	if (!config.settings.GOOGLE.USE_GOOGLE) {
+		callback();
+		return;
+	}
+
+	function setVoicesinSelect(voiceSelector) {
+		let voiceSelect = document.querySelector(voiceSelector); // obtain the html reference of the google voices comboBox
+
+		const internalTTSHeader = document.createElement('optgroup');
+		internalTTSHeader.label = "Google TTS";
+		voiceSelect.appendChild(internalTTSHeader);
+
+		const googleVoiceSelect = document.querySelector('#googleVoice'); // obtain the html reference of the google voices comboBox
+		const voices = Object.keys(googleVoices);
+		voices.forEach((voice) => {
+			const option = document.createElement('option');
+			option.classList.add("option");
+
+			option.value = voice;
+			option.innerHTML = googleVoices[voice];
+
+			internalTTSHeader.appendChild(option);
+		});
+	}
+	setVoicesinSelect("#primaryVoice");
+	setVoicesinSelect("#secondaryVoice");
+
+	callback();
+}
+
+getGoogleVoices(function () {
+	getAmazonVoices(function () {
+		getInstalledVoices(function () {
+			let primaryVoice = document.querySelector("#primaryVoice");
+			primaryVoice.selectedIndex = config.settings.TTS.PRIMARY_TTS_VOICE;
+
+			let secondaryVoice = document.querySelector("#secondaryVoice");
+			secondaryVoice.selectedIndex = config.settings.TTS.SECONDARY_TTS_VOICE;
+		});
+	});
 });
-
-async function getGoogleVoices() {
-	const voices = Object.keys(googleVoices);
-	await voices.forEach((voice) => {
-		const option = document.createElement('option');
-
-		option.value = voice;
-		option.innerHTML = googleVoices[voice];
-
-		googleVoiceSelect.appendChild(option);
-	});
-	googleVoiceSelect.selectedIndex = config.settings.TTS.GOOGLE_VOICE;
-}
-
-getGoogleVoices();
-
-async function getAmazonVoices() {
-	const voices = Object.keys(amazonVoices);
-	await voices.forEach((voice) => {
-		const option = document.createElement('option');
-
-		option.value = voice;
-		option.innerHTML = amazonVoices[voice];
-
-		amazonVoiceSelect.appendChild(option);
-	});
-	amazonVoiceSelect.selectedIndex = config.settings.TTS.AMAZON_VOICE;
-}
-
-getAmazonVoices();
 
 // Small tooltip
 Array.from(document.body.querySelectorAll('[tip]')).forEach((el) => {
 	const tip = document.createElement('div');
+	const body = document.querySelector('.container');
 	const element = el;
 	tip.classList.add('tooltip');
+	tip.classList.add('tooltiptext');
 	tip.innerText = el.getAttribute('tip');
 	tip.style.transform = `translate(${el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px'}, ${el.hasAttribute('tip-top') ? '-100%' : '15px'
 		})`;
-	element.appendChild(tip);
+	body.appendChild(tip);
 	element.onmousemove = (e) => {
-		tip.style.left = `${e.pageX}px`;
-		tip.style.top = `${e.pageY}px`;
+		tip.style.left = `${e.x}px`;
+		tip.style.top = `${e.y}px`;
+		tip.style.zIndex = 1;
+		tip.style.visibility = "visible";
+	};
+	element.onmouseleave = (e) => {
+		tip.style.visibility = "hidden";
 	};
 });
 
@@ -206,6 +296,25 @@ function showPreviewChatMessage() {
 }
 
 showPreviewChatMessage();
+
+function hideText(button, field) {
+	document.body.querySelector(button).addEventListener('click', () => {
+		const passwordInput = document.querySelector(field);
+		if (passwordInput.type === 'password') {
+			passwordInput.type = 'lol';
+		} else {
+			passwordInput.type = 'password';
+		}
+	});
+
+}
+
+hideText('.password-toggle-btn1', "#TWITCH_OAUTH_TOKEN");
+hideText('.password-toggle-btn2', "#TWITCH_CLIENT_ID");
+hideText('.password-toggle-btn3', "#TWITCH_CLIENT_SECRET");
+hideText('.password-toggle-btn4', "#AMAZON_ACCESS_KEY");
+hideText('.password-toggle-btn5', "#AMAZON_ACCESS_SECRET");
+hideText('.password-toggle-btn6', "#GOOGLE_API_KEY");
 
 // Amazon TTS
 // const polly = new Polly(amazonCredentials);

@@ -3,7 +3,6 @@ module.exports = {
         icon: './src/images/icon.ico',
         asar: true,
         "extraResource": [
-            "./src/config/settings.ini",
             "./src/config/loquendo.db",
             "./src/sounds"
         ]

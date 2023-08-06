@@ -13,7 +13,6 @@ const playTTS = (ttsData) => new Promise((resolve) => {
                 console.error(err);
                 return;
             }
-            console.log('Audio file deleted successfully!');
             resolve('finished');
         });
     });
@@ -61,16 +60,16 @@ function playVoice(filteredMessage, logoUrl, username, message) {
     trueMessage = filteredMessage;
     currentLogoUrl = logoUrl;
     currentUsername = username;
-    let text = '';
     let textObject = { "filtered": filteredMessage, "formatted": message };
-    let voice = installedTTS.options[installedTTS.selectedIndex].text;
+    let voice;
     const language = langdetect.detect(filteredMessage);
 
-    if (language[0].lang === 'en') {
-        voice = installedTTS.options[1].text;
-        text = `${username} said: ${filteredMessage}`
+    if (language[0].lang === config.settings.TTS.SECONDARY_TTS_LANGUAGE.toLowerCase()) {
+        voice = config.settings.TTS.SECONDARY_TTS_NAME;
+        textObject.filtered = `${username}: ${filteredMessage}`;
     } else {
-        text = `${username} dice: ${filteredMessage}`
+        voice = config.settings.TTS.PRIMARY_TTS_NAME;
+        textObject.filtered = `${username}: ${filteredMessage}`;
     }
 
     talk.add(textObject, voice);

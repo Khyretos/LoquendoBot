@@ -68,7 +68,7 @@ body {
     background-repeat: no-repeat;
 }
 
-input[type='vslider'] > button.slider {
+input[type='vslider']>button.slider {
     background-size: 100% auto;
     border-radius: 0;
     width: 275%;
@@ -86,11 +86,11 @@ button {
     background-color: transparent;
 }
 
-#meter-microphone > button.slider {
+#meter-microphone>button.slider {
     background-image: url('../png/controls/meters/left.png');
 }
 
-#meter-delay > button.slider {
+#meter-delay>button.slider {
     background-image: url('../png/controls/meters/right.png');
 }
 
@@ -259,7 +259,7 @@ button.motion {
 }
 
 .test {
-    width:50px;
+    width: 50px;
     height: 50px;
     background-size: cover;
     overflow: hidden;
@@ -268,7 +268,7 @@ button.motion {
 .avatar-change {
     background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
     background-size: cover;
-    width:50px;
+    width: 50px;
     height: 50px;
     position: relative;
     left: -5px;
@@ -277,7 +277,7 @@ button.motion {
 .border {
     background-image: url('../png/controls/buttons/top/motion/border.png');
     background-size: cover;
-    width:50px;
+    width: 50px;
     height: 50px;
     position: relative;
     top: -50px;
@@ -298,7 +298,7 @@ button.motion {
     height: 50px;
     width: 50px;
     background-position: 50% 50%;
-    background-color:  yellow;
+    background-color: yellow;
 }
 
 .mouth-transitionx {
@@ -308,12 +308,12 @@ button.motion {
     height: 50px;
     width: 50px;
     background-position: 50% 50%;
-    background-color:  red;
+    background-color: red;
 }
 
 
 #mouth-transition::before {
-    background-color:  red;
+    background-color: red;
     background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
 }
 
@@ -338,16 +338,16 @@ button.motion::before {
     height: 50px;
     width: 50px;
     pointer-events: none;
-    background-color:  yellow;
+    background-color: yellow;
 }
 
 button.motion::after {
     position: absolute;
     width: 80%;
     height: 80%;
-    background-color:  red;
+    background-color: red;
     overflow: hidden;
-    z-index: -2;
+    z-index: -1;
     transform: translate(11%, 11%);
     /* hit-margin: -999px; */
 }

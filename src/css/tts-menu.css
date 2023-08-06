@@ -75,29 +75,12 @@ textarea {
     margin-top: 40px;
 }
 
-.SaveButton {
-    text-shadow: 0 0 5px #070607, 0 0 5px #070607, 0 0 5px #070607;
-    transition: all 0.15s ease-in-out;
-}
-
-.SaveButton:hover {
-    /* color: var(--main-color1); */
-    cursor: pointer;
-    /* filter: brightness(150%); */
-}
-
-.SaveButton:active {
-    color: var(--main-color1);
-    transform: translateY(4px);
-    text-shadow: 0 0 5px #000, 0 0 5px #000, 0 0 5px #000;
-}
-
 .SmallButton {
     color: var(--main-color2);
     width: 50px;
     cursor: pointer;
     text-shadow: 0 0 5px #070607, 0 0 5px #070607, 0 0 5px #070607;
-    transition: all 0.15s ease-in-out;
+    /* transition: all 0.15s ease-in-out; */
     text-align: center;
 }
 
@@ -124,16 +107,24 @@ textarea {
     border: none;
     font-family: 'xxii_avenmedium';
     font-size: 14pt;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    /* Add a smooth transition for box-shadow and background-color */
 }
 
 .AdvancedMenuButton:hover {
-    /* background-color: var(--main-color1); */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: var(--main-color3);
+    filter: brightness(150%);
+    /* Darken the background color on hover */
     cursor: pointer;
-    /* filter: brightness(150%); */
 }
 
 .AdvancedMenuButton:active {
-    transform: translateY(4px);
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: var(--main-color3);
+    /* Reset the background color on click */
 }
 
 .AdvancedMenuIcon {

@@ -5,7 +5,6 @@ let counter = 0;
 const speak = (textObject) => new Promise((resolve) => {
     // say.setEncoding(Encoding);
     counter += 1;
-    console.log(textObject);
     let savePath = '';
 
     if (envInfo.env) {

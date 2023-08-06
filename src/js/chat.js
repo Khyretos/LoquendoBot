@@ -51,10 +51,10 @@ document.body.querySelector('#SendButton').addEventListener('click', () => {
 document.body.querySelector('.circle-left').addEventListener('click', () => {
 	const menu = document.body.querySelector('.sidepanel-left');
 
-	if (menu.classList.contains('collapse-menu')) {
-		menu.classList.remove('collapse-menu');
+	if (menu.classList.contains('collapse-menu-left')) {
+		menu.classList.remove('collapse-menu-left');
 	} else {
-		menu.classList.add('collapse-menu');
+		menu.classList.add('collapse-menu-left');
 	}
 
 	const leftCircle = document.body.querySelector('.circle-left');
@@ -70,10 +70,10 @@ document.body.querySelector('.circle-left').addEventListener('click', () => {
 document.body.querySelector('.circle-right').addEventListener('click', () => {
 	const menu = document.body.querySelector('.sidepanel-right');
 
-	if (menu.classList.contains('collapse-menu')) {
-		menu.classList.remove('collapse-menu');
+	if (menu.classList.contains('collapse-menu-right')) {
+		menu.classList.remove('collapse-menu-right');
 	} else {
-		menu.classList.add('collapse-menu');
+		menu.classList.add('collapse-menu-right');
 	}
 
 	const leftCircle = document.body.querySelector('.circle-right');
@@ -175,6 +175,5 @@ document.body.querySelector('#HideThemeCreator').addEventListener('click', () =>
 // #region Test/Save TTS
 document.body.querySelector('#TTSTestButton').addEventListener('click', () => {
 	const text = document.getElementById('TTSTest').value;
-	console.log(text);
-	sound.playVoice(text, '', '', text);
+	sound.playVoice(text, '', 'User', text);
 });

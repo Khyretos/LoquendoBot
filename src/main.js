@@ -31,8 +31,6 @@ async function createWindow() {
 		icon: path.join(__dirname, '/images/icon.png'),
 		width: parseInt(settings.SETTINGS.WIDTH),
 		height: parseInt(settings.SETTINGS.HEIGHT),
-		minHeight: 800,
-		minWidth: 600,
 		x: parseInt(settings.SETTINGS.POSITION_X),
 		y: parseInt(settings.SETTINGS.POSITION_Y),
 		frame: false,
@@ -44,12 +42,14 @@ async function createWindow() {
 	});
 	window.loadURL('https://github.com')
 
-
 	window.loadFile(path.join(__dirname, 'index.html'));
 
-	window.webContents.openDevTools();
+	if (!app.isPackaged) {
+		window.webContents.openDevTools();
+	}
 
 	window.on('close', e => {
+		settings = ini.parse(fs.readFileSync(resourcesPath, 'utf-8')); // load newest settings in case anything changed after starting the program
 		const bounds = window.getBounds();
 
 		settings.SETTINGS.WIDTH = bounds.width;
@@ -59,7 +59,6 @@ async function createWindow() {
 
 		fs.writeFileSync(resourcesPath, ini.stringify(settings));
 	})
-
 };
 
 app.whenReady().then(() => {
@@ -117,21 +116,26 @@ async function createIniFile() {
 			NOTIFICATION_ENABLED: true,
 			POSITION_X: 0,
 			POSITION_Y: 0,
-			WIDTH: 600,
-			HEIGHT: 800
+			WIDTH: 1024,
+			HEIGHT: 768,
+			LANGUAGE: "EN"
 		},
 		TTS: {
-			SELECTED_TTS: "InternalTTS",
-			INTERNAL_TTS_VOICE: 0,
-			GOOGLE_VOICE: 0,
-			AMAZON_VOICE: 0
+			PRIMARY_TTS_VOICE: 0,
+			PRIMARY_TTS_NAME: "",
+			PRIMARY_TTS_LANGUAGE: "EN",
+			PRIMARY_TTS_LANGUAGE_INDEX: 0,
+			SECONDARY_TTS_VOICE: 0,
+			SECONDARY_TTS_NAME: "",
+			SECONDARY_TTS_LANGUAGE: "EN",
+			SECONDARY_TTS_LANGUAGE_INDEX: 0
 		},
 		AUDIO: {
 			NOTIFICATION_AUDIO_DEVICE: 0,
 			NOTIFICATION_SOUND: 0,
 			NOTIFICATION_VOLUME: 100,
 			SELECTED_TTS_AUDIO_DEVICE: 0,
-			TTS_AUDIO_DEVICE: "",
+			TTS_AUDIO_DEVICE: "default",
 			TTS_VOLUME: 100
 		},
 		THEME: {
@@ -147,16 +151,27 @@ async function createIniFile() {
 			CHAT_BUBBLE_MESSAGE: "\#b5b5b5",
 		},
 		TWITCH: {
-			USE_TWITCH: true,
+			USE_TWITCH: false,
 			CHANNEL_NAME: "khyretos",
 			USERNAME: "loquendo",
 			OAUTH_TOKEN: "",
 			CLIENT_ID: "",
 			CLIENT_SECRET: "",
 		},
+		SERVER: {
+			USE_SERVER: false,
+			PORT: "9000",
+			USE_VTUBER: false,
+			USE_CHATBUBBLE: false,
+		},
 		AMAZON: {
+			USE_TWITCH: false,
 			ACCESS_KEY: "",
 			ACCESS_SECRET: "",
+		},
+		GOOGLE: {
+			USE_GOOGLE: false,
+			API_KEY: "",
 		}
 	}).then(() => {
 		settings = ini.parse(fs.readFileSync(resourcesPath, 'utf-8'));

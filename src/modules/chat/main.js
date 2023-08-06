@@ -63,7 +63,6 @@ function streamText() {
 }
 
 function displayTwitchMessage(logoUrl, username, messageObject) {
-    console.log(messageObject);
     if (!messageObject) {
         return;
     }

@@ -35,6 +35,8 @@
     display: block;
     width: 100%;
     background: var(--main-color1);
+    z-index: 1;
+    position: relative;
 }
 
 .menu .items {
@@ -64,18 +66,17 @@
 }
 
 .menu .items .item-active {
-    transition: 0.3s;
     background: -webkit-linear-gradient(left, var(--main-color2) 10%, var(--main-color2), var(--main-color1) 10%, var(--main-color1) 10%);
     color: var(--main-color2);
-    transition: all 0.15s ease-out;
+    filter: brightness(90%);
 }
 
 .menu .items .item:hover {
     cursor: pointer;
-    /* filter: brightness(150%); */
     color: var(--main-color2);
-    transition: all 0.15s ease-in-out;
+    filter: brightness(120%);
 }
+
 
 .sidepanel-left {
     position: relative;
@@ -86,7 +87,6 @@
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
     transition: .3s ease-in-out;
-    z-index: 1;
 }
 
 .sidepanel-right {
@@ -100,8 +100,12 @@
     transition: .3s ease-in-out;
 }
 
-.collapse-menu {
-    width: 0px;
+.collapse-menu-left {
+    margin-left: -50px;
+}
+
+.collapse-menu-right {
+    margin-right: -200px;
 }
 
 .sidepanel-left span {
@@ -124,11 +128,11 @@
     background-color: var(--main-color3);
     color: var(--main-color2);
     justify-content: left;
-    top: 0px;
+    top: 32px;
     left: 50px;
     cursor: pointer;
     display: flex;
-    z-index: 9;
+    z-index: 1;
     transition: .3s ease-in-out;
 }
 
@@ -146,11 +150,11 @@
     background-color: var(--main-color3);
     color: var(--main-color2);
     justify-content: right;
-    top: 0px;
+    top: 32px;
     right: 199px;
     cursor: pointer;
     display: flex;
-    z-index: 9;
+    z-index: 1;
     transition: .3s ease-in-out;
 }
 

@@ -78,7 +78,6 @@ function setTheme(USE_CUSTOM_THEME) {
 document.body.querySelector('#MAIN_COLOR_1').addEventListener('input', () => {
 	const x = document.getElementById('MAIN_COLOR_1').value;
 	root.style.setProperty('--main-color1-temp', x);
-	console.log("set");
 });
 
 document.body.querySelector('#MAIN_COLOR_1').addEventListener('change', () => {
