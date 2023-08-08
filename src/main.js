@@ -1,19 +1,21 @@
 const { app, shell, BrowserWindow, ipcMain } = require('electron');
-const writeIniFile = require('write-ini-file');
+const { writeIniFile } = require('write-ini-file');
 const path = require('path');
 
 const ini = require('ini');
 const fs = require('fs');
 
-let resourcesPath;
+let resourcesPath = __dirname;
 let settingsPath;
+
 let settings;
 let window;
 
 if (app.isPackaged) {
+    settingsPath = path.join(process.resourcesPath, './settings.ini');
     resourcesPath = process.resourcesPath;
 } else {
-    resourcesPath = __dirname;
+    settingsPath = path.join(resourcesPath, './config/settings.ini');
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -22,15 +24,15 @@ if (require('electron-squirrel-startup')) {
 }
 
 async function createWindow() {
-    if (!fs.existsSync(resourcesPath)) {
-        await createIniFile(path.join(resourcesPath, '../config/settings.ini'));
+    if (!fs.existsSync(settingsPath)) {
+        console.log(resourcesPath);
+        await createIniFile();
     } else {
-        settingsPath = path.join(resourcesPath, './config/settings.ini');
         settings = ini.parse(fs.readFileSync(settingsPath, 'utf-8'));
     }
 
     window = new BrowserWindow({
-        icon: path.join(resourcesPath, '/images/icon.png'),
+        icon: path.join(__dirname, '/images/icon.png'),
         width: parseInt(settings.SETTINGS.WIDTH),
         height: parseInt(settings.SETTINGS.HEIGHT),
         x: parseInt(settings.SETTINGS.POSITION_X),
@@ -44,7 +46,7 @@ async function createWindow() {
     });
     window.loadURL('https://github.com');
 
-    window.loadFile(path.join(resourcesPath, 'index.html'));
+    window.loadFile(path.join(__dirname, 'index.html'));
 
     if (!app.isPackaged) {
         window.webContents.openDevTools();
@@ -112,7 +114,7 @@ ipcMain.on('restart', (event) => {
 });
 
 ipcMain.on('environment', (event) => {
-    event.returnValue = { resourcesPath: resourcesPath, settingsPath: settingsPath, settings: settings };
+    event.returnValue = { resourcesPath: resourcesPath, settingsPath: settingsPath, settings: settings, isPackaged: app.isPackaged };
 });
 
 let twitchAuthentication = () =>
@@ -203,7 +205,7 @@ ipcMain.on('chatBubble', async (event) => {
 });
 
 async function createIniFile() {
-    await writeIniFile(resourcesPath, {
+    await writeIniFile(settingsPath, {
         SETTINGS: {
             VOICE_ENABLED: true,
             NOTIFICATION_ENABLED: true,
@@ -268,6 +270,6 @@ async function createIniFile() {
             API_KEY: '',
         },
     }).then(() => {
-        settings = ini.parse(fs.readFileSync(resourcesPath, 'utf-8'));
+        settings = ini.parse(fs.readFileSync(settingsPath, 'utf-8'));
     });
 }

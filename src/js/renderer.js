@@ -23,11 +23,11 @@ const settingsPath = main.settingsPath.toString();
 const settings = main.settings;
 
 // TODO: remove gooogle voices txt and use api instead
-const googleVoices = fs.readFileSync(path.join(resourcesPath, './config/googleVoices.txt')).toString().split('\r\n');
+const googleVoices = fs.readFileSync(path.join(__dirname, './config/googleVoices.txt')).toString().split('\r\n');
 // TODO: remove amazon voices txt and use api instead (sakura project has it)
-const amazonVoices = fs.readFileSync(path.join(resourcesPath, './config/amazonVoices.txt')).toString().split('\r\n');
+const amazonVoices = fs.readFileSync(path.join(__dirname, './config/amazonVoices.txt')).toString().split('\r\n');
 
-const languagesObject = fs.readFileSync(path.join(resourcesPath, './config/languages.txt')).toString().split('\r\n');
+const languagesObject = fs.readFileSync(path.join(__dirname, './config/languages.txt')).toString().split('\r\n');
 
 // html elements
 const root = document.documentElement;
@@ -39,17 +39,15 @@ const notificationSound = document.querySelector('#notification'); // obtain the
 const ttsAudioDevices = document.querySelector('#ttsAudioDevice'); // obtain the html reference of the installedTTS comboBox
 
 // laod local javascript files
-const chat = require(path.join(resourcesPath, './js/chat'));
+const chat = require(path.join(__dirname, './js/chat'));
 
-const messageTemplates = require(path.join(resourcesPath, './js/messageTemplates'));
-const logger = require(path.join(resourcesPath, './js/logger'));
-const sound = require(path.join(resourcesPath, './js/sound'));
-const talk = require(path.join(resourcesPath, './js/voiceQueue')); // Voice queue system
-const config = require(path.join(resourcesPath, './js/settings'));
+const messageTemplates = require(path.join(__dirname, './js/messageTemplates'));
+const logger = require(path.join(__dirname, './js/logger'));
+const sound = require(path.join(__dirname, './js/sound'));
+const talk = require(path.join(__dirname, './js/voiceQueue')); // Voice queue system
+const config = require(path.join(__dirname, './js/settings'));
 
-let notificationSounds = path.join(resourcesPath, './sounds/notifications');
-
-let twitch = require(path.join(resourcesPath, './js/twitch'));
+let notificationSounds = path.join(__dirname, './sounds/notifications');
 
 function reset() {
     ipcRenderer.send('restart');
@@ -62,16 +60,17 @@ function setServer() {
     if (!settings.SERVER.USE_SERVER) {
         return;
     }
-    server = require(path.join(resourcesPath, './js/server'));
+    server = require(path.join(__dirname, './js/server'));
     socket = io(`http://localhost:${settings.SERVER.PORT}`); // Connect to your Socket.IO server
 }
 
 setServer();
 
-const Polly = settings.AMAZON.USE_AMAZON ? require(path.join(resourcesPath, './js/amazon')) : '';
-const google = settings.GOOGLE.USE_GOOGLE ? require(path.join(resourcesPath, './js/amazon')) : '';
+let twitch = settings.TWITCH.USE_TWITCH ? require(path.join(__dirname, './js/twitch')) : '';
+const Polly = settings.AMAZON.USE_AMAZON ? require(path.join(__dirname, './js/amazon')) : '';
+const google = settings.GOOGLE.USE_GOOGLE ? require(path.join(__dirname, './js/google')) : '';
 
-const theme = require(path.join(resourcesPath, './js/theme'));
+const theme = require(path.join(__dirname, './js/theme'));
 
 // initialize values
 config.getGeneralSettings();

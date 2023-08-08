@@ -47,19 +47,21 @@ function add(ttsData) {
     }
 }
 
-// Play sound function
-function playAudio(data) {
+function playNotificationSound() {
     if (settings.AUDIO.USE_NOTIFICATION_SOUNDS) {
         let notfication = new Audio(
-            path.join(resourcesPath, `../src/sounds/notifications/${notificationSound.options[settings.AUDIO.NOTIFICATION_SOUND].text}`),
+            path.join(resourcesPath, `./sounds/notifications/${notificationSound.options[settings.AUDIO.NOTIFICATION_SOUND].text}`),
         );
         notfication.volume = settings.AUDIO.NOTIFICATION_VOLUME / 100;
         notfication.play();
     }
+}
 
+// Play sound function
+function playAudio(data) {
     if (settings.TTS.USE_TTS) {
         add(data);
-    } else if (settings.SERVER.USE_SERVER) {
+    } else if (settings.SERVER.USE_SERVER && settings.SERVER.USE_CHATBUBBLE) {
         socket.emit('xxx', currentLogoUrl, currentUsername, data);
     }
 }
@@ -86,8 +88,8 @@ function playVoice(filteredMessage, logoUrl, username, message) {
     if (settings.TTS.USE_TTS) {
         talk.add(textObject, voice);
     } else {
-        playAudio(textObject);
+        playNotificationSound();
     }
 }
 
-module.exports = { playAudio, playVoice };
+module.exports = { playAudio, playVoice, playNotificationSound };

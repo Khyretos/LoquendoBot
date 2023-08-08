@@ -204,6 +204,11 @@ document.body.querySelector('#Info_USERNAME').addEventListener('click', () => {
 
     let element = document.body.querySelector('#TWITCH_OAUTH_TOKEN');
     element.value = key;
+
+    settings.TWITCH.OAUTH_TOKEN = key;
+
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    createNotification('Saved OAuth token!', 'success');
 });
 
 document.body.querySelector('#Info_VTUBER').addEventListener('click', () => {
@@ -226,7 +231,7 @@ document.body.querySelector('#close-button').addEventListener('click', (event) =
 
 // #region Notification sound test
 document.body.querySelector('#SoundTestButton').addEventListener('click', () => {
-    sound.playAudio();
+    sound.playNotificationSound();
 });
 
 document.body.querySelector('#TestTwitchCredentials').addEventListener('click', () => {
@@ -248,7 +253,7 @@ document.body.querySelector('#USE_TWITCH').addEventListener('click', () => {
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     const inputs = document.getElementsByClassName('inputTwitch');
     toggleRadio(toggle, inputs);
-    twitch = settings.TWITCH.USE_TWITCH ? require(path.join(resourcesPath, './js/twitch')) : null;
+    twitch = settings.TWITCH.USE_TWITCH ? require(path.join(__dirname, './twitch')) : null;
     createNotification(`${toggle ? 'Enabled' : 'Disabled'} Twitch settings!`, 'success');
 });
 

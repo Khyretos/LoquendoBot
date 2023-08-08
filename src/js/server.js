@@ -19,7 +19,7 @@ function startVtuber() {
         return;
     }
 
-    app.use('/vtuber', express.static(path.join(resourcesPath, './modules/vtuber/')));
+    app.use('/vtuber', express.static(path.join(__dirname, '../modules/vtuber/')));
 
     let vtuber = document.body.querySelector('#BrowsersourceVtuber');
     let vtuberframe = document.createElement('iframe');
@@ -37,7 +37,7 @@ function startChatBubble() {
         return;
     }
 
-    app.use('/chat', express.static(path.join(resourcesPath, './modules/chat')));
+    app.use('/chat', express.static(path.join(__dirname, '../modules/chat')));
 
     let chat = document.body.querySelector('#BrowsersourceChat');
     let chatframe = document.createElement('iframe');

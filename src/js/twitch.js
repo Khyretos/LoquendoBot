@@ -29,13 +29,10 @@ function ping(element) {
     client
         .ping()
         .then((data) => {
-            console.log(client.readyState());
-            console.log(data);
             value.classList.add('success');
             value.innerText = 'Success!';
         })
         .catch((e) => {
-            console.log(e);
             value.classList.add('error');
             value.innerText = 'Failed!';
         });

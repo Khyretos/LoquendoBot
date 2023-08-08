@@ -6,13 +6,14 @@ const speak = (textObject) =>
     new Promise((resolve) => {
         // say.setEncoding(Encoding);
         counter += 1;
-        let savePath = path.join(resourcesPath, '../src/sounds/tts/internal_audio_' + counter + '.mp3');
+        let savePath = path.join(resourcesPath, './sounds/tts/internal_audio_' + counter + '.mp3');
 
         say.export(textObject.filtered, SelectedVoice, 1, savePath, (err) => {
             if (err) {
                 console.error(err);
             } else {
                 sound.playAudio({ path: savePath, message: textObject });
+                sound.playNotificationSound();
             }
             resolve('finished');
         });
