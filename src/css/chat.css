@@ -369,7 +369,7 @@ select {
 .AdvancedMenu {
     border: 1px var(--main-color2) solid;
     margin-top: 10px;
-    width: 300px;
+    min-width: 555px;
     border-radius: 5px;
     border-radius: 5px;
 }
@@ -377,6 +377,8 @@ select {
 .legendStyle {
     margin-left: 1em;
     padding: 0.2em 0.8em;
+    display: flex;
+    align-items: center;
 }
 
 .AdvancedMenuRow {

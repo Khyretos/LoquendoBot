@@ -14,15 +14,15 @@ td {
 }
 
 .info {
-	background-color: lightblue;
+	background-color: lightblue !important;
 }
 
 .warn {
-	background-color: yellow;
+	background-color: #f39c12 !important;
 }
 
 .error {
-	background-color: lightcoral;
+	background-color: #e74c3c !important;
 }
 
 #logTable {

@@ -1,3 +1,4 @@
+
 // Connect to the Socket.IO server
 const socket = io();
 

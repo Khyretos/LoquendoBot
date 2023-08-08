@@ -28,6 +28,7 @@
 
 .OptionPanel.show {
     display: block;
+    overflow: auto;
 }
 
 .menu {

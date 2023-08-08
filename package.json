@@ -23,6 +23,7 @@
         "franc": "^6.1.0",
         "i18next-electron-language-detector": "^0.0.10",
         "ini": "^2.0.0",
+        "kill-port": "^2.0.1",
         "langdetect": "^0.2.1",
         "node-google-tts-api": "^1.1.1",
         "querystring": "^0.2.1",

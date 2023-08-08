@@ -22,9 +22,10 @@
 
 #volume-icon {
     color: var(--main-color2);
-    width: 50px;
+    scale: 0.75;
     cursor: pointer;
     text-align: center;
+    align-self: center;
 }
 
 #image {

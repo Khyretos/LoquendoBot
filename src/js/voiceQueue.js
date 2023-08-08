@@ -2,26 +2,21 @@ let SelectedVoice = '';
 let Encoding = '';
 let counter = 0;
 // wrap in promise
-const speak = (textObject) => new Promise((resolve) => {
-    // say.setEncoding(Encoding);
-    counter += 1;
-    let savePath = '';
+const speak = (textObject) =>
+    new Promise((resolve) => {
+        // say.setEncoding(Encoding);
+        counter += 1;
+        let savePath = path.join(resourcesPath, '../src/sounds/tts/internal_audio_' + counter + '.mp3');
 
-    if (envInfo.env) {
-        savePath = path.join(envInfo.path, './sounds/tts/internal_audio_' + counter + '.mp3')
-    } else {
-        savePath = path.join(__dirname, '../sounds/tts/internal_audio_' + counter + '.mp3')
-    }
-
-    say.export(textObject.filtered, SelectedVoice, 1, savePath, (err) => {
-        if (err) {
-            console.error(err);
-        } else {
-            sound.playAudio({ "path": savePath, "message": textObject });
-        }
-        resolve('finished');
+        say.export(textObject.filtered, SelectedVoice, 1, savePath, (err) => {
+            if (err) {
+                console.error(err);
+            } else {
+                sound.playAudio({ path: savePath, message: textObject });
+            }
+            resolve('finished');
+        });
     });
-});
 
 // queue system
 class SayQueue {
@@ -41,7 +36,9 @@ class SayQueue {
     add(message, selectedVoice) {
         this.messages.push(message);
         SelectedVoice = selectedVoice;
-        if (this.status === 0) { this.shift(); }
+        if (this.status === 0) {
+            this.shift();
+        }
     }
 }
 

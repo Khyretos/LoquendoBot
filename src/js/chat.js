@@ -117,7 +117,6 @@ displayPanel('.OptionPanel', '#Configuration', '#btnConfiguration');
 displayPanel('.OptionPanel', '#Logs', '#btnLogs');
 displayPanel('.OptionPanel', '#BrowsersourceChat', '#btnBrowsersourceChat');
 displayPanel('.OptionPanel', '#BrowsersourceVtuber', '#btnBrowsersourceVtuber');
-displayPanel('.OptionPanel', '#TTS', '#btnTTS');
 displayPanel('.OptionPanel', '#Chat', '#btnChat');
 // #endregion
 
@@ -142,24 +141,11 @@ const displayPanelX = (panelSelectorClass, panelSelectorID, btnSelectorID) => {
 	});
 };
 
-displayPanelX('.item', '#btnTTS', '#btnTTS');
 displayPanelX('.item', '#btnChat', '#btnChat');
 displayPanelX('.item', '#btnBrowsersourceChat', '#btnBrowsersourceChat');
 displayPanelX('.item', '#btnBrowsersourceVtuber', '#btnBrowsersourceVtuber');
 displayPanelX('.item', '#btnLogs', '#btnLogs');
 displayPanelX('.item', '#btnConfiguration', '#btnConfiguration');
-
-
-// #region Show/Hide Advanced Menu
-document.body.querySelector('#ShowAdvancedMenu').addEventListener('click', () => {
-	document.getElementById('AdvancedMenu_mask').style.visibility = 'visible';
-});
-
-document.body.querySelector('#HideAdvancedMenu').addEventListener('click', () => {
-	document.getElementById('AdvancedMenu_mask').style.visibility = 'hidden';
-});
-
-// #endregion
 
 // #region Show/Hide Theme Creator
 document.body.querySelector('#ShowThemeCreator').addEventListener('click', () => {

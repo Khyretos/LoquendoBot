@@ -73,7 +73,7 @@ section {
 .scale {
     height: 2em;
     width: 2em;
-    vertical-align: bottom
+    vertical-align: bottom;
 }
 
 .tab {
@@ -83,14 +83,13 @@ section {
     cursor: pointer;
 }
 
-input:checked+label {
-    border-top-color: #FFB03D;
-    border-right-color: #DDD;
-    border-left-color: #DDD;
+input:checked + label {
+    border-top-color: #ffb03d;
+    border-right-color: #ddd;
+    border-left-color: #ddd;
     border-bottom-color: transparent;
     text-decoration: none;
 }
-
 
 /* --------------------------------- */
 
@@ -129,13 +128,13 @@ input:checked+label {
 
 .tabx-bar .tabx::before {
     position: absolute;
-    content: "";
+    content: '';
     width: 26%;
     height: 13%;
     border-top-left-radius: 200px;
     border-top-right-radius: 200px;
     border-bottom: none;
-    background-color: #607D8B;
+    background-color: #607d8b;
     /* bottom: -8px; */
     opacity: 0;
     transition: all 0.3s ease-in-out;
@@ -153,7 +152,8 @@ input:checked+label {
     bottom: 0px;
 }
 
-.tabx-bar .tabx::after {}
+.tabx-bar .tabx::after {
+}
 
 .tabx-bar .tabx:hover {
     padding-bottom: 10px;
@@ -192,7 +192,7 @@ input:checked+label {
 }
 
 select {
-    font-size: .9rem;
+    font-size: 0.9rem;
     height: 40px;
     border-radius: 20px;
     background-color: var(--main-color3);
@@ -258,7 +258,7 @@ select {
     padding-left: 10px;
 }
 
-input[type="password"] {
+input[type='password'] {
     background: var(--main-color3);
     border: none;
     height: 40px;
@@ -272,7 +272,19 @@ input[type="password"] {
     /* To make space for the reveal button */
 }
 
-input[type="lol"] {
+input[type='url'] {
+    background: var(--main-color3);
+    border: none;
+    height: 40px;
+    border-radius: 40px;
+    width: 260px;
+    outline: none;
+    color: var(--main-color2);
+    font-size: 10pt;
+    margin-left: 10px;
+}
+
+input[type='lol'] {
     background: var(--main-color3);
     border: none;
     height: 40px;
@@ -292,7 +304,7 @@ input[type="lol"] {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    left: 450px;
+    left: 425px;
 }
 
 /* Hide the default appearance of the button */
@@ -331,20 +343,20 @@ input[type="lol"] {
 }
 
 /* Apply different colors based on the toast type */
-.toast.info {
-    background-color: #3498db;
+.info {
+    background-color: lightblue !important;
 }
 
-.toast.success {
-    background-color: #2ecc71;
+.success {
+    background-color: #2ecc71 !important;
 }
 
-.toast.warning {
-    background-color: #f39c12;
+.warning {
+    background-color: #f39c12 !important;
 }
 
-.toast.error {
-    background-color: #e74c3c;
+.error {
+    background-color: #e74c3c !important;
 }
 
 /* CSS animation for the toast appearance */
@@ -413,19 +425,30 @@ input[type="lol"] {
     visibility: visible;
 } */
 
-input[type=text]:disabled {
-    background: #dddddd;
+div[type='text']:disabled {
+    background: #4b4b4b;
+    display: none;
 }
 
-input[type2=text]:disabled {
-    background: #dddddd;
+input[type='text']:disabled {
+    background: #4b4b4b;
 }
 
-button[type=text]:disabled {
-    background: #dddddd;
+button[type='text']:disabled {
+    background: #4b4b4b;
+    display: none;
+}
+
+input[type2='text']:disabled {
+    background: #4b4b4b;
 }
 
 div:disabled {
-    background: #dddddd;
+    background: #4b4b4b;
+    filter: brightness(200%);
+}
+
+div:disabled {
+    background: #4b4b4b;
     filter: brightness(200%);
 }

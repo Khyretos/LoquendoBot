@@ -67,11 +67,14 @@
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 1);
 }
 
-.volume-icon-container {
+.option-icon-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
+    /* width: 78px; */
+    /* float: right; */
+    flex-grow: 1;
 }
 
 .brush-icon-container {

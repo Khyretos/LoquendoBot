@@ -24,11 +24,11 @@ const logger = createLogger({
 	format: fileFormat,
 	transports: [
 		new transports.File({
-			filename: path.join(__dirname, '../logs/error.log'),
+			filename: path.join(resourcesPath, '../logs/error.log'),
 			level: 'error',
 		}),
 		new transports.File({
-			filename: path.join(__dirname, '../logs/activity.log'),
+			filename: path.join(resourcesPath, '../logs/activity.log'),
 			maxsize: 5242880,
 			maxFiles: 5,
 		}),
@@ -44,7 +44,7 @@ if (process.env.NODE_ENV !== 'production') {
 	);
 }
 
-fetch(path.join(__dirname, '../logs/activity.log'))
+fetch(path.join(resourcesPath, '../logs/activity.log'))
 	.then((response) => response.text())
 	.then((logData) => {
 		const logLines = logData.trim().split('\n');

@@ -1,184 +1,179 @@
 /*generated with Input range slider CSS style generator (version 20211225)
 https://toughengineer.github.io/demo/slider-styler*/
-input[type=range].styled-slider {
-	/* height: 500px; */
-	background: transparent;
-	-webkit-appearance: none;
-	width: 300px;
+input[type='range'].styled-slider {
+    /* height: 500px; */
+    background: transparent;
+    -webkit-appearance: none;
+    width: 300px;
 }
 
 /*progress support*/
-input[type=range].styled-slider.slider-progress1 {
-	--range: calc(var(--max) - var(--min));
-	--ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
-	--sx: calc(0.5* 2em + var(--ratio) * (100% - 2em));
+input[type='range'].styled-slider.slider-progress1 {
+    --range: calc(var(--max) - var(--min));
+    --ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
+    --sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
 }
 
-input[type=range].styled-slider.slider-progress2 {
-	--range: calc(var(--max) - var(--min));
-	--ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
-	--sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
+input[type='range'].styled-slider.slider-progress2 {
+    --range: calc(var(--max) - var(--min));
+    --ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
+    --sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
 }
 
-input[type=range].styled-slider.slider-progress3 {
-	--range: calc(var(--max) - var(--min));
-	--ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
-	--sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
+input[type='range'].styled-slider.slider-progress3 {
+    --range: calc(var(--max) - var(--min));
+    --ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
+    --sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
 }
 
-input[type=range].styled-slider.slider-progress4 {
-	--range: calc(var(--max) - var(--min));
-	--ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
-	--sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
+input[type='range'].styled-slider.slider-progress4 {
+    --range: calc(var(--max) - var(--min));
+    --ratio: calc((var(--tiempotemporal) - var(--min)) / var(--range));
+    --sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
 }
 
 /*webkit*/
-input[type=range].styled-slider::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	width: 2em;
-	height: 40px;
-	border-radius: 20px;
-	background: #FFFFFF;
-	border: none;
-	box-shadow: 0 0 2px black;
-	margin-top: calc(2em * 0.5 - 2em * 0.5);
+input[type='range'].styled-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 2em;
+    height: 40px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 0 2px black;
+    margin-top: calc(2em * 0.5 - 2em * 0.5);
 }
 
-input[type=range].styled-slider::-webkit-slider-runnable-track {
-	height: 40px;
-	border: none;
-	border-radius: 20px;
-	background: #1a1a1a;
-	box-shadow: none;
+input[type='range'].styled-slider::-webkit-slider-runnable-track {
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    background: #1a1a1a;
+    box-shadow: none;
 }
 
-input[type=range].styled-slider.slider-progress1::-webkit-slider-runnable-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #1a1a1a;
-	;
+input[type='range'].styled-slider.slider-progress1::-webkit-slider-runnable-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
-input[type=range].styled-slider.slider-progress2::-webkit-slider-runnable-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #1a1a1a;
-	;
+input[type='range'].styled-slider.slider-progress2::-webkit-slider-runnable-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
-input[type=range].styled-slider.slider-progress3::-webkit-slider-runnable-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #1a1a1a;
-	;
+input[type='range'].styled-slider.slider-progress3::-webkit-slider-runnable-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
-input[type=range].styled-slider.slider-progress4::-webkit-slider-runnable-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #1a1a1a;
-	;
+input[type='range'].styled-slider.slider-progress4::-webkit-slider-runnable-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
 /*mozilla*/
-input[type=range].styled-slider::-moz-range-thumb {
-	width: 2em;
-	height: 40px;
-	border-radius: 20px;
-	background: #FFFFFF;
-	border: none;
-	box-shadow: 0 0 2px black;
+input[type='range'].styled-slider::-moz-range-thumb {
+    width: 2em;
+    height: 40px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 0 2px black;
 }
 
-input[type=range].styled-slider::-moz-range-track {
-	height: 40px;
-	border: none;
-	border-radius: 20px;
-	background: #1a1a1a;
-	box-shadow: none;
+input[type='range'].styled-slider::-moz-range-track {
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    background: #1a1a1a;
+    box-shadow: none;
 }
 
-input[type=range].styled-slider.slider-progress1::-moz-range-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #464646;
+input[type='range'].styled-slider.slider-progress1::-moz-range-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
-input[type=range].styled-slider.slider-progress2::-moz-range-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #464646;
+input[type='range'].styled-slider.slider-progress2::-moz-range-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
-input[type=range].styled-slider.slider-progress3::-moz-range-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #464646;
+input[type='range'].styled-slider.slider-progress3::-moz-range-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
-input[type=range].styled-slider.slider-progress4::-moz-range-track {
-	background: linear-gradient(#7b2cbf, #7b2cbf) 0/var(--sx) 100% no-repeat, #464646;
+input[type='range'].styled-slider.slider-progress4::-moz-range-track {
+    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
 /*ms*/
-input[type=range].styled-slider::-ms-fill-upper {
-	background: transparent;
-	border-color: transparent;
+input[type='range'].styled-slider::-ms-fill-upper {
+    background: transparent;
+    border-color: transparent;
 }
 
-input[type=range].styled-slider::-ms-fill-lower {
-	background: transparent;
-	border-color: transparent;
+input[type='range'].styled-slider::-ms-fill-lower {
+    background: transparent;
+    border-color: transparent;
 }
 
-input[type=range].styled-slider::-ms-thumb {
-	width: 2em;
-	height: 40px;
-	border-radius: 20px;
-	background: #FFFFFF;
-	border: none;
-	box-shadow: 0 0 2px black;
-	margin-top: 0;
-	box-sizing: border-box;
+input[type='range'].styled-slider::-ms-thumb {
+    width: 2em;
+    height: 40px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 0 2px black;
+    margin-top: 0;
+    box-sizing: border-box;
 }
 
-input[type=range].styled-slider::-ms-track {
-	height: 40px;
-	border-radius: 20px;
-	background: #1a1a1a;
-	border: none;
-	box-shadow: none;
-	box-sizing: border-box;
+input[type='range'].styled-slider::-ms-track {
+    height: 40px;
+    border-radius: 20px;
+    background: #1a1a1a;
+    border: none;
+    box-shadow: none;
+    box-sizing: border-box;
 }
 
-input[type=range].styled-slider.slider-progress1::-ms-fill-lower {
-	height: 40px;
-	border-radius: 1em 0 0 1em;
-	margin: -undefined 0 -undefined -undefined;
-	background: #7b2cbf;
-	border: none;
-	border-right-width: 0;
+input[type='range'].styled-slider.slider-progress1::-ms-fill-lower {
+    height: 40px;
+    border-radius: 1em 0 0 1em;
+    margin: -undefined 0 -undefined -undefined;
+    background: #7b2cbf;
+    border: none;
+    border-right-width: 0;
 }
 
-input[type=range].styled-slider.slider-progress2::-ms-fill-lower {
-	height: 40px;
-	border-radius: 1em 0 0 1em;
-	margin: -undefined 0 -undefined -undefined;
-	background: #7b2cbf;
-	border: none;
-	border-right-width: 0;
+input[type='range'].styled-slider.slider-progress2::-ms-fill-lower {
+    height: 40px;
+    border-radius: 1em 0 0 1em;
+    margin: -undefined 0 -undefined -undefined;
+    background: #7b2cbf;
+    border: none;
+    border-right-width: 0;
 }
 
-input[type=range].styled-slider.slider-progress3::-ms-fill-lower {
-	height: 40px;
-	border-radius: 1em 0 0 1em;
-	margin: -undefined 0 -undefined -undefined;
-	background: #7b2cbf;
-	border: none;
-	border-right-width: 0;
+input[type='range'].styled-slider.slider-progress3::-ms-fill-lower {
+    height: 40px;
+    border-radius: 1em 0 0 1em;
+    margin: -undefined 0 -undefined -undefined;
+    background: #7b2cbf;
+    border: none;
+    border-right-width: 0;
 }
 
-input[type=range].styled-slider.slider-progress4::-ms-fill-lower {
-	height: 40px;
-	border-radius: 1em 0 0 1em;
-	margin: -undefined 0 -undefined -undefined;
-	background: #7b2cbf;
-	border: none;
-	border-right-width: 0;
+input[type='range'].styled-slider.slider-progress4::-ms-fill-lower {
+    height: 40px;
+    border-radius: 1em 0 0 1em;
+    margin: -undefined 0 -undefined -undefined;
+    background: #7b2cbf;
+    border: none;
+    border-right-width: 0;
 }
 
 .inputBox {
-  border: none;
-  width: 50px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 14pt;
-  font-weight: bold;
-  margin-left: 10px; 
+    border: none;
+    width: 38px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
 }
