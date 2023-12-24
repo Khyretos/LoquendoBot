@@ -95,7 +95,7 @@ out/
 src/config/settings.ini
 speech_to_text_models/
 !speech_to_text_models/Where to get STT models.txt
-package-lock.json
+**package-lock.json
 build/
 backend/
 language_detection_model/
