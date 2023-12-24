@@ -95,9 +95,10 @@ out/
 src/config/settings.ini
 speech_to_text_models/
 !speech_to_text_models/Where to get STT models.txt
-**package-lock.json
 build/
 backend/
 language_detection_model/
 !language_detection_model/Where to get language detection model.txt
 .vscode/
+.vscode/settings.json
+package-lock.json
