@@ -1,6 +1,5 @@
 const tmi = require('tmi.js');
 const axios = require('axios');
-const { post } = require('request');
 
 let client;
 

@@ -105,7 +105,6 @@ const createBackendServer = () =>
             python = spawn(path.join(pythonPath, './loquendoBot_backend.exe'), [settingsPath, 'prod']);
         } else {
             python = spawn('python', ['-u', path.join(pythonPath, './loquendoBot_backend.py'), settingsPath, 'dev']);
-            // python = spawn(path.join(pythonPath, './loquendoBot_backend.exe'), [settingsPath, 'dev']);
         }
         // Capture the stdout of the Python process
         python.stdout.on('data', (data) => {
@@ -140,7 +139,6 @@ async function initiateBackend() {
     } catch (error) {
         console.error('Error during backend initialization:', error);
     }
-    // setTimeout(getSTT, 3000);
 }
 
 initiateBackend();

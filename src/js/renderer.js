@@ -4,8 +4,6 @@ const path = require('path'); // get directory path
 
 const { ipcRenderer, shell } = require('electron'); // necessary electron libraries to send data to the app
 const say = require('say');
-const request = require('request');
-const langdetect = require('langdetect');
 const io = require('socket.io-client');
 
 const util = require('util');
@@ -15,7 +13,6 @@ const GoogleTTS = require('node-google-tts-api');
 
 const tts = new GoogleTTS();
 const { Socket } = require('socket.io-client');
-// const { languages } = require('./languages');
 
 const main = ipcRenderer.sendSync('environment');
 
@@ -46,7 +43,6 @@ const messageTemplates = require(path.join(__dirname, './js/messageTemplates'));
 const languageObject = require(path.join(__dirname, './js/languages'));
 const logger = require(path.join(__dirname, './js/logger'));
 const sound = require(path.join(__dirname, './js/sound'));
-const talk = require(path.join(__dirname, './js/voiceQueue')); // Voice queue system
 const config = require(path.join(__dirname, './js/settings'));
 
 const mediaDevices = require(path.join(__dirname, './js/mediaDevices'));
@@ -77,7 +73,6 @@ config.getGeneralSettings();
 const TTSVolume = 1;
 
 const notificationSoundVolume = 1;
-// const slider = document.body.querySelector('#slider');
 const StartDateAndTime = Date.now();
 const speakButton = document.querySelector('#speakBtn');
 
@@ -124,7 +119,6 @@ fs.readdir(sttModels, (err, files) => {
 
 async function getAudioDevices() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-        // logger.info('enumerateDevices() not supported.');
         return;
     }
 
@@ -149,8 +143,6 @@ function setLanguagesinSelect(languageSelector, setting) {
     for (const language in languageObject.languages) {
         if (languageObject.languages.hasOwnProperty(language)) {
             const iso639 = languageObject.languages[language]['ISO-639'];
-            // console.log(`${language}: ${iso639}`);
-
             const option = document.createElement('option');
             option.value = iso639;
             option.innerHTML = `${iso639} - ${language}`;
@@ -207,11 +199,8 @@ function showChatMessage(article) {
     const usernameHtml = article.querySelector('.username');
     var style = getComputedStyle(usernameHtml);
     var style2 = getComputedStyle(usernameHtml);
-    // console.log(style.getPropertyValue('width'));
-    // console.log(style.getPropertyValue('width') + style.getPropertyValue('width') + 10);
 
     const msg = article.querySelector('.msg-box');
-    // msg.width = `${getComputedStyle(usernameHtml).width + getComputedStyle(usernameHtml).width / 10}px`;
 
     const messages = Array.from(document.body.querySelectorAll('.msg-container'));
     const lastMessage = messages[messages.length - 1];

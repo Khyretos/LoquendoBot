@@ -77,7 +77,6 @@ async function playVoice(filteredMessage, logoUrl, username, message) {
     currentUsername = username;
     let textObject = { filtered: filteredMessage, formatted: message };
     let voice;
-    const language = langdetect.detect(filteredMessage);
     textObject.filtered = `${username}: ${filteredMessage}`;
 
     // if (

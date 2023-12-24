@@ -85,7 +85,6 @@ const displayPanel = (panelSelectorClass, panelSelectorID, btnSelectorID) => {
                 el.classList.remove('show');
             });
             if (panel.classList.contains('show')) {
-                // panel.classList.remove('show');
             } else {
                 panel.classList.add('show');
             }
@@ -103,7 +102,6 @@ displayPanel('.OptionPanel', '#BrowsersourceVtuber', '#btnBrowsersourceVtuber');
 displayPanel('.OptionPanel', '#Chat', '#btnChat');
 displayPanel('.OptionPanel', '#ThemeCreator', '#btnThemeCreator');
 displayPanel('.OptionPanel', '#ChatCreator', '#btnChatCreator');
-// displayPanel('.OptionPanel', '#Info', '#btnInfo');
 // #endregion
 
 const displayPanelX = (panelSelectorClass, panelSelectorID, btnSelectorID) => {
@@ -120,7 +118,6 @@ const displayPanelX = (panelSelectorClass, panelSelectorID, btnSelectorID) => {
                 el.classList.remove('item-active');
             });
             if (panel.classList.contains('item-active')) {
-                // panel.classList.remove('item-active');
             } else {
                 panel.classList.add('item-active');
             }

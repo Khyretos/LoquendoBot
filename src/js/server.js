@@ -63,7 +63,6 @@ localServer.listen(settings.GENERAL.PORT, () => {
     startChatBubbleModule();
 
     if (settings.TTS.USE_TTS) {
-        // internalTTS.getInstalledVoices();
     }
 });
 
