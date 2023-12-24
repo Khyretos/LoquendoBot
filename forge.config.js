@@ -2,17 +2,14 @@ module.exports = {
     packagerConfig: {
         icon: './src/images/icon.ico',
         asar: true,
-        "extraResource": [
-            "./src/config/loquendo.db",
-            "./src/sounds"
-        ]
+        extraResource: ['./src/config/loquendo.db', './src/sounds', './backend', './speech_to_text_models'],
     },
     rebuildConfig: {},
     makers: [
         {
             name: '@electron-forge/maker-squirrel',
             config: {
-                setupIcon: './src/images/icon.ico'
+                setupIcon: './src/images/icon.ico',
             },
         },
         {
@@ -22,14 +19,12 @@ module.exports = {
         {
             name: '@electron-forge/maker-deb',
             config: {
-                options: {
-                }
+                options: {},
             },
         },
         {
             name: '@electron-forge/maker-rpm',
-            config: {
-            },
+            config: {},
         },
     ],
     plugins: [

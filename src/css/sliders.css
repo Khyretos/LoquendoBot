@@ -53,19 +53,19 @@ input[type='range'].styled-slider::-webkit-slider-runnable-track {
 }
 
 input[type='range'].styled-slider.slider-progress1::-webkit-slider-runnable-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
 input[type='range'].styled-slider.slider-progress2::-webkit-slider-runnable-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
 input[type='range'].styled-slider.slider-progress3::-webkit-slider-runnable-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
 input[type='range'].styled-slider.slider-progress4::-webkit-slider-runnable-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #1a1a1a;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #1a1a1a;
 }
 
 /*mozilla*/
@@ -82,24 +82,24 @@ input[type='range'].styled-slider::-moz-range-track {
     height: 40px;
     border: none;
     border-radius: 20px;
-    background: #1a1a1a;
+    background: var(--main-color3);
     box-shadow: none;
 }
 
 input[type='range'].styled-slider.slider-progress1::-moz-range-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
 input[type='range'].styled-slider.slider-progress2::-moz-range-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
 input[type='range'].styled-slider.slider-progress3::-moz-range-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
 input[type='range'].styled-slider.slider-progress4::-moz-range-track {
-    background: linear-gradient(#7b2cbf, #7b2cbf) 0 / var(--sx) 100% no-repeat, #464646;
+    background: linear-gradient(var(--main-color1), var(--main-color1)) 0 / var(--sx) 100% no-repeat, #464646;
 }
 
 /*ms*/
@@ -127,7 +127,7 @@ input[type='range'].styled-slider::-ms-thumb {
 input[type='range'].styled-slider::-ms-track {
     height: 40px;
     border-radius: 20px;
-    background: #1a1a1a;
+    background: var(--main-color3);
     border: none;
     box-shadow: none;
     box-sizing: border-box;
@@ -137,7 +137,7 @@ input[type='range'].styled-slider.slider-progress1::-ms-fill-lower {
     height: 40px;
     border-radius: 1em 0 0 1em;
     margin: -undefined 0 -undefined -undefined;
-    background: #7b2cbf;
+    background: var(--main-color1);
     border: none;
     border-right-width: 0;
 }
@@ -146,7 +146,7 @@ input[type='range'].styled-slider.slider-progress2::-ms-fill-lower {
     height: 40px;
     border-radius: 1em 0 0 1em;
     margin: -undefined 0 -undefined -undefined;
-    background: #7b2cbf;
+    background: var(--main-color1);
     border: none;
     border-right-width: 0;
 }
@@ -155,7 +155,7 @@ input[type='range'].styled-slider.slider-progress3::-ms-fill-lower {
     height: 40px;
     border-radius: 1em 0 0 1em;
     margin: -undefined 0 -undefined -undefined;
-    background: #7b2cbf;
+    background: var(--main-color1);
     border: none;
     border-right-width: 0;
 }
@@ -164,7 +164,7 @@ input[type='range'].styled-slider.slider-progress4::-ms-fill-lower {
     height: 40px;
     border-radius: 1em 0 0 1em;
     margin: -undefined 0 -undefined -undefined;
-    background: #7b2cbf;
+    background: var(--main-color1);
     border: none;
     border-right-width: 0;
 }

@@ -1,22 +1,11 @@
 const twitchTemplate = `
-<div class="mmg">
-		<div class="icon-container">
-				<img class="user-img" src="" />
-				<img class="status-circle" src="./images/twitch-icon.png" />
-		</div>
-		<div class="msg-box">
-				<div class="flr">
-						<div class="messages">
-						<span class="timestamp">
-								<span class="username"></span>
-								<span class="post-time"></span>
-						</span>
-						<br>
-						<p class="msg"></p>
-						</div>
-				</div>
-		</div>
-</div>
+	<div class="icon-container">
+		<img class="user-img" src="" />
+		<img class="status-circle" src="./images/twitch-icon.png" />
+	</div>
+	<span class="username"></span>
+	<div class="msg-box">
+	</div>
 `.trim();
 
 const userTemplate = `
@@ -31,7 +20,6 @@ const userTemplate = `
 							<span class="username">You</span>
 							<span class="post-time"></span>
 						</span>
-						<br>
 						<p class="msg"></p>
 				</div>
 		</div>

@@ -5,10 +5,11 @@
     "main": "src/main.js",
     "scripts": {
         "start": "electron-forge start",
-        "package": "electron-forge package",
+        "package": "npm run backend && electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",
-        "lint": "echo \"No linting configured\""
+        "lint": "echo \"No linting configured\"",
+        "backend": "pyinstaller --noconsole --onefile --collect-all vosk --distpath ./backend ./src/backend/loquendoBot_backend.py"
     },
     "keywords": [],
     "author": {
@@ -22,6 +23,7 @@
         "express": "^4.18.2",
         "franc": "^6.1.0",
         "i18next-electron-language-detector": "^0.0.10",
+        "iconv-lite": "^0.6.3",
         "ini": "^2.0.0",
         "kill-port": "^2.0.1",
         "langdetect": "^0.2.1",
@@ -34,6 +36,7 @@
         "sound-play": "^1.1.0",
         "tmi.js": "^1.8.5",
         "url": "^0.11.1",
+        "voice-recognition": "^1.0.6",
         "winston": "^3.10.0",
         "write-ini-file": "^4.0.1"
     },

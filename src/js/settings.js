@@ -1,23 +1,103 @@
+function getGeneralSettings() {
+    // General
+    document.body.querySelector('#PORT').value = settings.GENERAL.PORT;
+
+    // Theme
+    document.querySelector('#USE_CUSTOM_THEME').value = settings.THEME.USE_CUSTOM_THEME;
+    document.body.querySelector('#USE_CUSTOM_THEME').checked = settings.THEME.USE_CUSTOM_THEME === true ? 1 : 0;
+    theme.setTheme();
+
+    // STT
+    document.body.querySelector('#USE_STT').checked = settings.STT.USE_STT;
+
+    // Language detection
+    document.body.querySelector('#USE_DETECTION').checked = settings.LANGUAGE.USE_DETECTION;
+
+    // TTS
+    document.body.querySelector('#USE_TTS').checked = settings.TTS.USE_TTS;
+
+    // Notification sounds
+    document.body.querySelector('#USE_NOTIFICATION_SOUNDS').checked = settings.AUDIO.USE_NOTIFICATION_SOUNDS;
+
+    // Twitch
+    document.body.querySelector('#USE_TWITCH').checked = settings.TWITCH.USE_TWITCH;
+    document.body.querySelector('#TWITCH_CHANNEL_NAME').value = settings.TWITCH.CHANNEL_NAME;
+    document.body.querySelector('#TWITCH_OAUTH_TOKEN').value = settings.TWITCH.OAUTH_TOKEN;
+
+    // Modules
+    document.body.querySelector('#USE_MODULES').checked = settings.MODULES.USE_MODULES;
+    document.body.querySelector('#USE_VTUBER').checked = settings.MODULES.USE_VTUBER;
+    document.body.querySelector('#VTUBER_URL').value = `http://localhost:${settings.GENERAL.PORT}/vtuber/`;
+    showMenuButton('#btnBrowsersourceVtuber', settings.MODULES.USE_VTUBER);
+    document.body.querySelector('#USE_CHATBUBBLE').checked = settings.GENERAL.USE_CHATBUBBLE;
+    document.body.querySelector('#CHATBUBBLE_URL').value = `http://localhost:${settings.GENERAL.PORT}/chat/`;
+    showMenuButton('#btnBrowsersourceChat', settings.GENERAL.USE_CHATBUBBLE);
+
+    // Amazon
+    document.body.querySelector('#USE_AMAZON').checked = settings.AMAZON.USE_AMAZON;
+    document.body.querySelector('#AMAZON_ACCESS_KEY').value = settings.AMAZON.ACCESS_KEY;
+    document.body.querySelector('#AMAZON_ACCESS_SECRET').value = settings.AMAZON.ACCESS_SECRET;
+
+    // Google
+    document.body.querySelector('#USE_GOOGLE').checked = settings.GOOGLE.USE_GOOGLE;
+    document.body.querySelector('#GOOGLE_API_KEY').value = settings.GOOGLE.API_KEY;
+}
+
+document.body.querySelector('#primaryAmazonVoice').addEventListener('change', () => {
+    var select = document.querySelector('#primaryAmazonVoice');
+    settings.AMAZON.PRIMARY_VOICE = select.value;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    createNotification('Saved Amazon primary voice!', 'success');
+});
+
+document.body.querySelector('#secondaryAmazonVoice').addEventListener('change', () => {
+    var select = document.querySelector('#secondaryAmazonVoice');
+    settings.AMAZON.SECONDARY_VOICE = select.value;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    createNotification('Saved Amazon secondary voice!', 'success');
+});
+
+document.body.querySelector('#primaryGoogleVoice').addEventListener('change', () => {
+    var select = document.querySelector('#primaryGoogleVoice');
+    settings.GOOGLE.PRIMARY_VOICE = select.value;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    createNotification('Saved Google primary voice!', 'success');
+});
+
+document.body.querySelector('#secondaryGoogleVoice').addEventListener('change', () => {
+    var select = document.querySelector('#secondaryGoogleVoice');
+    settings.GOOGLE.SECONDARY_VOICE = select.value;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    createNotification('Saved Google secondary voice!', 'success');
+});
+
 document.body.querySelector('#primaryVoice').addEventListener('change', () => {
     var select = document.querySelector('#primaryVoice');
-    settings.TTS.PRIMARY_TTS_VOICE = select.selectedIndex;
-    settings.TTS.PRIMARY_TTS_NAME = select.options[select.selectedIndex].text;
+    settings.TTS.PRIMARY_VOICE = select.value;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     createNotification('Saved primary voice!', 'success');
 });
 
-document.body.querySelector('#primaryLanguage').addEventListener('change', () => {
-    var select = document.querySelector('#primaryLanguage');
+document.body.querySelector('#microphone').addEventListener('change', () => {
+    var select = document.querySelector('#microphone');
+    settings.STT.MICROPHONE = select.selectedIndex;
+    settings.STT.MICROPHONE_ID = select.options[select.selectedIndex].text;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    createNotification('Saved microphone!', 'success');
+    startVoiceRecognition();
+});
+
+document.body.querySelector('#defaultLanguage').addEventListener('change', () => {
+    var select = document.querySelector('#defaultLanguage');
     settings.TTS.PRIMARY_TTS_LANGUAGE_INDEX = select.selectedIndex;
     settings.TTS.PRIMARY_TTS_LANGUAGE = select.options[select.selectedIndex].text;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
-    createNotification('Saved primary language!', 'success');
+    createNotification('Saved default language!', 'success');
 });
 
 document.body.querySelector('#secondaryVoice').addEventListener('change', () => {
     var select = document.querySelector('#secondaryVoice');
-    settings.TTS.SECONDARY_TTS_VOICE = select.selectedIndex;
-    settings.TTS.SECONDARY_TTS_NAME = select.options[select.selectedIndex].text;
+    settings.TTS.SECONDARY_VOICE = select.value;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     createNotification('Saved secondary voice!', 'success');
 });
@@ -57,7 +137,7 @@ document.body.querySelector('#TWITCH_OAUTH_TOKEN').addEventListener('change', ()
 });
 
 document.body.querySelector('#PORT').addEventListener('change', () => {
-    settings.SERVER.PORT = document.body.querySelector('#PORT').value;
+    settings.GENERAL.PORT = document.body.querySelector('#PORT').value;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     createNotification('Saved port, please restart the application to reset the port', 'warning');
 });
@@ -85,43 +165,6 @@ document.body.querySelector('#notification').addEventListener('change', () => {
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     createNotification('Saved notification sound!', 'success');
 });
-
-function getGeneralSettings() {
-    // Theme
-    document.querySelector('#USE_CUSTOM_THEME').value = settings.THEME.USE_CUSTOM_THEME;
-    document.body.querySelector('#USE_CUSTOM_THEME').checked = settings.THEME.USE_CUSTOM_THEME === true ? 1 : 0;
-    theme.setTheme();
-
-    // TTS
-    document.body.querySelector('#USE_TTS').checked = settings.TTS.USE_TTS;
-
-    // Notification sounds
-    document.body.querySelector('#USE_NOTIFICATION_SOUNDS').checked = settings.AUDIO.USE_NOTIFICATION_SOUNDS;
-
-    // Twitch
-    document.body.querySelector('#USE_TWITCH').checked = settings.TWITCH.USE_TWITCH;
-    document.body.querySelector('#TWITCH_CHANNEL_NAME').value = settings.TWITCH.CHANNEL_NAME;
-    document.body.querySelector('#TWITCH_OAUTH_TOKEN').value = settings.TWITCH.OAUTH_TOKEN;
-
-    // Server
-    document.body.querySelector('#USE_SERVER').checked = settings.SERVER.USE_SERVER;
-    document.body.querySelector('#PORT').value = settings.SERVER.PORT;
-    document.body.querySelector('#USE_VTUBER').checked = settings.SERVER.USE_VTUBER;
-    document.body.querySelector('#VTUBER_URL').value = `http://localhost:${settings.SERVER.PORT}/vtuber/`;
-    showMenuButton('#btnBrowsersourceVtuber', settings.SERVER.USE_VTUBER);
-    document.body.querySelector('#USE_CHATBUBBLE').checked = settings.SERVER.USE_CHATBUBBLE;
-    document.body.querySelector('#CHATBUBBLE_URL').value = `http://localhost:${settings.SERVER.PORT}/chat/`;
-    showMenuButton('#btnBrowsersourceChat', settings.SERVER.USE_CHATBUBBLE);
-
-    // Amazon
-    document.body.querySelector('#USE_AMAZON').checked = settings.AMAZON.USE_AMAZON;
-    document.body.querySelector('#AMAZON_ACCESS_KEY').value = settings.AMAZON.ACCESS_KEY;
-    document.body.querySelector('#AMAZON_ACCESS_SECRET').value = settings.AMAZON.ACCESS_SECRET;
-
-    // Google
-    document.body.querySelector('#USE_GOOGLE').checked = settings.GOOGLE.USE_GOOGLE;
-    document.body.querySelector('#GOOGLE_API_KEY').value = settings.GOOGLE.API_KEY;
-}
 
 function showMenuButton(menuButton, toggle) {
     let option = document.body.querySelector(menuButton);
@@ -199,31 +242,64 @@ document.body.querySelector('#min-button').addEventListener('click', () => {
 });
 
 // #region Top bar buttons
-document.body.querySelector('#Info_USERNAME').addEventListener('click', () => {
-    const key = ipcRenderer.sendSync('twitch');
-
+document.body.querySelector('#Info_USERNAME').addEventListener('click', async () => {
     let element = document.body.querySelector('#TWITCH_OAUTH_TOKEN');
-    element.value = key;
+    element.value = await auth.getTwitchOauthToken();
 
-    settings.TWITCH.OAUTH_TOKEN = key;
-
-    fs.writeFileSync(settingsPath, ini.stringify(settings));
     createNotification('Saved OAuth token!', 'success');
 });
 
+let hideInputToggleButton = document.body.querySelectorAll('.password-toggle-btn .password-toggle-icon .fa-eye-slash');
+hideInputToggleButton.forEach((item) => {
+    item.addEventListener('click', () => {
+        if (item.classList.contains('fa-eye')) {
+            item.classList.remove('fa-eye');
+            item.classList.add('fa-eye-slash');
+        } else {
+            item.classList.remove('fa-eye-slash');
+            item.classList.add('fa-eye');
+        }
+    });
+});
+
+function hideOrShowViewerPanel() {
+    const menu = document.body.querySelector('.sidepanel-right');
+    const leftCircle = document.body.querySelector('.circle-right');
+
+    if (!settings.GENERAL.VIEWERS_PANEL) {
+        menu.classList.add('collapse-menu-right');
+        leftCircle.classList.add('collapse-circle-right');
+    } else {
+        menu.classList.remove('collapse-menu-right');
+        leftCircle.classList.remove('collapse-circle-right');
+    }
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+}
+
+hideOrShowViewerPanel();
+
+document.body.querySelector('#VIEWERS_PANEL').addEventListener('click', () => {
+    if (settings.GENERAL.VIEWERS_PANEL) {
+        settings.GENERAL.VIEWERS_PANEL = false;
+    } else {
+        settings.GENERAL.VIEWERS_PANEL = true;
+    }
+    hideOrShowViewerPanel();
+});
+
 document.body.querySelector('#Info_VTUBER').addEventListener('click', () => {
-    ipcRenderer.send('vtuber');
+    shell.openExternal(`http://localhost:${settings.GENERAL.PORT}/vtuber/`);
 });
 
 document.body.querySelector('#Info_CHATBUBBLE').addEventListener('click', () => {
-    ipcRenderer.send('chatBubble');
+    shell.openExternal(`http://localhost:${settings.GENERAL.PORT}/chat/`);
 });
 
 document.body.querySelector('#max-button').addEventListener('click', () => {
     ipcRenderer.send('maximize-window');
 });
 
-document.body.querySelector('#close-button').addEventListener('click', (event) => {
+document.body.querySelector('#close-button').addEventListener('click', () => {
     ipcRenderer.send('close-window');
 });
 
@@ -292,45 +368,46 @@ document.body.querySelector('#USE_AMAZON').addEventListener('click', () => {
 });
 
 function toggleServer() {
-    const toggle = settings.SERVER.USE_SERVER;
+    const toggle = settings.MODULES.USE_MODULES;
     const inputs = document.getElementsByClassName('inputServer');
     toggleRadio(toggle, inputs);
 }
 
 toggleServer();
 
-document.body.querySelector('#USE_SERVER').addEventListener('click', () => {
-    const toggle = document.getElementById('USE_SERVER').checked;
-    settings.SERVER.USE_SERVER = toggle;
+document.body.querySelector('#USE_MODULES').addEventListener('click', () => {
+    const toggle = document.getElementById('USE_MODULES').checked;
+    settings.MODULES.USE_MODULES = toggle;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     const inputs = document.getElementsByClassName('inputServer');
     toggleRadio(toggle, inputs);
-    setServer();
     createNotification(
-        `${toggle ? 'Enabled' : 'Disabled'} server settings!, the service will stop working after restarting the application`,
+        `${toggle ? 'Enabled' : 'Disabled'} server settings!, the service will stop working after restarting the application
+        ${toggle ? '' : ', the service will stop working after restarting the application'}`,
         'success',
     );
 });
 
 document.body.querySelector('#USE_VTUBER').addEventListener('change', () => {
     const toggle = document.getElementById('USE_VTUBER').checked;
-    settings.SERVER.USE_VTUBER = toggle;
+    settings.MODULES.USE_VTUBER = toggle;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     showMenuButton('#btnBrowsersourceVtuber', toggle);
     createNotification(
-        `${toggle ? 'Enabled' : 'Disabled'} Vtuber setting!, the service will stop working after restarting the application`,
+        `${toggle ? 'Enabled' : 'Disabled'} Vtuber setting! 
+        ${toggle ? '' : ', the service will stop working after restarting the application'}`,
         'success',
     );
-    server.startVtuber();
+    server.startVtuberModule();
 });
 
 document.body.querySelector('#USE_CHATBUBBLE').addEventListener('change', () => {
     const toggle = document.getElementById('USE_CHATBUBBLE').checked;
-    settings.SERVER.USE_CHATBUBBLE = toggle;
+    settings.MODULES.USE_CHATBUBBLE = toggle;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     showMenuButton('#btnBrowsersourceChat', toggle);
     createNotification(`${toggle ? 'Enabled' : 'Disabled'} chatbubble setting!`, 'success');
-    server.startChatBubble();
+    server.startChatBubbleModule();
 });
 
 function toggleTTS() {
@@ -348,6 +425,40 @@ document.body.querySelector('#USE_TTS').addEventListener('change', () => {
     const inputs = document.getElementsByClassName('inputTTS');
     toggleRadio(toggle, inputs);
     createNotification(`${toggle ? 'Enabled' : 'Disabled'} text to speech!`, 'success');
+});
+
+function toggleSTT() {
+    const toggle = settings.STT.USE_STT;
+    const inputs = document.getElementsByClassName('inputSTT');
+    toggleRadio(toggle, inputs);
+}
+
+toggleSTT();
+
+document.body.querySelector('#USE_STT').addEventListener('change', () => {
+    const toggle = document.getElementById('USE_STT').checked;
+    settings.STT.USE_STT = toggle;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    const inputs = document.getElementsByClassName('inputSTT');
+    toggleRadio(toggle, inputs);
+    createNotification(`${toggle ? 'Enabled' : 'Disabled'} speech to text!`, 'success');
+});
+
+function toggleLanguageDetection() {
+    const toggle = settings.LANGUAGE.USE_DETECTION;
+    const inputs = document.getElementsByClassName('languageDetectionInput');
+    toggleRadio(toggle, inputs);
+}
+
+toggleLanguageDetection();
+
+document.body.querySelector('#USE_DETECTION').addEventListener('change', () => {
+    const toggle = document.getElementById('USE_DETECTION').checked;
+    settings.LANGUAGE.USE_DETECTION = toggle;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    const inputs = document.getElementsByClassName('languageDetectionInput');
+    toggleRadio(toggle, inputs);
+    createNotification(`${toggle ? 'Enabled' : 'Disabled'} Language detection!`, 'success');
 });
 
 function toggleNotificationSounds() {
@@ -407,12 +518,12 @@ if (settings.AUDIO.NOTIFICATION_VOLUME) {
 
 document.body.querySelector('#ttsVolume').addEventListener('change', () => {
     let element = document.body.querySelector('#ttsVolume');
-    settings.TTS.TTS_VOLUME = element.value;
+    settings.AUDIO.TTS_VOLUME = element.value;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
 
     const slider = document.querySelector('#ttsVolumeSlider');
-    slider.value = settings.TTS.TTS_VOLUME;
-    slider.style.setProperty('--tiempotemporal', settings.TTS.TTS_VOLUME);
+    slider.value = settings.AUDIO.TTS_VOLUME;
+    slider.style.setProperty('--tiempotemporal', settings.AUDIO.TTS_VOLUME);
 
     createNotification('Saved TTS volume!', 'success');
 });
@@ -427,7 +538,7 @@ document.body.querySelector('#ttsVolumeSlider').addEventListener('change', () =>
     e.addEventListener('input', () => {
         e.style.setProperty('--tiempotemporal', e.value);
         document.querySelector('#ttsVolume').value = e.value;
-        settings.TTS.TTS_VOLUME = e.value;
+        settings.AUDIO.TTS_VOLUME = e.value;
         fs.writeFileSync(settingsPath, ini.stringify(settings));
     });
 });
@@ -436,8 +547,8 @@ document.body.querySelector('#ttsVolumeSlider').addEventListener('mouseup', () =
     createNotification('Saved TTS volume!', 'success');
 });
 
-if (settings.TTS.TTS_VOLUME) {
-    document.querySelector('#ttsVolumeSlider').value = settings.TTS.TTS_VOLUME;
+if (settings.AUDIO.TTS_VOLUME) {
+    document.querySelector('#ttsVolumeSlider').value = settings.AUDIO.TTS_VOLUME;
     document.querySelector('#ttsVolumeSlider').dispatchEvent(new Event('change'));
 } else {
     document.querySelector('#ttsVolumeSlider').dispatchEvent(new Event('change', { value: 50 }));
@@ -445,47 +556,37 @@ if (settings.TTS.TTS_VOLUME) {
 
 document.body.querySelector('#ttsVolume').addEventListener('change', () => {
     let element = document.body.querySelector('#ttsVolume');
-    settings.TTS.TTS_VOLUME = element.value;
+    settings.AUDIO.TTS_VOLUME = element.value;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
 
     const slider = document.querySelector('#ttsVolumeSlider');
-    slider.value = settings.TTS.TTS_VOLUME;
-    slider.style.setProperty('--tiempotemporal', settings.TTS.TTS_VOLUME);
+    slider.value = settings.AUDIO.TTS_VOLUME;
+    slider.style.setProperty('--tiempotemporal', settings.AUDIO.TTS_VOLUME);
 });
 
-document.body.querySelector('.language-selector').addEventListener('click', () => {
-    var dropdown = document.body.querySelector('.language-dropdown');
-    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+document.body.querySelector('#TestDefaultTTSButton').addEventListener('click', async () => {
+    const text = document.getElementById('testPrimaryTTS').value;
+    const requestData = {
+        message: `user: ${text}`,
+        voice: settings.TTS.PRIMARY_VOICE,
+    };
+    let count = await backend.getInternalTTSAudio(requestData);
+    let textObject = { filtered: text, formatted: text };
+    sound.playAudio({ service: 'Internal', message: textObject, count });
 });
 
-document.body.querySelector('.language-dropdown').addEventListener('mouseleave', () => {
-    hideDropdown();
+document.body.querySelector('#TestSecondaryTTSButton').addEventListener('click', async () => {
+    const text = document.getElementById('testSecondaryTTS').value;
+    const requestData = {
+        message: `user: ${text}`,
+        voice: settings.TTS.SECONDARY_VOICE,
+    };
+
+    let count = await backend.getInternalTTSAudio(requestData);
+    let textObject = { filtered: text, formatted: text };
+
+    sound.playAudio({ service: 'Internal', message: textObject, count });
 });
-
-let languageSelector = document.querySelectorAll('.language-item');
-languageSelector.forEach((item) => {
-    item.addEventListener('click', (event) => {
-        const el = event.target;
-        // tip.innerText = el.getAttribute('language');
-        document.getElementById('selected-language').innerText = el.getAttribute('language');
-        document.getElementById('selected-flag').innerText = el.getAttribute('flag');
-        hideDropdown();
-    });
-});
-
-function hideDropdown() {
-    var dropdown = document.body.querySelector('.language-dropdown');
-    dropdown.style.display = 'none';
-}
-
-// let primaryTTSSelector = document.body.querySelector(".optgroup");
-// primaryTTSSelector.forEach(item => {
-// 	item.addEventListener('hover', (event) => {
-// 		console.log(event);
-// 		// const optionsElement = document.getElementById(optgroupID);
-// 		// optionsElement.style.display = optionsElement.style.display === "none" ? "block" : "none";
-// 	});
-// });
 
 module.exports = {
     getGeneralSettings,

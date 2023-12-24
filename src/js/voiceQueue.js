@@ -1,3 +1,5 @@
+var iconv = require('iconv-lite');
+
 let SelectedVoice = '';
 let Encoding = '';
 let counter = 0;
@@ -8,7 +10,7 @@ const speak = (textObject) =>
         counter += 1;
         let savePath = path.join(resourcesPath, './sounds/tts/internal_audio_' + counter + '.mp3');
 
-        say.export(textObject.filtered, SelectedVoice, 1, savePath, (err) => {
+        say.export(iconv.encode(textObject.filtered, 'ascii'), SelectedVoice, 1, savePath, (err) => {
             if (err) {
                 console.error(err);
             } else {
