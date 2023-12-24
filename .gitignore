@@ -100,3 +100,4 @@ build/
 backend/
 language_detection_model/
 !language_detection_model/Where to get language detection model.txt
+.vscode/
