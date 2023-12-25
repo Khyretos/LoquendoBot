@@ -1,8 +1,7 @@
 #tstx {
     display: flex;
     flex-direction: row;
-    margin-top: 40px;
-    margin-left: 50px;
+    margin-left: 40px;
 }
 
 .optionrow {
@@ -50,20 +49,16 @@
     font-size: 12pt;
 }
 
-#TTSTest {
-    width: 296px;
-    height: 85px;
-}
-
 textarea {
-    font-size: 14pt;
+    height: 60px;
+    padding: 5px;
+    width: 300px;
     resize: none;
+    border-radius: 5px;
     background: var(--main-color3);
     color: var(--main-color2);
     font-family: 'xxii_avenmedium';
     border: none;
-    outline: none;
-    border-radius: 5px;
 }
 
 .SaveConfig {
@@ -73,7 +68,6 @@ textarea {
     justify-content: center;
     color: var(--main-color2);
     margin-bottom: 10px;
-    margin-top: 40px;
 }
 
 .SmallButton {
@@ -129,7 +123,39 @@ textarea {
 }
 
 .AdvancedMenuIcon {
-    /* filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(350deg) brightness(104%) contrast(101%); */
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(350deg) brightness(104%) contrast(101%);
     align-items: flex-start;
     margin: auto;
+    height: 24px;
+    width: 24px;
+}
+
+.AdvancedMenuIcon2 {
+    align-items: flex-start;
+    margin: auto;
+    height: 24px;
+    width: 24px;
+}
+
+input:hover {
+    filter: brightness(120%);
+}
+
+select:hover {
+    filter: brightness(120%);
+}
+
+textarea:hover {
+    filter: brightness(120%);
+}
+
+label:hover {
+    filter: brightness(120%);
+}
+
+.circle-right:hover {
+    filter: brightness(120%);
+}
+.circle-left:hover {
+    filter: brightness(120%);
 }

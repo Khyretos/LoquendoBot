@@ -73,8 +73,6 @@ fetch(path.join(__dirname, '../logs/activity.log'))
             tableBody.appendChild(row);
         });
     })
-    .catch((error) => {
-        // console.error('Error fetching log file:', error);
-    });
+    .catch((error) => {});
 
 module.exports = logger;

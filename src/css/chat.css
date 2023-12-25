@@ -1,6 +1,5 @@
 @font-face {
     font-family: 'FRAMDCN';
-
 }
 
 h1 {
@@ -45,7 +44,7 @@ h1 {
     border-bottom-right-radius: 2px;
     max-width: 80%;
     margin-right: 10px;
-    animation: floatup .5s forwards;
+    animation: floatup 0.5s forwards;
 }
 
 .botText {
@@ -65,13 +64,13 @@ h1 {
     border-bottom-left-radius: 2px;
     max-width: 80%;
     margin-left: 10px;
-    animation: floatup .5s forwards
+    animation: floatup 0.5s forwards;
 }
 
 @keyframes floatup {
     from {
         transform: translateY(14px);
-        opacity: .0;
+        opacity: 0;
     }
 
     to {
@@ -80,7 +79,7 @@ h1 {
     }
 }
 
-@media screen and (max-width:600px) {
+@media screen and (max-width: 600px) {
     .full-chat-block {
         width: 100%;
         border-radius: 0px;
@@ -159,44 +158,38 @@ h1 {
     margin: 10px;
 }
 
-.chat-input input[good]+button {
-    box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
+.chat-input input[good] + button {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
 }
 
-.chat-input input[good]+button:hover {
+.chat-input input[good] + button:hover {
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     /* filter: brightness(150%); */
 }
 
-.chat-input input[good]+button path {
+.chat-input input[good] + button path {
     fill: var(--chat-bubble-message);
 }
 
 .msg-container {
-    position: relative;
+    position: static;
     display: inline-block;
     width: 100%;
-    margin: 0 0 10px 0;
-    padding: 0;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 10px 0px;
 }
 
 .msg-box {
-    display: flex;
     background: var(--chat-bubble);
-    padding: 5px 5px 5px 5px;
-    border-radius: 6px 6px 6px 6px;
-    margin-left: -20px;
-    margin-right: 10px;
-    margin-top: 10px;
-    max-width: 80%;
-    width: auto;
-    float: left;
-    word-wrap: break-word;
-    box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
+    color: white;
+    border-radius: 5px;
+    padding: 20px 5px 5px 25px;
+    margin: 20px 0px 0px 25px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+    width: fit-content;
 }
 
 .msg-box-user {
-    display: flex;
     background: var(--chat-bubble);
     padding: 5px 5px 5px 5px;
     border-radius: 6px 6px 6px 6px;
@@ -206,7 +199,7 @@ h1 {
     width: auto;
     float: right;
     word-wrap: break-word;
-    box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
 }
 
 .msg-box-user-temp {
@@ -216,9 +209,8 @@ h1 {
 .user-img {
     display: inline-block;
     border-radius: 50%;
-    height: 40px;
-    width: 40px;
-    margin: 0 10px 10px 0;
+    height: 50px;
+    width: 50px;
 }
 
 .user-img-user {
@@ -229,45 +221,33 @@ h1 {
     margin: 0 0px 10px 10px;
 }
 
-.flr {
-    flex: 1 0 auto;
-    display: flex;
-    flex-direction: column;
-    width: calc(100% - 50px);
-}
-
 .messages {
     margin-left: 20px;
-    min-width: 200px;
 }
 
 .messages-user {
     margin-right: 20px;
-    min-width: 200px;
 }
 
 .msg {
-    font-size: 11pt;
-    line-height: 13pt;
+    font-size: 12pt;
     color: var(--chat-bubble-message);
-    margin: 0 0 4px 0;
-    display: flex;
-    align-items: self-end;
+    margin: 0 0 0 0;
 }
 
 .msg-temp {
     color: var(--chat-bubble-message-temp);
 }
 
-.msg:first-of-type {
+/* .msg:first-of-type {
     margin-top: 8px;
-}
+} */
 
 .timestamp {
     color: var(--chat-bubble-header);
     font-size: 10pt;
     align-items: center;
-    font-family: "xxii_avenmedium";
+    font-family: 'xxii_avenmedium';
 }
 
 .timestamp-temp {
@@ -277,7 +257,14 @@ h1 {
 .username {
     float: left;
     color: var(--chat-bubble-header);
-    font-weight: bold;
+    background-color: var(--main-color4);
+    margin-left: 25px;
+    color: white;
+    position: relative;
+    z-index: 2;
+    padding: 5px 5px 5px 30px;
+    border-radius: 5px;
+    top: 10px;
 }
 
 .username-temp {
@@ -286,7 +273,9 @@ h1 {
 
 .post-time {
     float: right;
-    font-weight: bold;
+    font-size: 8pt;
+    padding: 10px 0px 0px 5px;
+    display: inline-block;
 }
 
 .msg-self .msg-box {
@@ -311,10 +300,11 @@ h1 {
 .icon-container {
     width: 50px;
     height: 50px;
-    position: relative;
+    position: absolute;
     float: left;
     display: flex;
     align-items: center;
+    z-index: 3;
 }
 
 .icon-container-user {
@@ -324,6 +314,7 @@ h1 {
     float: right;
     display: flex;
     align-items: center;
+    z-index: 3;
 }
 
 .img {
@@ -336,10 +327,8 @@ h1 {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    bottom: 0;
-    right: 0;
-    margin-left: -20px;
-    margin-top: 10px;
+    margin-left: -15px;
+    margin-top: -30px;
 }
 
 .status-circle-user {
@@ -353,17 +342,53 @@ h1 {
 }
 
 select {
+}
+
+.menu-select {
+    font-size: 0.9rem;
+    height: 40px;
+    border-radius: 20px;
+    background-color: var(--main-color3);
+    color: var(--main-color2);
+    align-items: center;
+    border: 0px;
+    padding-left: 10px;
+    width: 300px;
     font-size: 100%;
     padding: 10px;
-    padding-right: 40px;
+    padding-right: 25px;
     outline: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: transparent;
     background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='34' viewBox='0 0 24 24' width='32' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     background-repeat: no-repeat;
-    background-position-x: 95%;
+    background-position-x: 100%;
     background-position-y: 5px;
+}
+
+.top-select {
+    width: auto;
+    height: 24px;
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+    color: white;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+}
+
+.info-image {
+    width: 50px;
+    height: 50px;
+}
+
+.top-select option {
+    margin: 40px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    background-color: var(--top-bar);
 }
 
 .AdvancedMenu {
@@ -394,11 +419,17 @@ select {
     font-size: 10pt;
     padding-right: 5px;
     margin-left: 10px;
-    width: 125px
+    width: 125px;
 }
 
 .AdvancedMenuLabel2 {
     font-size: 10pt;
+    padding-right: 5px;
+    margin-left: 10px;
+}
+
+.AdvancedMenuLabel3 {
+    font-size: 12pt;
     padding-right: 5px;
     margin-left: 10px;
 }
@@ -416,7 +447,6 @@ select {
     border-radius: 20px;
 }
 
-
 /* After slide changes */
 
 .toggle:after {
@@ -430,20 +460,17 @@ select {
     top: 5px;
 }
 
-
 /* Checkbox checked effect */
 
-.checkbox:checked+.toggle::after {
+.checkbox:checked + .toggle::after {
     left: 25px;
 }
 
-
 /* Checkbox checked toggle label bg color */
 
-.checkbox:checked+.toggle {
+.checkbox:checked + .toggle {
     background-color: var(--main-color1);
 }
-
 
 /* Checkbox vanished */
 
@@ -451,9 +478,7 @@ select {
     display: none;
 }
 
-
 /* Small toggle */
-
 
 /* toggle in label designing */
 
@@ -464,8 +489,8 @@ select {
     height: 20px;
     background-color: var(--main-color3);
     border-radius: 10px;
+    margin-left: 10px;
 }
-
 
 /* After slide changes */
 
@@ -480,16 +505,14 @@ select {
     top: 2px;
 }
 
-
 /* Checkbox checked effect */
 
-.checkbox:checked+.toggle-small::after {
+.checkbox:checked + .toggle-small::after {
     left: 13px;
 }
 
-
 /* Checkbox checked toggle label bg color */
 
-.checkbox:checked+.toggle-small {
+.checkbox:checked + .toggle-small {
     background-color: var(--main-color1);
 }

@@ -1,14 +1,14 @@
 {
     "name": "loquendo-bot",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Bot assistant for streamers over different platforms",
     "main": "src/main.js",
     "scripts": {
         "start": "electron-forge start",
-        "package": "electron-forge package",
+        "package": "npm run backend && electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",
-        "lint": "echo \"No linting configured\""
+        "backend": "pyinstaller --noconsole --onefile --collect-all vosk --distpath ./backend ./src/backend/loquendoBot_backend.py"
     },
     "keywords": [],
     "author": {
@@ -20,18 +20,11 @@
         "axios": "^1.4.0",
         "electron-squirrel-startup": "^1.0.0",
         "express": "^4.18.2",
-        "franc": "^6.1.0",
-        "i18next-electron-language-detector": "^0.0.10",
         "ini": "^2.0.0",
-        "kill-port": "^2.0.1",
-        "langdetect": "^0.2.1",
         "node-google-tts-api": "^1.1.1",
         "querystring": "^0.2.1",
-        "request": "^2.88.2",
-        "say": "^0.16.0",
         "socket.io": "^4.7.1",
         "socket.io-client": "^4.7.1",
-        "sound-play": "^1.1.0",
         "tmi.js": "^1.8.5",
         "url": "^0.11.1",
         "winston": "^3.10.0",
@@ -44,6 +37,6 @@
         "@electron-forge/maker-squirrel": "^6.2.1",
         "@electron-forge/maker-zip": "^6.2.1",
         "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
-        "electron": "25.4.0"
+        "electron": "^25.9.8"
     }
 }

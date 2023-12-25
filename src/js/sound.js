@@ -3,15 +3,22 @@ let currentLogoUrl = '';
 let currentUsername = '';
 let voiceSoundArray = [];
 let status = 0;
+let counter = 0;
 
-const playTTS = (ttsData) =>
+const playTTS = (data) =>
     new Promise((resolve) => {
-        const tts = new Audio(ttsData.path);
+        ttsAudioFile = path.join(resourcesPath, `./sounds/tts/${data.service}_${data.count}.mp3`);
+        const tts = new Audio(ttsAudioFile);
+        console.log(settings.AUDIO.TTS_AUDIO_DEVICE);
+        tts.setSinkId(settings.AUDIO.TTS_AUDIO_DEVICE);
 
         tts.addEventListener('ended', () => {
-            fs.unlink(ttsData.path, (err) => {
+            console.log('ended');
+            fs.unlink(ttsAudioFile, (err) => {
                 if (err) {
-                    console.error(err);
+                    console.error('TEST');
+
+                    resolve('finished');
                     return;
                 }
                 resolve('finished');
@@ -20,15 +27,15 @@ const playTTS = (ttsData) =>
 
         tts.setSinkId(settings.AUDIO.TTS_AUDIO_DEVICE)
             .then(() => {
-                tts.volume = settings.TTS.TTS_VOLUME / 100;
-                tts.play();
-
-                if (settings.SERVER.USE_SERVER) {
-                    socket.emit('xxx', currentLogoUrl, currentUsername, ttsData.message);
-                }
+                console.log('playing');
+                tts.volume = settings.AUDIO.TTS_VOLUME / 100;
+                tts.play().catch((error) => {
+                    resolve('finished');
+                });
             })
             .catch((error) => {
                 console.error('Failed to set audio output device:', error);
+                resolve('finished');
             });
     });
 
@@ -40,8 +47,8 @@ async function shiftVoice() {
     status = 0;
 }
 
-function add(ttsData) {
-    voiceSoundArray.push(ttsData);
+function add(data) {
+    voiceSoundArray.push(data);
     if (status === 0) {
         shiftVoice();
     }
@@ -59,37 +66,55 @@ function playNotificationSound() {
 
 // Play sound function
 function playAudio(data) {
-    if (settings.TTS.USE_TTS) {
+    if (data.service !== '') {
         add(data);
-    } else if (settings.SERVER.USE_SERVER && settings.SERVER.USE_CHATBUBBLE) {
-        socket.emit('xxx', currentLogoUrl, currentUsername, data);
     }
 }
 
-function playVoice(filteredMessage, logoUrl, username, message) {
+async function playVoice(filteredMessage, logoUrl, username, message) {
     trueMessage = filteredMessage;
     currentLogoUrl = logoUrl;
     currentUsername = username;
     let textObject = { filtered: filteredMessage, formatted: message };
     let voice;
-    const language = langdetect.detect(filteredMessage);
+    textObject.filtered = `${username}: ${filteredMessage}`;
 
-    if (
-        settings.TTS.PRIMARY_TTS_LANGUAGE.toLowerCase() !== settings.TTS.SECONDARY_TTS_LANGUAGE.toLowerCase() ||
-        language[0].lang === settings.TTS.SECONDARY_TTS_LANGUAGE.toLowerCase()
-    ) {
-        voice = settings.TTS.SECONDARY_TTS_NAME;
-        textObject.filtered = `${username}: ${filteredMessage}`;
-    } else {
-        voice = settings.TTS.PRIMARY_TTS_NAME;
-        textObject.filtered = `${username}: ${filteredMessage}`;
+    // if (
+    //     settings.TTS.PRIMARY_TTS_LANGUAGE.toLowerCase() !== settings.TTS.SECONDARY_TTS_LANGUAGE.toLowerCase() &&
+    //     language[0].lang === settings.TTS.SECONDARY_TTS_LANGUAGE.toLowerCase()
+    // ) {
+    //     voice = settings.TTS.SECONDARY_TTS_NAME;
+    //     textObject.filtered = `${username}: ${filteredMessage}`;
+    // } else {
+    //     voice = settings.TTS.PRIMARY_TTS_NAME;
+    //     textObject.filtered = `${username}: ${filteredMessage}`;
+    // }
+
+    const service = document.getElementById('primaryTTSService').value;
+
+    switch (service) {
+        case 'Internal':
+            const requestData = {
+                message: textObject.filtered,
+                voice: settings.TTS.PRIMARY_VOICE,
+            };
+
+            let count = await backend.getInternalTTSAudio(requestData);
+            playAudio({ service, message: textObject, count });
+            break;
+        case 'Amazon':
+            // playAudio({ service: 'Amazon', message: textObject, count });
+            break;
+        case 'Google':
+            // playAudio({ service: 'Google', message: textObject, count });
+            break;
     }
 
-    if (settings.TTS.USE_TTS) {
-        talk.add(textObject, voice);
-    } else {
-        playNotificationSound();
+    if (settings.MODULES.USE_CHATBUBBLE) {
+        socket.emit('xxx', currentLogoUrl, currentUsername, textObject);
     }
+
+    playNotificationSound();
 }
 
 module.exports = { playAudio, playVoice, playNotificationSound };

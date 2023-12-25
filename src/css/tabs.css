@@ -191,21 +191,9 @@ input:checked + label {
     height: 32 px;
 }
 
-select {
-    font-size: 0.9rem;
-    height: 40px;
-    border-radius: 20px;
-    background-color: var(--main-color3);
-    color: var(--main-color2);
-    align-items: center;
-    border: 0px;
-    padding-left: 20px;
-    width: 300px;
-}
-
 .language {
     width: 80px;
-    margin-left: 10px;
+    text-align: center;
 }
 
 #AdvancedMenu_mask {
@@ -304,7 +292,7 @@ input[type='lol'] {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    left: 425px;
+    left: 450px;
 }
 
 /* Hide the default appearance of the button */
@@ -315,19 +303,17 @@ input[type='lol'] {
 /* Style the reveal icon (you can use your preferred icon or font) */
 .password-toggle-icon {
     font-size: 16px;
-    color: #555;
+    color: var(--main-color2);
 }
 
 #toasts {
-    position: fixed;
+    position: absolute;
     bottom: 20px;
     /* Adjust the distance from the bottom of the screen */
-    right: 50%;
+    right: 0%;
     /* Center the toasts horizontally */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    /* Center the toasts horizontally */
     z-index: 999;
 }
 

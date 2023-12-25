@@ -1,21 +1,14 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const http = require('http');
+const localServer = http.createServer(app);
+const io = require('socket.io')(localServer);
 
-if (!settings.SERVER.USE_SERVER) {
-    return;
-}
+let requestCount = 0;
 
-const PORT = settings.SERVER.PORT;
-
-let isVtuberEnabled = true;
-let isChatBubbleEnabled = true;
-
-function startVtuber() {
-    if (!settings.SERVER.USE_VTUBER) {
-        isVtuberEnabled = false;
+function startVtuberModule() {
+    if (!settings.MODULES.USE_VTUBER) {
         return;
     }
 
@@ -24,16 +17,17 @@ function startVtuber() {
     let vtuber = document.body.querySelector('#BrowsersourceVtuber');
     let vtuberframe = document.createElement('iframe');
     vtuberframe.class = 'frame';
-    vtuberframe.src = `http://localhost:${PORT}/vtuber`;
+    vtuberframe.src = `http://localhost:${settings.GENERAL.PORT}/vtuber`;
     vtuberframe.style.width = '100%';
     vtuberframe.style.height = '100%';
     vtuberframe.frameBorder = 0;
     vtuber.appendChild(vtuberframe);
 }
 
-function startChatBubble() {
-    if (!settings.SERVER.USE_CHATBUBBLE) {
-        isChatBubbleEnabled = false;
+startVtuberModule();
+
+function startChatBubbleModule() {
+    if (!settings.MODULES.USE_CHATBUBBLE) {
         return;
     }
 
@@ -42,27 +36,34 @@ function startChatBubble() {
     let chat = document.body.querySelector('#BrowsersourceChat');
     let chatframe = document.createElement('iframe');
     chatframe.class = 'frame';
-    chatframe.src = `http://localhost:${PORT}/chat`;
+    chatframe.src = `http://localhost:${settings.GENERAL.PORT}/chat`;
     chatframe.style.width = '100%';
     chatframe.style.height = '100%';
     chatframe.frameBorder = 0;
     chat.appendChild(chatframe);
 }
 
+startChatBubbleModule();
+
+function startSTT() {}
+
 // Middleware to conditionally serve routes
 app.use((req, res, next) => {
-    if (!isVtuberEnabled && req.path === '/vtuber') {
+    if (!settings.MODULES.USE_VTUBER && req.path === '/vtuber') {
         res.sendStatus(404); // Return a 404 status for /vtuber when it's disabled
-    } else if (!isChatBubbleEnabled && req.path === '/chat') {
+    } else if (!settings.MODULES.USE_CHATBUBBLE && req.path === '/chat') {
         res.sendStatus(404); // Return a 404 status for /chat when it's disabled
     } else {
         next(); // Proceed to the next middleware or route handler
     }
 });
 
-http.listen(PORT, () => {
-    startVtuber();
-    startChatBubble();
+localServer.listen(settings.GENERAL.PORT, () => {
+    startVtuberModule();
+    startChatBubbleModule();
+
+    if (settings.TTS.USE_TTS) {
+    }
 });
 
 // Handle socket connections
@@ -78,4 +79,4 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {});
 });
 
-module.exports = { startVtuber, startChatBubble };
+module.exports = { startVtuberModule, startChatBubbleModule };

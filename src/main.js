@@ -1,6 +1,7 @@
-const { app, shell, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { writeIniFile } = require('write-ini-file');
 const path = require('path');
+const http = require('http');
 
 const ini = require('ini');
 const fs = require('fs');
@@ -13,9 +14,11 @@ let window;
 
 if (app.isPackaged) {
     settingsPath = path.join(process.resourcesPath, './settings.ini');
+    pythonPath = path.join(process.resourcesPath, './backend');
     resourcesPath = process.resourcesPath;
 } else {
     settingsPath = path.join(resourcesPath, './config/settings.ini');
+    pythonPath = path.join(resourcesPath, './backend');
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -32,11 +35,11 @@ async function createWindow() {
     }
 
     window = new BrowserWindow({
-        icon: path.join(__dirname, '/images/icon.png'),
-        width: parseInt(settings.SETTINGS.WIDTH),
-        height: parseInt(settings.SETTINGS.HEIGHT),
-        x: parseInt(settings.SETTINGS.POSITION_X),
-        y: parseInt(settings.SETTINGS.POSITION_Y),
+        icon: path.join(__dirname, '/images/icon-512.png'),
+        width: parseInt(settings.GENERAL.WIDTH),
+        height: parseInt(settings.GENERAL.HEIGHT),
+        x: parseInt(settings.GENERAL.POSITION_X),
+        y: parseInt(settings.GENERAL.POSITION_Y),
         frame: false,
         webPreferences: {
             nodeIntegration: true,
@@ -44,7 +47,6 @@ async function createWindow() {
             enableRemoteModule: true,
         },
     });
-    window.loadURL('https://github.com');
 
     window.loadFile(path.join(__dirname, 'index.html'));
 
@@ -56,10 +58,10 @@ async function createWindow() {
         settings = ini.parse(fs.readFileSync(settingsPath, 'utf-8')); // load newest settings in case anything changed after starting the program
         const bounds = window.getBounds();
 
-        settings.SETTINGS.WIDTH = bounds.width;
-        settings.SETTINGS.HEIGHT = bounds.height;
-        settings.SETTINGS.POSITION_X = bounds.x;
-        settings.SETTINGS.POSITION_Y = bounds.y;
+        settings.GENERAL.WIDTH = bounds.width;
+        settings.GENERAL.HEIGHT = bounds.height;
+        settings.GENERAL.POSITION_X = bounds.x;
+        settings.GENERAL.POSITION_Y = bounds.y;
 
         fs.writeFileSync(settingsPath, ini.stringify(settings));
     });
@@ -76,11 +78,13 @@ app.on('window-all-closed', (event) => {
 });
 
 app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
+});
+
+app.on('before-quit', () => {
+    window.webContents.send('quit-event');
 });
 
 ipcMain.on('resize-window', (event, width, height) => {
@@ -114,99 +118,12 @@ ipcMain.on('restart', (event) => {
 });
 
 ipcMain.on('environment', (event) => {
-    event.returnValue = { resourcesPath: resourcesPath, settingsPath: settingsPath, settings: settings, isPackaged: app.isPackaged };
-});
-
-let twitchAuthentication = () =>
-    new Promise((resolve) => {
-        const http = require('http');
-        const redirectUri = 'http://localhost:1989/auth';
-        const scopes = ['chat:edit', 'chat:read'];
-
-        const express = require('express');
-        let tempAuthServer = express();
-        const port = 1989;
-
-        const { parse: parseQueryString } = require('querystring');
-
-        tempAuthServer.use(function (req, res, next) {
-            if (req.url !== '/auth') {
-                let token = parseQueryString(req.query.auth);
-                settings.TWITCH.OAUTH_TOKEN = token['#access_token'];
-                fs.writeFileSync(settingsPath, ini.stringify(settings));
-                settings = ini.parse(fs.readFileSync(settingsPath, 'utf-8'));
-                resolve('finished');
-                stopServer();
-            }
-            next();
-        });
-
-        function stopServer() {
-            tempAuthServer.close();
-        }
-
-        const htmlString = `
-	  <!DOCTYPE html>
-	  <html>
-	    <head>
-	      <title>Authentication</title>
-	    </head>
-	    <body>
-	      <h1>Authentication successful! You can close this window now.</h1>
-			  <form name="auth" "action="auth" method="get" >
-			    <input type="text" id="auth" name="auth"/>
-			    <input type="submit" />
-			</form>
-	    </body>
-	  </html>
-	  <script>
-	  function onSubmitComplete() {
-		  		  close();
-		}
-		  document.querySelector("#auth").value = document.location.hash;
-		  document.auth.submit();
-		  setTimeout(onSubmitComplete, 500); 
-	  </script>
-	`;
-
-        tempAuthServer.get('/auth', (req, res) => {
-            res.send(htmlString);
-        });
-
-        tempAuthServer.post('/auth', (req, res) => {
-            res.render('authentication', { name: req.body.name });
-        });
-
-        const server = http.createServer(tempAuthServer);
-
-        server.listen(port, () => {
-            const authURL = `https://id.twitch.tv/oauth2/authorize?client_id=${settings.TWITCH.CLIENT_ID}&redirect_uri=${encodeURIComponent(
-                redirectUri,
-            )}&response_type=token&scope=${scopes.join(' ')}`;
-            shell.openExternal(authURL);
-        });
-
-        function stopServer() {
-            server.close(() => {});
-        }
-    });
-
-ipcMain.on('twitch', async (event) => {
-    await twitchAuthentication();
-    event.returnValue = settings.TWITCH.OAUTH_TOKEN;
-});
-
-ipcMain.on('vtuber', async (event) => {
-    shell.openExternal(`http://localhost:${settings.SERVER.PORT}/vtuber/`);
-});
-
-ipcMain.on('chatBubble', async (event) => {
-    shell.openExternal(`http://localhost:${settings.SERVER.PORT}/chat/`);
+    event.returnValue = { resourcesPath, pythonPath, settingsPath, settings, isPackaged: app.isPackaged };
 });
 
 async function createIniFile() {
     await writeIniFile(settingsPath, {
-        SETTINGS: {
+        GENERAL: {
             VOICE_ENABLED: true,
             NOTIFICATION_ENABLED: true,
             POSITION_X: 0,
@@ -214,18 +131,26 @@ async function createIniFile() {
             WIDTH: 1024,
             HEIGHT: 768,
             LANGUAGE: 'EN',
+            PORT: 9000,
+            VIEWERS_PANEL: false,
+            LOCATION: pythonPath,
+        },
+        LANGUAGE: {
+            USE_DETECTION: false,
         },
         TTS: {
             USE_TTS: true,
-            PRIMARY_TTS_VOICE: 0,
-            PRIMARY_TTS_NAME: '',
+            PRIMARY_VOICE: '',
             PRIMARY_TTS_LANGUAGE: 'EN',
-            PRIMARY_TTS_LANGUAGE_INDEX: 0,
-            SECONDARY_TTS_VOICE: 0,
-            SECONDARY_TTS_NAME: '',
+            SECONDARY_VOICE: '',
             SECONDARY_TTS_LANGUAGE: 'EN',
-            SECONDARY_TTS_LANGUAGE_INDEX: 0,
-            TTS_VOLUME: 50,
+        },
+        STT: {
+            USE_STT: false,
+            MICROPHONE_ID: 'default',
+            SELECTED_MICROPHONE: 'default',
+            MICROPHONE: 0,
+            LANGUAGE: 'vosk-model-small-es-0.42',
         },
         AUDIO: {
             USE_NOTIFICATION_SOUNDS: true,
@@ -234,6 +159,7 @@ async function createIniFile() {
             NOTIFICATION_VOLUME: 50,
             SELECTED_TTS_AUDIO_DEVICE: 0,
             TTS_AUDIO_DEVICE: 'default',
+            TTS_VOLUME: 50,
         },
         THEME: {
             USE_CUSTOM_THEME: false,
@@ -254,20 +180,25 @@ async function createIniFile() {
             OAUTH_TOKEN: '',
             CLIENT_ID: '2t206sj7rvtr1rutob3p627d13jch9',
         },
-        SERVER: {
-            USE_SERVER: false,
-            PORT: '9000',
+        MODULES: {
+            USE_MODULES: false,
             USE_VTUBER: false,
             USE_CHATBUBBLE: false,
         },
         AMAZON: {
-            USE_TWITCH: false,
+            USE_AMAZON: false,
             ACCESS_KEY: '',
             ACCESS_SECRET: '',
+            PRIMARY_VOICE: '',
+            SECONDARY_VOICE: '',
+            CHARACTERS_USED: 0,
         },
         GOOGLE: {
             USE_GOOGLE: false,
             API_KEY: '',
+            PRIMARY_VOICE: '',
+            SECONDARY_VOICE: '',
+            CHARACTERS_USED: 0,
         },
     }).then(() => {
         settings = ini.parse(fs.readFileSync(settingsPath, 'utf-8'));

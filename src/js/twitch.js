@@ -54,27 +54,23 @@ function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage
         usernameHtml.innerText = username;
     }
 
-    const postTime = article.querySelector('.post-time');
+    const postTime = document.createElement('span');
+    postTime.classList.add('post-time');
+
     if (postTime) {
         postTime.innerText = getPostTime();
     }
 
-    const msg = article.querySelector('.msg');
+    const msg = article.querySelector('.msg-box');
     if (msg) {
-        msg.innerHTML = '';
-
-        const messageElement = document.createElement('div');
-
         messageObject.forEach((entry) => {
-            const messageElement = document.createElement('div');
             if (entry.text) {
-                messageElement.innerText = entry.text;
-                msg.appendChild(messageElement);
+                msg.innerHTML += entry.text;
             } else {
-                messageElement.innerHTML = entry.html;
-                msg.appendChild(messageElement);
+                msg.innerHTML += entry.html;
             }
         });
+        msg.appendChild(postTime);
     }
 
     // Appends the message to the main chat box (shows the message)

@@ -1,4 +1,3 @@
-
 // Connect to the Socket.IO server
 const socket = io();
 
@@ -34,11 +33,11 @@ let fullMessageLength = 0;
 
 function getFullMessageLength(text) {
     let fullMessageLength = 0;
-    text.forEach(element => {
+    text.forEach((element) => {
         if (element.text) {
             fullMessageLength += element.text.length;
         }
-        element.html
+        element.html;
         fullMessageLength += 1;
     });
 
@@ -53,7 +52,6 @@ function streamText() {
     //     setTimeout(streamText, 50);
     // }
     if (currentIndex < messageStream.length) {
-
         textStreamContainer.innerHTML += messageStream.charAt(currentIndex);
         currentIndex++;
         setTimeout(streamText, 50);
@@ -88,7 +86,7 @@ function displayTwitchMessage(logoUrl, username, messageObject) {
     article.innerHTML = placeMessage;
     const msg = article.querySelector('.message');
 
-    msg.innerHTML = `<div class="sender">${username}</div>`//\n${message}`;
+    msg.innerHTML = `<div class="sender">${username}</div>`; //\n${message}`;
 
     msg.style.fontSize = '12pt';
 
