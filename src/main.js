@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { writeIniFile } = require('write-ini-file');
 const path = require('path');
 const http = require('http');
+const kill = require('kill-process-by-name');
 
 const ini = require('ini');
 const fs = require('fs');
@@ -109,6 +110,7 @@ ipcMain.on('maximize-window', (event) => {
 
 ipcMain.on('close-window', (event) => {
     const browserWindow = BrowserWindow.fromWebContents(event.sender);
+    kill('loquendoBot_backend');
     browserWindow.close();
     app.quit();
 });

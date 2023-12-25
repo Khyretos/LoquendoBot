@@ -32,11 +32,11 @@ SetLogLevel(-1)
 settings = configparser.ConfigParser()
 app = Flask(__name__)
 
+if len(sys.argv) > 1:
+    settingsPath = os.path.normpath(sys.argv[1])
+    environment = sys.argv[2]
 
-settingsPath = os.path.normpath(sys.argv[1])
-environment = sys.argv[2]
 q = queue.Queue()
-
 
 # gobal functions
 
@@ -79,7 +79,7 @@ class STT:
     def __init__(self):
         settings.read(settingsPath)
         device_info = sd.query_devices(int(settings["STT"]["MICROPHONE"]), "input")
-        self.samplerate = int(device_info["default_samplerate"])        
+        self.samplerate = int(device_info["default_samplerate"])
 
         if environment == "dev":
             settings_folder = os.path.dirname(settingsPath)
@@ -277,3 +277,4 @@ if __name__ == "__main__":
         stream_recognition()
 
     app.run(host="127.0.0.1", port=port)
+    app.terminate()
