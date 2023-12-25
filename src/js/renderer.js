@@ -3,7 +3,6 @@ const ini = require('ini');
 const path = require('path'); // get directory path
 
 const { ipcRenderer, shell } = require('electron'); // necessary electron libraries to send data to the app
-const say = require('say');
 const io = require('socket.io-client');
 
 const util = require('util');
@@ -101,20 +100,23 @@ fs.readdir(notificationSounds, (err, files) => {
 
 // Check for installed stt models
 fs.readdir(sttModels, (err, files) => {
-    files.forEach((file, i) => {
+    for (let file of files) {
+        if (file.includes('.txt')) {
+            continue;
+        }
         // Create a new option element.
         const option = document.createElement('option');
 
         // Set the options value and text.
-        option.value = i;
+        option.value = file;
         option.innerHTML = file;
 
         // Add the option to the sound selector.
         sttModel.appendChild(option);
-    });
+    }
 
     // set the saved notification sound
-    sttModel.selectedIndex = settings.AUDIO.NOTIFICATION_SOUND;
+    sttModel.value = settings.STT.LANGUAGE;
 });
 
 async function getAudioDevices() {

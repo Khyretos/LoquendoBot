@@ -80,11 +80,18 @@ document.body.querySelector('#primaryVoice').addEventListener('change', () => {
 
 document.body.querySelector('#microphone').addEventListener('change', () => {
     var select = document.querySelector('#microphone');
-    settings.STT.MICROPHONE = select.selectedIndex;
+    settings.STT.MICROPHONE = select.value;
     settings.STT.MICROPHONE_ID = select.options[select.selectedIndex].text;
     fs.writeFileSync(settingsPath, ini.stringify(settings));
     createNotification('Saved microphone!', 'success');
     startVoiceRecognition();
+});
+
+document.body.querySelector('#sttModel').addEventListener('change', () => {
+    var select = document.querySelector('#sttModel');
+    settings.STT.LANGUAGE = select.value;
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
+    createNotification('Saved voice detection language!', 'success');
 });
 
 document.body.querySelector('#defaultLanguage').addEventListener('change', () => {

@@ -2,7 +2,7 @@ module.exports = {
     packagerConfig: {
         icon: './src/images/icon.ico',
         asar: true,
-        extraResource: ['./src/config/loquendo.db', './src/sounds', './backend', './speech_to_text_models'],
+        extraResource: ['./src/config/loquendo.db', './src/sounds', './backend', './language_detection_model', './speech_to_text_models'],
     },
     rebuildConfig: {},
     makers: [

@@ -100,5 +100,8 @@ language_detection_model/*
 !language_detection_model/Where to get language detection model.txt
 .vscode/
 package-lock.json
-src/backend/loquendoBot_backend.exe
 src/sounds/tts/*
+loquendoBot_backend.spec
+forge.config.js
+backend/*
+src/backend/loquendoBot_backend.exe

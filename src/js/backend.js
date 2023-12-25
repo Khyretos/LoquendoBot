@@ -55,7 +55,7 @@ async function getBackendServerStatus() {
     }
 }
 
-function getSTT() {
+function startSTT() {
     const eventSource = new EventSource('http://127.0.0.1:9000/stream');
 
     eventSource.addEventListener('message', (event) => {
@@ -134,7 +134,9 @@ async function initiateBackend() {
         createBackendServer().then(() => {
             getBackendServerStatus();
             getInstalledVoices();
-            getSTT();
+            if (settings.STT.USE_STT) {
+                startSTT();
+            }
         });
     } catch (error) {
         console.error('Error during backend initialization:', error);

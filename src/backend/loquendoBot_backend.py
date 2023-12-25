@@ -33,8 +33,8 @@ settings = configparser.ConfigParser()
 app = Flask(__name__)
 
 
-settingsPath = ""
-environment = ""
+settingsPath = os.path.normpath(sys.argv[1])
+environment = sys.argv[2]
 q = queue.Queue()
 
 
@@ -45,10 +45,23 @@ q = queue.Queue()
 
 class LanguageDetection:
     def __init__(self):
-        pretrained_lang_model = (
-            r"C:\repos\LoquendoBotV2\language_detection_model\lid.176.bin"
+        if environment == "dev":
+            settings_folder = os.path.dirname(settingsPath)
+            src_folder = os.path.dirname(settings_folder)
+            main_folder = os.path.dirname(src_folder)
+            language_detection_model = os.path.join(
+                main_folder, "language_detection_model", f"lid.176.bin"
+            )
+        else:
+            resources_folder = os.path.dirname(settingsPath)
+            language_detection_model = os.path.join(
+                resources_folder, "language_detection_model", f"lid.176.bin"
+            )
+            
+        language_detection_model = (
+            rf"{language_detection_model}"
         )
-        self.model = fasttext.load_model(pretrained_lang_model)
+        self.model = fasttext.load_model(language_detection_model)
 
     def predict_lang(self, text):
         predictions = self.model.predict(text, k=5)  # returns top 2 matching languages
@@ -58,17 +71,31 @@ class LanguageDetection:
 
         return language_codes
 
-
 class STT:
     samplerate = None
     args = ""
     remaining = ""
 
     def __init__(self):
-        device_info = sd.query_devices(0, "input")
-        self.samplerate = int(device_info["default_samplerate"])
+        settings.read(settingsPath)
+        device_info = sd.query_devices(int(settings["STT"]["MICROPHONE"]), "input")
+        self.samplerate = int(device_info["default_samplerate"])        
+
+        if environment == "dev":
+            settings_folder = os.path.dirname(settingsPath)
+            src_folder = os.path.dirname(settings_folder)
+            main_folder = os.path.dirname(src_folder)
+            vosk_model = os.path.join(
+                main_folder, "speech_to_text_models", settings["STT"]["LANGUAGE"]
+            )
+        else:
+            resources_folder = os.path.dirname(settingsPath)
+            vosk_model = os.path.join(
+                resources_folder, "speech_to_text_models", settings["STT"]["LANGUAGE"]
+            )
+
         self.model = Model(
-            r"C:\repos\LoquendoBotV2\speech_to_text_models\vosk-model-small-es-0.42"
+            rf"{vosk_model}"
         )
         self.dump_fn = None
 
@@ -234,7 +261,7 @@ def get_voices():
 
 if __name__ == "__main__":
     LANGUAGE = LanguageDetection()
-    lang = LANGUAGE.predict_lang("hola")
+    lang = LANGUAGE.predict_lang("hola cómo estás")
     print(lang)
     text = "Keep it up. You are awesome"
     translated = MyMemoryTranslator(
@@ -242,8 +269,6 @@ if __name__ == "__main__":
     ).translate(text)
     print(translated)
     if len(sys.argv) > 1:
-        environment = sys.argv[2]
-        settingsPath = os.path.normpath(sys.argv[1])
         settings.read(settingsPath)
         port = int(settings["GENERAL"]["PORT"])
     else:

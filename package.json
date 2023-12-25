@@ -8,7 +8,6 @@
         "package": "npm run backend && electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",
-        "lint": "echo \"No linting configured\"",
         "backend": "pyinstaller --noconsole --onefile --collect-all vosk --distpath ./backend ./src/backend/loquendoBot_backend.py"
     },
     "keywords": [],

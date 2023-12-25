@@ -150,6 +150,7 @@ async function createIniFile() {
             MICROPHONE_ID: 'default',
             SELECTED_MICROPHONE: 'default',
             MICROPHONE: 5,
+            LANGUAGE: 'vosk-model-small-es-0.42',
         },
         AUDIO: {
             USE_NOTIFICATION_SOUNDS: true,

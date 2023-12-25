@@ -18,7 +18,17 @@ function getAvailableMediaDevices(type) {
 // Microphones
 getAvailableMediaDevices('audioinput')
     .then((microphones) => {
-        microphones.forEach((mic, i) => {
+        let i = 0;
+        let tempname = '';
+        for (let mic of microphones) {
+            if (mic.deviceId === 'default') {
+                tempname = mic.label.slice(10); // remove "default -" from the label to get the default device name.
+            }
+
+            if (mic.deviceId === 'communications' || mic.label === tempname) {
+                continue;
+            }
+
             const option = document.createElement('option');
 
             // Set the options value and text.
@@ -31,7 +41,8 @@ getAvailableMediaDevices('audioinput')
             if (i === microphones.length - 1) {
                 document.getElementById('microphone').value = settings.STT.SELECTED_MICROPHONE;
             }
-        });
+            i++;
+        }
     })
     .catch((error) => {
         console.error('Error retrieving microphones:', error);
