@@ -1,6 +1,7 @@
 const fs = require('fs');
 const ini = require('ini');
 const path = require('path'); // get directory path
+const axios = require('axios');
 
 const { ipcRenderer, shell } = require('electron'); // necessary electron libraries to send data to the app
 const io = require('socket.io-client');
@@ -195,16 +196,23 @@ Array.from(document.body.querySelectorAll('[tip]')).forEach((el) => {
     };
 });
 
-function showChatMessage(article) {
+function showChatMessage(article, isUser) {
     document.querySelector('#chatBox').appendChild(article);
+    let usernameHtml;
+    let msg;
+    let messages = Array.from(document.body.querySelectorAll('.msg-container'));
 
-    const usernameHtml = article.querySelector('.username');
+    if (isUser) {
+        usernameHtml = article.querySelector('.username-user');
+        msg = article.querySelector('.msg-box-user');
+    } else {
+        usernameHtml = article.querySelector('.username');
+        msg = article.querySelector('.msg-box');
+    }
+
     var style = getComputedStyle(usernameHtml);
     var style2 = getComputedStyle(usernameHtml);
 
-    const msg = article.querySelector('.msg-box');
-
-    const messages = Array.from(document.body.querySelectorAll('.msg-container'));
     const lastMessage = messages[messages.length - 1];
     lastMessage.scrollIntoView({ behavior: 'smooth' });
 }

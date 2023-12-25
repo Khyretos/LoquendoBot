@@ -41,8 +41,6 @@ q = queue.Queue()
 # gobal functions
 
 # classes
-
-
 class LanguageDetection:
     def __init__(self):
         if environment == "dev":
@@ -181,7 +179,6 @@ class TTS:
 text_to_speech_service = TTS()
 
 # endpoints
-
 
 @app.route("/stream", methods=["GET"])
 def stream_recognition():

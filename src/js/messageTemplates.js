@@ -9,21 +9,14 @@ const twitchTemplate = `
 `.trim();
 
 const userTemplate = `
-<div class="icon-container-user">
-		<img class="user-img-user" src="https://gravatar.com/avatar/56234674574535734573000000000001?d=retro" />
+	<div class="icon-container-user">
+		<span class="post-time-user">You</span>
 		<img class="status-circle-user" src="./images/twitch-icon.png" />
-</div>
-<div class="msg-box-user">
-		<div class="flr">
-				<div class="messages-user">
-						<span class="timestamp">
-							<span class="username">You</span>
-							<span class="post-time"></span>
-						</span>
-						<p class="msg"></p>
-				</div>
-		</div>
-</div>
+		<img class="user-img-user" src="https://gravatar.com/avatar/56234674574535734573000000000001?d=retro" />
+	</div>
+	<span class="username-user">You</span>
+	<div class="msg-box-user">
+	</div>
 `.trim();
 
 const messageTemplate = `

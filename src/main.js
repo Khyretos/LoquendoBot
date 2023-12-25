@@ -178,7 +178,9 @@ async function createIniFile() {
         TWITCH: {
             USE_TWITCH: false,
             CHANNEL_NAME: '',
-            USERNAME: 'loquendo',
+            USERNAME: '',
+            USER_ID: '',
+            USER_LOGO_URL: '',
             OAUTH_TOKEN: '',
             CLIENT_ID: '2t206sj7rvtr1rutob3p627d13jch9',
         },

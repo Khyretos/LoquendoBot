@@ -388,6 +388,7 @@ input[type='lol'] {
     transition: opacity 0.3s, visibility 0s;
     color: var(--main-color2);
     font-family: 'xxii_avenmedium';
+    z-index: 999;
 }
 
 /* .tooltip .tooltiptext {
