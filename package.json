@@ -1,6 +1,6 @@
 {
     "name": "loquendo-bot",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Bot assistant for streamers over different platforms",
     "main": "src/main.js",
     "scripts": {
