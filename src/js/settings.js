@@ -29,7 +29,7 @@ function getGeneralSettings() {
     document.body.querySelector('#USE_VTUBER').checked = settings.MODULES.USE_VTUBER;
     document.body.querySelector('#VTUBER_URL').value = `http://localhost:${settings.GENERAL.PORT}/vtuber/`;
     showMenuButton('#btnBrowsersourceVtuber', settings.MODULES.USE_VTUBER);
-    document.body.querySelector('#USE_CHATBUBBLE').checked = settings.GENERAL.USE_CHATBUBBLE;
+    document.body.querySelector('#USE_CHATBUBBLE').checked = settings.MODULES.USE_CHATBUBBLE;
     document.body.querySelector('#CHATBUBBLE_URL').value = `http://localhost:${settings.GENERAL.PORT}/chat/`;
     showMenuButton('#btnBrowsersourceChat', settings.GENERAL.USE_CHATBUBBLE);
 

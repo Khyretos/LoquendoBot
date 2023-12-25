@@ -61,6 +61,9 @@ function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage
         postTime.innerText = getPostTime();
     }
 
+    const iconContainer = article.querySelector('.icon-container');
+    iconContainer.appendChild(postTime);
+
     const msg = article.querySelector('.msg-box');
     if (msg) {
         messageObject.forEach((entry) => {
@@ -70,11 +73,11 @@ function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage
                 msg.innerHTML += entry.html;
             }
         });
-        msg.appendChild(postTime);
+        // msg.appendChild(postTime);
     }
 
     // Appends the message to the main chat box (shows the message)
-    showChatMessage(article);
+    showChatMessage(article, false);
 
     if (fileteredMessage) {
         sound.playVoice(fileteredMessage, logoUrl, username, msg);

@@ -15,8 +15,9 @@ h1 {
     flex-direction: column;
     background-color: var(--mid-section);
     margin-left: 50px;
-    margin-right: 50px;
     font-family: 'FRAMDCN';
+    position: relative;
+    z-index: 1;
 }
 
 .input-box {
@@ -172,16 +173,25 @@ h1 {
 }
 
 .msg-container {
+    direction: ltr;
     position: static;
     display: inline-block;
     width: 100%;
-    margin: 0px 0px 0px 0px;
     padding: 0px 0px 10px 0px;
+}
+
+.msg-container-user {
+    direction: rtl;
+    position: static;
+    display: inline-block;
+    width: 100%;
+    margin-top: 10px;
 }
 
 .msg-box {
     background: var(--chat-bubble);
     color: white;
+    min-width: 150px;
     border-radius: 5px;
     padding: 20px 5px 5px 25px;
     margin: 20px 0px 0px 25px;
@@ -191,15 +201,14 @@ h1 {
 
 .msg-box-user {
     background: var(--chat-bubble);
-    padding: 5px 5px 5px 5px;
-    border-radius: 6px 6px 6px 6px;
-    margin-right: -20px;
-    margin-top: 10px;
-    max-width: 80%;
-    width: auto;
-    float: right;
-    word-wrap: break-word;
+    color: white;
+    text-align: -webkit-left;
+    min-width: 150px;
+    border-radius: 5px;
+    padding: 20px 15px 10px 5px;
+    margin: 0px 35px 0px 25px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+    width: fit-content;
 }
 
 .msg-box-user-temp {
@@ -211,14 +220,16 @@ h1 {
     border-radius: 50%;
     height: 50px;
     width: 50px;
+    z-index: 5;
 }
 
 .user-img-user {
     display: inline-block;
     border-radius: 50%;
-    height: 40px;
-    width: 40px;
-    margin: 0 0px 10px 10px;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    z-index: 5;
 }
 
 .messages {
@@ -256,15 +267,26 @@ h1 {
 
 .username {
     float: left;
-    color: var(--chat-bubble-header);
     background-color: var(--main-color4);
     margin-left: 25px;
     color: white;
     position: relative;
-    z-index: 2;
     padding: 5px 5px 5px 30px;
     border-radius: 5px;
     top: 10px;
+    z-index: 1;
+}
+
+.username-user {
+    background-color: var(--main-color4);
+    margin-right: 25px;
+    color: white;
+    padding: 5px 40px 5px 15px;
+    border-radius: 5px;
+    margin: 0px 30px 5px 5px;
+    top: 15px;
+    position: relative;
+    z-index: 1;
 }
 
 .username-temp {
@@ -272,13 +294,35 @@ h1 {
 }
 
 .post-time {
-    float: right;
     font-size: 8pt;
-    padding: 10px 0px 0px 5px;
+    padding: 3px 5px 0px 15px;
+    color: white;
     display: inline-block;
+    background-color: var(--main-color4);
+    right: 15px;
+    top: -19px;
+    position: relative;
+    z-index: 2;
+    border-radius: 5px;
+    text-align: center;
 }
 
-.msg-self .msg-box {
+.post-time-user {
+    font-size: 8pt;
+    padding: 3px 15px 0px 5px;
+    margin: 5px -15px 0px -10px;
+    color: white;
+    display: inline-block;
+    background-color: var(--main-color4);
+    right: 60px;
+    top: -19px;
+    position: relative;
+    z-index: 2;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* .msg-self .msg-box {
     border-radius: 6px 6px 6px 6px;
     background: var(--main-color1);
     float: right;
@@ -291,30 +335,26 @@ h1 {
 .msg-self .msg {
     text-align: justify;
     text-justify: inter-word;
-}
+} */
 
 .mmg {
     display: flex;
 }
 
 .icon-container {
-    width: 50px;
     height: 50px;
     position: absolute;
-    float: left;
+    left: 0;
     display: flex;
     align-items: center;
-    z-index: 3;
 }
 
 .icon-container-user {
-    width: 50px;
+    direction: ltr;
     height: 50px;
-    position: relative;
-    float: right;
+    position: absolute;
     display: flex;
     align-items: center;
-    z-index: 3;
 }
 
 .img {
@@ -328,6 +368,7 @@ h1 {
     height: 20px;
     border-radius: 50%;
     margin-left: -15px;
+    z-index: 6;
     margin-top: -30px;
 }
 
@@ -335,13 +376,8 @@ h1 {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    bottom: 0;
-    right: 0;
-    margin-left: -50px;
-    margin-top: 10px;
-}
-
-select {
+    z-index: 6;
+    margin-top: -30px;
 }
 
 .menu-select {

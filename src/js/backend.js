@@ -1,4 +1,5 @@
 const spawn = require('child_process').spawn;
+var kill = require('kill-process-by-name');
 let python;
 
 async function getInstalledVoices() {
@@ -145,17 +146,21 @@ async function initiateBackend() {
 
 initiateBackend();
 
+//TODO: convert to restartServer function
 ipcRenderer.on('quit-event', async () => {
     try {
         const response = await fetch(`http://127.0.0.1:${settings.GENERAL.PORT}/terminate`, { method: 'GET' });
         if (response.ok) {
             const responseData = await response.json();
             console.log('Response:', responseData);
+            kill('loquendoBot_backend');
         } else {
             console.error('Failed to send termination signal to Flask server.');
+            kill('loquendoBot_backend');
         }
     } catch (error) {
         console.error('Error sending termination signal:', error);
+        kill('loquendoBot_backend');
     }
 });
 

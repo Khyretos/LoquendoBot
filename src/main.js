@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { writeIniFile } = require('write-ini-file');
 const path = require('path');
 const http = require('http');
+const kill = require('kill-process-by-name');
 
 const ini = require('ini');
 const fs = require('fs');
@@ -109,6 +110,7 @@ ipcMain.on('maximize-window', (event) => {
 
 ipcMain.on('close-window', (event) => {
     const browserWindow = BrowserWindow.fromWebContents(event.sender);
+    kill('loquendoBot_backend');
     browserWindow.close();
     app.quit();
 });
@@ -176,7 +178,9 @@ async function createIniFile() {
         TWITCH: {
             USE_TWITCH: false,
             CHANNEL_NAME: '',
-            USERNAME: 'loquendo',
+            USERNAME: '',
+            USER_ID: '',
+            USER_LOGO_URL: '',
             OAUTH_TOKEN: '',
             CLIENT_ID: '2t206sj7rvtr1rutob3p627d13jch9',
         },

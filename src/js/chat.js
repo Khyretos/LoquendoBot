@@ -8,22 +8,31 @@ function getResponse() {
 
     // Create chat message from received data
     const article = document.createElement('article');
-    article.className = 'msg-container msg-self';
+    article.className = 'msg-container-user';
 
     article.innerHTML = messageTemplates.userTemplate;
 
-    const postTime = article.querySelector('.post-time');
+    const userImg = article.querySelector('.icon-container-user > .user-img-user');
+    if (userImg) {
+        userImg.src = settings.TWITCH.USER_LOGO_URL;
+    }
+
+    const postTime = article.querySelector('.post-time-user');
+
+    const iconContainer = article.querySelector('.icon-container-user');
+    iconContainer.appendChild(postTime);
+
     if (postTime) {
         postTime.innerText = getPostTime();
     }
 
-    const msg = article.querySelector('.msg');
+    const msg = article.querySelector('.msg-box-user');
     if (msg) {
         msg.innerText = userText;
     }
 
     // Appends the message to the main chat box (shows the message)
-    showChatMessage(article);
+    showChatMessage(article, true);
 
     twitch.sendMessage(userText);
 
