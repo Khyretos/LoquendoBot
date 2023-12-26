@@ -8,25 +8,24 @@ function getResponse() {
 
     // Create chat message from received data
     const article = document.createElement('article');
-    article.className = 'msg-container-user';
+    article.className = 'msg-container user';
 
     article.innerHTML = messageTemplates.userTemplate;
 
-    const userImg = article.querySelector('.icon-container-user > .user-img-user');
+    const userImg = article.querySelector('.user-img');
     if (userImg) {
         userImg.src = settings.TWITCH.USER_LOGO_URL;
     }
 
-    const postTime = article.querySelector('.post-time-user');
-
-    const iconContainer = article.querySelector('.icon-container-user');
-    iconContainer.appendChild(postTime);
+    const postTime = article.querySelector('.post-time');
 
     if (postTime) {
         postTime.innerText = getPostTime();
     }
 
-    const msg = article.querySelector('.msg-box-user');
+    article.appendChild(postTime);
+
+    const msg = article.querySelector('.msg-box');
     if (msg) {
         msg.innerText = userText;
     }

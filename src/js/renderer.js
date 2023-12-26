@@ -210,8 +210,8 @@ function showChatMessage(article, isUser) {
         msg = article.querySelector('.msg-box');
     }
 
-    var style = getComputedStyle(usernameHtml);
-    var style2 = getComputedStyle(usernameHtml);
+    // var style = getComputedStyle(usernameHtml);
+    // var style2 = getComputedStyle(usernameHtml);
 
     const lastMessage = messages[messages.length - 1];
     lastMessage.scrollIntoView({ behavior: 'smooth' });

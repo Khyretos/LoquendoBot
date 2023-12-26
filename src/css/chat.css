@@ -14,7 +14,8 @@ h1 {
     align-items: center;
     flex-direction: column;
     background-color: var(--mid-section);
-    margin-left: 50px;
+    padding-left: 50px;
+    padding-right: 50px;
     font-family: 'FRAMDCN';
     position: relative;
     z-index: 1;
@@ -175,40 +176,45 @@ h1 {
 .msg-container {
     direction: ltr;
     position: static;
-    display: inline-block;
     width: 100%;
-    padding: 0px 0px 10px 0px;
+    padding: 10px 0px 0px 0px;
+    display: grid;
+    grid-template: 1fr / 1fr;
+    align-self: start;
 }
 
-.msg-container-user {
-    direction: rtl;
-    position: static;
-    display: inline-block;
-    width: 100%;
-    margin-top: 10px;
+.msg-container > * {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+}
+
+.msg-container.sender {
+    place-items: self-start;
+}
+
+.msg-container.user {
+    place-items: self-end;
 }
 
 .msg-box {
     background: var(--chat-bubble);
     color: white;
-    min-width: 150px;
+    min-width: 100px;
     border-radius: 5px;
-    padding: 20px 5px 5px 25px;
-    margin: 20px 0px 0px 25px;
+    padding: 18px 5px 5px 5px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
     width: fit-content;
+    position: relative;
+    align-self: start;
 }
 
-.msg-box-user {
-    background: var(--chat-bubble);
-    color: white;
-    text-align: -webkit-left;
-    min-width: 150px;
-    border-radius: 5px;
-    padding: 20px 15px 10px 5px;
-    margin: 0px 35px 0px 25px;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
-    width: fit-content;
+.msg-box.sender {
+    margin: 25px 25px 0px 35px;
+}
+
+.msg-box.user {
+    text-align: left;
+    margin: 25px 35px 0px 0px;
 }
 
 .msg-box-user-temp {
@@ -217,26 +223,15 @@ h1 {
 
 .user-img {
     display: inline-block;
+    position: relative;
     border-radius: 50%;
     height: 50px;
     width: 50px;
     z-index: 5;
+    align-self: start;
 }
 
-.user-img-user {
-    display: inline-block;
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    z-index: 5;
-}
-
-.messages {
-    margin-left: 20px;
-}
-
-.messages-user {
+.messages.user {
     margin-right: 20px;
 }
 
@@ -250,10 +245,6 @@ h1 {
     color: var(--chat-bubble-message-temp);
 }
 
-/* .msg:first-of-type {
-    margin-top: 8px;
-} */
-
 .timestamp {
     color: var(--chat-bubble-header);
     font-size: 10pt;
@@ -266,27 +257,22 @@ h1 {
 }
 
 .username {
-    float: left;
     background-color: var(--main-color4);
-    margin-left: 25px;
     color: white;
     position: relative;
-    padding: 5px 5px 5px 30px;
     border-radius: 5px;
-    top: 10px;
-    z-index: 1;
+    z-index: 3;
+    align-self: start;
 }
 
-.username-user {
-    background-color: var(--main-color4);
-    margin-right: 25px;
-    color: white;
-    padding: 5px 40px 5px 15px;
-    border-radius: 5px;
-    margin: 0px 30px 5px 5px;
-    top: 15px;
-    position: relative;
-    z-index: 1;
+.username.sender {
+    padding: 0px 5px 5px 30px;
+    margin: 20px 5px 5px 30px;
+}
+
+.username.user {
+    padding: 0px 30px 5px 5px;
+    margin: 20px 30px 5px 5px;
 }
 
 .username-temp {
@@ -295,66 +281,26 @@ h1 {
 
 .post-time {
     font-size: 8pt;
-    padding: 3px 5px 0px 15px;
     color: white;
     display: inline-block;
     background-color: var(--main-color4);
-    right: 15px;
-    top: -19px;
     position: relative;
     z-index: 2;
     border-radius: 5px;
-    text-align: center;
+    align-self: start;
+}
+.post-time.sender {
+    padding: 5px 5px 0px 15px;
+    margin: 0px 0px 0px 50px;
 }
 
-.post-time-user {
-    font-size: 8pt;
-    padding: 3px 15px 0px 5px;
-    margin: 5px -15px 0px -10px;
-    color: white;
-    display: inline-block;
-    background-color: var(--main-color4);
-    right: 60px;
-    top: -19px;
-    position: relative;
-    z-index: 2;
-    border-radius: 5px;
-    text-align: center;
+.post-time.user {
+    padding: 5px 15px 0px 5px;
+    margin: 0px 50px 0px 0px;
 }
-
-/* .msg-self .msg-box {
-    border-radius: 6px 6px 6px 6px;
-    background: var(--main-color1);
-    float: right;
-}
-
-.msg-self .user-img {
-    align-items: center;
-}
-
-.msg-self .msg {
-    text-align: justify;
-    text-justify: inter-word;
-} */
 
 .mmg {
     display: flex;
-}
-
-.icon-container {
-    height: 50px;
-    position: absolute;
-    left: 0;
-    display: flex;
-    align-items: center;
-}
-
-.icon-container-user {
-    direction: ltr;
-    height: 50px;
-    position: absolute;
-    display: flex;
-    align-items: center;
 }
 
 .img {
@@ -365,19 +311,18 @@ h1 {
 
 .status-circle {
     width: 20px;
-    height: 20px;
     border-radius: 50%;
-    margin-left: -15px;
     z-index: 6;
-    margin-top: -30px;
+    position: relative;
+    align-self: start;
 }
 
-.status-circle-user {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    z-index: 6;
-    margin-top: -30px;
+.status-circle.sender {
+    margin-left: 40px;
+}
+
+.status-circle.user {
+    margin-right: 40px;
 }
 
 .menu-select {

@@ -40,11 +40,11 @@ function ping(element) {
 
 function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage) {
     const article = document.createElement('article');
-    article.className = 'msg-container msg-remote';
+    article.className = 'msg-container sender';
 
     article.innerHTML = messageTemplates.twitchTemplate;
 
-    const userImg = article.querySelector('.icon-container > .user-img');
+    const userImg = article.querySelector('.user-img');
     if (userImg) {
         userImg.src = logoUrl;
     }
@@ -54,15 +54,13 @@ function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage
         usernameHtml.innerText = username;
     }
 
-    const postTime = document.createElement('span');
-    postTime.classList.add('post-time');
+    const postTime = article.querySelector('.post-time');
 
     if (postTime) {
         postTime.innerText = getPostTime();
     }
 
-    const iconContainer = article.querySelector('.icon-container');
-    iconContainer.appendChild(postTime);
+    article.appendChild(postTime);
 
     const msg = article.querySelector('.msg-box');
     if (msg) {
@@ -73,7 +71,6 @@ function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage
                 msg.innerHTML += entry.html;
             }
         });
-        // msg.appendChild(postTime);
     }
 
     // Appends the message to the main chat box (shows the message)
