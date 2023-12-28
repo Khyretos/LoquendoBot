@@ -3,7 +3,7 @@ const ini = require('ini');
 const path = require('path'); // get directory path
 const axios = require('axios');
 
-const { ipcRenderer, shell } = require('electron'); // necessary electron libraries to send data to the app
+const { webFrame, ipcRenderer, shell } = require('electron'); // necessary electron libraries to send data to the app
 const io = require('socket.io-client');
 
 const util = require('util');
@@ -17,8 +17,8 @@ const { Socket } = require('socket.io-client');
 const main = ipcRenderer.sendSync('environment');
 
 const resourcesPath = main.resourcesPath;
-let settingsPath = main.settingsPath.toString();
-let pythonPath = main.pythonPath.toString();
+const settingsPath = main.settingsPath.toString();
+const pythonPath = main.pythonPath.toString();
 const settings = main.settings;
 
 // TODO: remove gooogle voices txt and use api instead
@@ -35,6 +35,8 @@ const devicesDropdown = document.querySelector('#devicesDropdown');
 const notificationSound = document.querySelector('#notification'); // obtain the html reference of the sound comboBox
 const sttModel = document.querySelector('#sttModel'); // obtain the html reference of the sound comboBox
 const ttsAudioDevices = document.querySelector('#ttsAudioDevice'); // obtain the html reference of the installedTTS comboBox
+const notificationSoundAudioDevices = document.querySelector('#notificationSoundAudioDevice'); // obtain the html reference of the installedTTS comboBox
+const emojiPicker = document.body.querySelector('emoji-picker');
 
 // laod local javascript files
 const chat = require(path.join(__dirname, './js/chat'));
@@ -47,18 +49,18 @@ const config = require(path.join(__dirname, './js/settings'));
 
 const mediaDevices = require(path.join(__dirname, './js/mediaDevices'));
 
-let notificationSounds = path.join(__dirname, './sounds/notifications');
-let sttModels = path.join(__dirname, '../speech_to_text_models');
+const notificationSounds = path.join(__dirname, './sounds/notifications');
+const sttModels = path.join(__dirname, '../speech_to_text_models');
 
 function reset() {
-    ipcRenderer.send('restart');
+  ipcRenderer.send('restart');
 }
 
-let server = require(path.join(__dirname, './js/server'));
+const server = require(path.join(__dirname, './js/server'));
 const backend = require(path.join(__dirname, './js/backend'));
-let socket = io(`http://localhost:${settings.GENERAL.PORT}`); // Connect to your Socket.IO server
+const socket = io(`http://localhost:${settings.GENERAL.PORT}`); // Connect to your Socket.IO server
 
-let twitch = settings.TWITCH.USE_TWITCH ? require(path.join(__dirname, './js/twitch')) : '';
+const twitch = settings.TWITCH.USE_TWITCH ? require(path.join(__dirname, './js/twitch')) : '';
 const Polly = settings.AMAZON.USE_AMAZON ? require(path.join(__dirname, './js/amazon')) : '';
 const google = settings.GOOGLE.USE_GOOGLE ? require(path.join(__dirname, './js/google')) : '';
 
@@ -66,6 +68,9 @@ const theme = require(path.join(__dirname, './js/theme'));
 const auth = require(path.join(__dirname, './js/auth'));
 
 let ttsRequestCount = 0;
+ttsRequestCount = 0;
+let customEmojis = [];
+customEmojis = [];
 
 // initialize values
 config.getGeneralSettings();
@@ -77,83 +82,93 @@ const StartDateAndTime = Date.now();
 const speakButton = document.querySelector('#speakBtn');
 
 const amazonCredentials = {
-    accessKeyId: settings.AMAZON.ACCESS_KEY,
-    secretAccessKey: settings.AMAZON.ACCESS_SECRET,
+  accessKeyId: settings.AMAZON.ACCESS_KEY,
+  secretAccessKey: settings.AMAZON.ACCESS_SECRET
 };
 
 // Check for installed sounds
 fs.readdir(notificationSounds, (err, files) => {
-    files.forEach((file, i) => {
-        // Create a new option element.
-        const option = document.createElement('option');
+  if (err) {
+    console.error(err);
+  }
 
-        // Set the options value and text.
-        option.value = i;
-        option.innerHTML = file;
+  files.forEach((file, i) => {
+    // Create a new option element.
+    const option = document.createElement('option');
 
-        // Add the option to the sound selector.
-        notificationSound.appendChild(option);
-    });
+    // Set the options value and text.
+    option.value = i;
+    option.innerHTML = file;
 
-    // set the saved notification sound
-    notificationSound.selectedIndex = settings.AUDIO.NOTIFICATION_SOUND;
+    // Add the option to the sound selector.
+    notificationSound.appendChild(option);
+  });
+
+  // set the saved notification sound
+  notificationSound.selectedIndex = settings.AUDIO.NOTIFICATION_SOUND;
 });
 
 // Check for installed stt models
 fs.readdir(sttModels, (err, files) => {
-    for (let file of files) {
-        if (file.includes('.txt')) {
-            continue;
-        }
-        // Create a new option element.
-        const option = document.createElement('option');
+  if (err) {
+    console.error(err);
+  }
 
-        // Set the options value and text.
-        option.value = file;
-        option.innerHTML = file;
-
-        // Add the option to the sound selector.
-        sttModel.appendChild(option);
+  for (const file of files) {
+    if (file.includes('.txt')) {
+      continue;
     }
+    // Create a new option element.
+    const option = document.createElement('option');
 
-    // set the saved notification sound
-    sttModel.value = settings.STT.LANGUAGE;
+    // Set the options value and text.
+    option.value = file;
+    option.innerHTML = file;
+
+    // Add the option to the sound selector.
+    sttModel.appendChild(option);
+  }
+
+  // set the saved notification sound
+  sttModel.value = settings.STT.LANGUAGE;
 });
 
 async function getAudioDevices() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-        return;
-    }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+    return;
+  }
 
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const audioOutputDevices = devices.filter((device) => device.kind === 'audiooutput');
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const audioOutputDevices = devices.filter(device => device.kind === 'audiooutput');
 
-    audioOutputDevices.forEach((device) => {
-        const option = document.createElement('option');
-        option.text = device.label || `Output ${device.deviceId}`;
-        option.value = device.deviceId;
-        ttsAudioDevices.appendChild(option);
-    });
+  audioOutputDevices.forEach(device => {
+    const option = document.createElement('option');
+    option.text = device.label || `Output ${device.deviceId}`;
+    option.value = device.deviceId;
+    ttsAudioDevices.appendChild(option);
+    notificationSoundAudioDevices.appendChild(option);
+  });
 
-    ttsAudioDevices.selectedIndex = settings.AUDIO.SELECTED_TTS_AUDIO_DEVICE;
+  ttsAudioDevices.selectedIndex = settings.AUDIO.SELECTED_TTS_AUDIO_DEVICE;
+  notificationSoundAudioDevices.selectedIndex = settings.AUDIO.SELECTED_NOTIFICATION_AUDIO_DEVICE;
 }
 
 getAudioDevices();
 
 function setLanguagesinSelect(languageSelector, setting) {
-    let languageSelect = document.querySelector(languageSelector); // obtain the html reference of the google voices comboBox
+  const languageSelect = document.querySelector(languageSelector); // obtain the html reference of the google voices comboBox
 
-    for (const language in languageObject.languages) {
-        if (languageObject.languages.hasOwnProperty(language)) {
-            const iso639 = languageObject.languages[language]['ISO-639'];
-            const option = document.createElement('option');
-            option.value = iso639;
-            option.innerHTML = `${iso639} - ${language}`;
-            languageSelect.appendChild(option);
-        }
+  for (const language in languageObject.languages) {
+    if (Object.prototype.hasOwnProperty.call(languageObject.languages, language)) {
+      const iso639 = languageObject.languages[language]['ISO-639'];
+      const option = document.createElement('option');
+      option.value = iso639;
+      option.innerHTML = `${iso639} - ${language}`;
+      languageSelect.appendChild(option);
     }
+  }
 
-    languageSelect.selectedIndex = setting;
+  languageSelect.selectedIndex = setting;
 }
 
 setLanguagesinSelect('#language', settings.GENERAL.LANGUAGE);
@@ -161,95 +176,122 @@ setLanguagesinSelect('#defaultLanguage', settings.TTS.PRIMARY_TTS_LANGUAGE_INDEX
 setLanguagesinSelect('#secondaryLanguage', settings.TTS.SECONDARY_TTS_LANGUAGE_INDEX);
 
 function addVoiceService(name) {
-    function addToselect(select) {
-        let ttsService = document.querySelector(select);
-        const option = document.createElement('option');
-        ttsService.appendChild(option);
+  function addToselect(select) {
+    const ttsService = document.querySelector(select);
+    const option = document.createElement('option');
+    ttsService.appendChild(option);
 
-        option.value = name;
-        option.innerHTML = name;
-    }
-    addToselect('#primaryTTSService');
-    addToselect('#secondaryTTSService');
+    option.value = name;
+    option.innerHTML = name;
+  }
+  addToselect('#primaryTTSService');
+  addToselect('#secondaryTTSService');
 }
 
 // Small tooltip
-Array.from(document.body.querySelectorAll('[tip]')).forEach((el) => {
-    const tip = document.createElement('div');
-    const body = document.querySelector('.container');
-    const element = el;
-    tip.classList.add('tooltip');
-    tip.classList.add('tooltiptext');
-    tip.innerText = el.getAttribute('tip');
-    tip.style.transform = `translate(${el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px'}, ${
-        el.hasAttribute('tip-top') ? '-100%' : '15px'
-    })`;
-    body.appendChild(tip);
-    element.onmousemove = (e) => {
-        tip.style.left = `${e.x}px`;
-        tip.style.top = `${e.y}px`;
-        tip.style.zIndex = 1;
-        tip.style.visibility = 'visible';
-    };
-    element.onmouseleave = (e) => {
-        tip.style.visibility = 'hidden';
-    };
+Array.from(document.body.querySelectorAll('[tip]')).forEach(el => {
+  const tip = document.createElement('div');
+  const body = document.querySelector('.container');
+  const element = el;
+  tip.classList.add('tooltip');
+  tip.classList.add('tooltiptext');
+  tip.innerText = el.getAttribute('tip');
+  tip.style.transform = `translate(${el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px'}, ${
+    el.hasAttribute('tip-top') ? '-100%' : '15px'
+  })`;
+  body.appendChild(tip);
+  element.onmousemove = e => {
+    tip.style.left = `${e.x}px`;
+    tip.style.top = `${e.y}px`;
+    tip.style.zIndex = 1;
+    tip.style.visibility = 'visible';
+  };
+  element.onmouseleave = e => {
+    tip.style.visibility = 'hidden';
+  };
 });
 
-function showChatMessage(article, isUser) {
-    document.querySelector('#chatBox').appendChild(article);
-    let usernameHtml;
-    let msg;
-    let messages = Array.from(document.body.querySelectorAll('.msg-container'));
+function showChatMessage(article) {
+  document.querySelector('#chatBox').appendChild(article);
 
-    if (isUser) {
-        usernameHtml = article.querySelector('.username-user');
-        msg = article.querySelector('.msg-box-user');
-    } else {
-        usernameHtml = article.querySelector('.username');
-        msg = article.querySelector('.msg-box');
-    }
+  const messages = Array.from(document.body.querySelectorAll('.msg-container'));
 
-    // var style = getComputedStyle(usernameHtml);
-    // var style2 = getComputedStyle(usernameHtml);
-
-    const lastMessage = messages[messages.length - 1];
-    lastMessage.scrollIntoView({ behavior: 'smooth' });
+  const lastMessage = messages[messages.length - 1];
+  lastMessage.scrollIntoView({ behavior: 'smooth' });
 }
 
 function getPostTime() {
-    const date = new Date();
-    document.body.querySelectorAll('.container').innerHTML = date.getHours();
-    const hours = date.getHours();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
-    const time = `${hours}:${minutes} ${ampm}`;
+  const date = new Date();
+  document.body.querySelectorAll('.container').innerHTML = date.getHours();
+  const hours = date.getHours();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+  const time = `${hours}:${minutes} ${ampm}`;
 
-    return time;
+  return time;
 }
 
 function showPreviewChatMessage() {
-    const message = messageTemplates.messageTemplate;
-    document.querySelector('#mini-mid').innerHTML += message;
-    const messages = Array.from(document.body.querySelectorAll('#mini-mid'));
-    const lastMessage = messages[messages.length - 1];
-    lastMessage.scrollIntoView({ behavior: 'smooth' });
+  const message = messageTemplates.messageTemplate;
+  document.querySelector('#mini-mid').innerHTML += message;
+  const messages = Array.from(document.body.querySelectorAll('#mini-mid'));
+  const lastMessage = messages[messages.length - 1];
+  lastMessage.scrollIntoView({ behavior: 'smooth' });
 }
 
 showPreviewChatMessage();
 
 function hideText(button, field) {
-    document.body.querySelector(button).addEventListener('click', () => {
-        const passwordInput = document.querySelector(field);
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'lol';
-        } else {
-            passwordInput.type = 'password';
-        }
-    });
+  document.body.querySelector(button).addEventListener('click', () => {
+    const passwordInput = document.querySelector(field);
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'lol';
+    } else {
+      passwordInput.type = 'password';
+    }
+  });
 }
 
 hideText('.password-toggle-btn1', '#TWITCH_OAUTH_TOKEN');
 hideText('.password-toggle-btn4', '#AMAZON_ACCESS_KEY');
 hideText('.password-toggle-btn5', '#AMAZON_ACCESS_SECRET');
 hideText('.password-toggle-btn6', '#GOOGLE_API_KEY');
+
+function setZoomLevel(currentZoom, zoomIn) {
+  let newZoom = currentZoom.toFixed(2);
+
+  if (zoomIn === true && currentZoom < 4.95) {
+    newZoom = (currentZoom + 0.05).toFixed(2);
+  }
+  if (zoomIn === false && currentZoom > 0.25) {
+    newZoom = (currentZoom - 0.05).toFixed(2);
+  }
+
+  webFrame.setZoomFactor(parseFloat(newZoom));
+  settings.GENERAL.ZOOMLEVEL = newZoom;
+  fs.writeFileSync(settingsPath, ini.stringify(settings));
+  document.body.querySelector('#ZOOMLEVEL').value = (settings.GENERAL.ZOOMLEVEL * 100).toFixed(0);
+}
+
+// const customEmojix = [
+//   {
+//     name: 'sakuraestaKleefeliz',
+//     shortcodes: ['sakuraestaKleefeliz'],
+//     url: 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_0cb536ddb6e143ab87ffeccb160a4d45/default/dark/1.0',
+//     category: 'Sakura'
+//   }
+// ];
+
+// const customEmojiy = [
+//   {
+//     name: 'sakuraestaKleefeliz',
+//     shortcodes: ['sakuraestaKleefeliz'],
+//     url: 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_0cb536ddb6e143ab87ffeccb160a4d45/default/dark/1.0',
+//     category: 'Sakurax'
+//   }
+// ];
+
+// emojiPicker.customEmoji = customEmojix;
+// emojiPicker.customEmoji = customEmojiy;
+
+// console.log(emojiPicker.database.getEmojiBySearchQuery('Kappa'));

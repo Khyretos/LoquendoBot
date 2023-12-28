@@ -1,161 +1,169 @@
 #tstx {
-    display: flex;
-    flex-direction: row;
-    margin-left: 40px;
+  display: flex;
+  flex-direction: row;
+  margin-left: 40px;
 }
 
 .optionrow {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    justify-content: left;
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  justify-content: left;
+  margin-bottom: 10px;
 }
 
 .LabelText {
-    margin-bottom: 5px;
-    color: var(--main-color2);
-    margin: 0px 0px 5px 0px;
+  margin-bottom: 5px;
+  color: var(--main-color2);
+  margin: 0px 0px 5px 0px;
 }
 
 #volume-icon {
-    color: var(--main-color2);
-    scale: 0.75;
-    cursor: pointer;
-    text-align: center;
-    align-self: center;
+  color: var(--main-color2);
+  scale: 0.75;
+  cursor: pointer;
+  text-align: center;
+  align-self: center;
 }
 
 #image {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 10px;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
 }
 
 .TTSVolume {
-    color: var(--main-color2);
-    font-size: 12pt;
-    text-align: center;
+  color: var(--main-color2);
+  font-size: 12pt;
+  text-align: center;
 }
 
 #SoundVolume {
-    color: var(--main-color2);
-    font-size: 12pt;
+  color: var(--main-color2);
+  font-size: 12pt;
 }
 
 .testLabel {
-    color: var(--main-color2);
-    font-size: 12pt;
+  color: var(--main-color2);
+  font-size: 12pt;
 }
 
 textarea {
-    height: 60px;
-    padding: 5px;
-    width: 300px;
-    resize: none;
-    border-radius: 5px;
-    background: var(--main-color3);
-    color: var(--main-color2);
-    font-family: 'xxii_avenmedium';
-    border: none;
+  height: 60px;
+  padding: 5px;
+  width: 300px;
+  resize: none;
+  border-radius: 5px;
+  background: var(--main-color3);
+  color: var(--main-color2);
+  font-family: 'xxii_avenmedium';
+  border: none;
 }
 
 .SaveConfig {
-    align-content: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: var(--main-color2);
-    margin-bottom: 10px;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--main-color2);
+  margin-bottom: 10px;
 }
 
 .SmallButton {
-    color: var(--main-color2);
-    width: 50px;
-    cursor: pointer;
-    text-shadow: 0 0 5px #070607, 0 0 5px #070607, 0 0 5px #070607;
-    /* transition: all 0.15s ease-in-out; */
-    text-align: center;
+  color: var(--main-color2);
+  width: 50px;
+  cursor: pointer;
+  text-shadow:
+    0 0 5px #070607,
+    0 0 5px #070607,
+    0 0 5px #070607;
+  /* transition: all 0.15s ease-in-out; */
+  text-align: center;
 }
 
 .SmallButton:hover {
-    /* color: var(--main-color1); */
-    width: 50px;
-    cursor: pointer;
-    /* filter: brightness(150%); */
+  /* color: var(--main-color1); */
+  width: 50px;
+  cursor: pointer;
+  /* filter: brightness(150%); */
 }
 
 .SmallButton:active {
-    color: var(--main-color1);
-    transform: translateY(4px);
-    text-shadow: 0 0 5px #000, 0 0 5px #000, 0 0 5px #000;
+  color: var(--main-color1);
+  transform: translateY(4px);
+  text-shadow:
+    0 0 5px #000,
+    0 0 5px #000,
+    0 0 5px #000;
 }
 
 .AdvancedMenuButton {
-    width: 300px;
-    height: 40px;
-    border-radius: 20px;
-    background-color: var(--main-color3);
-    color: var(--main-color2);
-    padding: 0;
-    border: none;
-    font-family: 'xxii_avenmedium';
-    font-size: 14pt;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;
-    /* Add a smooth transition for box-shadow and background-color */
+  width: 300px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: var(--main-color3);
+  color: var(--main-color2);
+  padding: 0;
+  border: none;
+  font-family: 'xxii_avenmedium';
+  font-size: 14pt;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition:
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  /* Add a smooth transition for box-shadow and background-color */
 }
 
 .AdvancedMenuButton:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    background-color: var(--main-color3);
-    filter: brightness(150%);
-    /* Darken the background color on hover */
-    cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background-color: var(--main-color3);
+  filter: brightness(150%);
+  /* Darken the background color on hover */
+  cursor: pointer;
 }
 
 .AdvancedMenuButton:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    background-color: var(--main-color3);
-    /* Reset the background color on click */
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: var(--main-color3);
+  /* Reset the background color on click */
 }
 
 .AdvancedMenuIcon {
-    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(350deg) brightness(104%) contrast(101%);
-    align-items: flex-start;
-    margin: auto;
-    height: 24px;
-    width: 24px;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(350deg) brightness(104%) contrast(101%);
+  align-items: flex-start;
+  margin: auto;
+  height: 24px;
+  width: 24px;
 }
 
 .AdvancedMenuIcon2 {
-    align-items: flex-start;
-    margin: auto;
-    height: 24px;
-    width: 24px;
+  align-items: flex-start;
+  margin: auto;
+  height: 24px;
+  width: 24px;
 }
 
 input:hover {
-    filter: brightness(120%);
+  filter: brightness(120%);
 }
 
 select:hover {
-    filter: brightness(120%);
+  filter: brightness(120%);
 }
 
 textarea:hover {
-    filter: brightness(120%);
+  filter: brightness(120%);
 }
 
 label:hover {
-    filter: brightness(120%);
+  filter: brightness(120%);
 }
 
 .circle-right:hover {
-    filter: brightness(120%);
+  filter: brightness(120%);
 }
 .circle-left:hover {
-    filter: brightness(120%);
+  filter: brightness(120%);
 }
