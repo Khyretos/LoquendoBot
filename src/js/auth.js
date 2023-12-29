@@ -4,7 +4,7 @@ const twitchAuthentication = () =>
   new Promise(resolve => {
     const http = require('http');
     const redirectUri = 'http://localhost:1989/auth';
-    const scopes = ['chat:edit', 'chat:read'];
+    const scopes = ['chat:edit', 'chat:read', 'user:read:follows', 'user:read:subscriptions'];
 
     const express = require('express');
     const tempAuthServer = express();
@@ -23,10 +23,6 @@ const twitchAuthentication = () =>
       }
       next();
     });
-
-    // function stopServer() {
-    //     tempAuthServer.close();
-    // }
 
     const htmlString = `
     <!DOCTYPE html>
@@ -99,119 +95,11 @@ function getTwitchUserId() {
     });
 }
 
-function getTwitchSubscriptions(channelId) {
-  // Get user Logo with access token
-  options = {
-    method: 'GET',
-    url: `https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${channelId}`,
-    headers: {
-      'Client-ID': settings.TWITCH.CLIENT_ID,
-      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
-    }
-  };
-
-  axios
-    .request(options)
-    .then(responseLogoUrl => {
-      console.log(responseLogoUrl);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
-function getTwitchChannelEmotes(channelId) {
-  // Get user Logo with access token
-  options = {
-    method: 'GET',
-    url: `https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${channelId}`,
-    headers: {
-      'Client-ID': settings.TWITCH.CLIENT_ID,
-      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
-    }
-  };
-
-  axios
-    .request(options)
-    .then(responseLogoUrl => {
-      console.log(responseLogoUrl);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
-function getTwitchChannelFollows(channelId) {
-  // Get user Logo with access token
-  options = {
-    method: 'GET',
-    url: 'https://api.twitch.tv/helix/streams/followed',
-    headers: {
-      'Client-ID': settings.TWITCH.CLIENT_ID,
-      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
-    }
-  };
-
-  axios
-    .request(options)
-    .then(responseLogoUrl => {
-      console.log(responseLogoUrl);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
-function getTwitchChannelSubscriptions(channelId) {
-  // Get user Logo with access token
-  options = {
-    method: 'GET',
-    url: `https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${channelId}`,
-    headers: {
-      'Client-ID': settings.TWITCH.CLIENT_ID,
-      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
-    }
-  };
-
-  axios
-    .request(options)
-    .then(responseLogoUrl => {
-      console.log(responseLogoUrl);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
-function getTwitchChannelId() {
-  // Get user Logo with access token
-  options = {
-    method: 'GET',
-    url: 'https://api.twitch.tv/helix/users?login=MelvyCoral',
-    headers: {
-      'Client-ID': settings.TWITCH.CLIENT_ID,
-      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
-    }
-  };
-
-  axios
-    .request(options)
-    .then(responseLogoUrl => {
-      // console.log(responseLogoUrl);
-      getTwitchChannelEmotes(responseLogoUrl.data.data[0].id);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
 function getTwitchOauthToken() {
-  // getTwitchChannelId();
-  getTwitchGLobalEmotes();
-  // return twitchAuthentication().then(res => {
-  //   getTwitchUserId();
-  //   return res;
-  // });
+  return twitchAuthentication().then(res => {
+    getTwitchUserId();
+    return res;
+  });
 }
 
 module.exports = { getTwitchOauthToken };

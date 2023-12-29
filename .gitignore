@@ -105,3 +105,4 @@ loquendoBot_backend.spec
 forge.config.js
 backend/*
 src/backend/loquendoBot_backend.exe
+src/config/twitch-emotes.json

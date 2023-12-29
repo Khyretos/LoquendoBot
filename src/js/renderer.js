@@ -25,6 +25,8 @@ const settings = main.settings;
 const googleVoices = fs.readFileSync(path.join(__dirname, './config/googleVoices.txt')).toString().split('\r\n');
 // TODO: remove amazon voices txt and use api instead (sakura project has it)
 const amazonVoices = fs.readFileSync(path.join(__dirname, './config/amazonVoices.txt')).toString().split('\r\n');
+const emoteListSavePath =
+  main.isPackaged === true ? path.join(resourcesPath, './twitch-emotes.json') : path.join(resourcesPath, './config/twitch-emotes.json');
 
 // html elements
 const root = document.documentElement;
@@ -273,25 +275,13 @@ function setZoomLevel(currentZoom, zoomIn) {
   document.body.querySelector('#ZOOMLEVEL').value = (settings.GENERAL.ZOOMLEVEL * 100).toFixed(0);
 }
 
-// const customEmojix = [
-//   {
-//     name: 'sakuraestaKleefeliz',
-//     shortcodes: ['sakuraestaKleefeliz'],
-//     url: 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_0cb536ddb6e143ab87ffeccb160a4d45/default/dark/1.0',
-//     category: 'Sakura'
-//   }
-// ];
-
-// const customEmojiy = [
-//   {
-//     name: 'sakuraestaKleefeliz',
-//     shortcodes: ['sakuraestaKleefeliz'],
-//     url: 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_0cb536ddb6e143ab87ffeccb160a4d45/default/dark/1.0',
-//     category: 'Sakurax'
-//   }
-// ];
-
-// emojiPicker.customEmoji = customEmojix;
-// emojiPicker.customEmoji = customEmojiy;
-
-// console.log(emojiPicker.database.getEmojiBySearchQuery('Kappa'));
+if (fs.existsSync(emoteListSavePath)) {
+  fs.readFile(emoteListSavePath, 'utf8', (error, data) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    const emotes = JSON.parse(data);
+    emojiPicker.customEmoji = emotes;
+  });
+}

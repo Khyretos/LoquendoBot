@@ -137,19 +137,12 @@ document.body.querySelector('#notificationSoundAudioDevice').addEventListener('c
 document.body.querySelector('#TWITCH_CHANNEL_NAME').addEventListener('change', () => {
   settings.TWITCH.CHANNEL_NAME = document.body.querySelector('#TWITCH_CHANNEL_NAME').value;
   fs.writeFileSync(settingsPath, ini.stringify(settings));
-
-  const button = document.body.querySelector('#TestTwitchCredentials');
-  button.className = 'AdvancedMenuButton';
   createNotification('Saved Channel name, please restart the application to reset twitch service', 'warning');
 });
 
 document.body.querySelector('#TWITCH_OAUTH_TOKEN').addEventListener('change', () => {
   settings.TWITCH.OAUTH_TOKEN = document.body.querySelector('#TWITCH_OAUTH_TOKEN').value;
   fs.writeFileSync(settingsPath, ini.stringify(settings));
-  createNotification('Saved OAuth token!', 'success');
-
-  const button = document.body.querySelector('#TestTwitchCredentials');
-  button.className = 'AdvancedMenuButton';
   createNotification('Saved OAuth token, please restart the application to reset twitch service', 'warning');
 });
 
@@ -337,6 +330,11 @@ document.body.querySelector('#SoundTestButton').addEventListener('click', () => 
 
 document.body.querySelector('#TestTwitchCredentials').addEventListener('click', () => {
   twitch.ping('#TestTwitchCredentials');
+  // resetTwitch(;
+});
+
+document.body.querySelector('#GetTwitchEmotes').addEventListener('click', () => {
+  twitch.getUserAvailableTwitchEmotes('#GetTwitchEmotes');
   // resetTwitch(;
 });
 
