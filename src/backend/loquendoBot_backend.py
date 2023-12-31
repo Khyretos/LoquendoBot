@@ -1,4 +1,3 @@
-# from wsgiref.simple_server import WSGIServer
 from flask import Flask, Response, jsonify, request
 import gevent
 
@@ -201,14 +200,6 @@ def stop_recording():
     return Response("Speech recognition stopped", status=200)
 
 
-# @app.before_request
-# def custom_warning():
-#     if environment == "dev":
-#         print(
-#             # "Running in internal development environment. This server is not for production use."
-#         )
-
-
 @app.route("/terminate", methods=["GET"])
 def terminate_processes():
     shutdown_server()
@@ -222,23 +213,35 @@ def shutdown_server():
     func()
 
 
-# @app.route("/detect", methods=["POST"])
-# def server_status():
-#     try:
-#         request_data = request.json
-#         message = request_data.get("message", "")
-#         confidence_values = detector.compute_language_confidence_values(message)
-#         for language, value in confidence_values:
-#             print(f"{language.name}: {value:.2f}")
-#             message = request_data.get("message", "")
-#     except Exception as e:
-#         return jsonify({"error": "An error occurred"}), 500
-#     return jsonify({"message": "Audio triggered"}), 200
-
-
 @app.route("/status", methods=["GET"])
 def server_status():
     return jsonify({"status": "server is running"})
+
+
+@app.route("/detect", methods=["POST"])
+def get_language():
+    try:
+        request_data = request.json
+        message = request_data.get("message", "")
+        lang = LanguageDetection().predict_lang(message)
+    except Exception as e:
+        return jsonify({"error": "An error occurred"}), 500
+    return jsonify({"languages": lang}), 200
+
+
+@app.route("/translate", methods=["POST"])
+def get_translation():
+    try:
+        settings.read(settingsPath)
+        request_data = request.json
+        message = request_data.get("message", "")
+        detectedLanguage = request_data.get("language", "")
+        translated = MyMemoryTranslator(
+            source=detectedLanguage, target=settings["LANGUAGE"]["TRANSLATE_TO"]
+        ).translate(message)
+    except Exception as e:
+        return jsonify({"error": e}), 500
+    return jsonify({"translation": translated}), 200
 
 
 @app.route("/audio", methods=["POST"])
@@ -255,7 +258,7 @@ def trigger_backend_event():
         count = request_data.get("count")
         text_to_speech_service.say(filteredMessage, voice, count)
     except Exception as e:
-        return jsonify({"error": "An error occurred"}), 500
+        return jsonify({"error": e}), 500
     return jsonify({"message": "Audio triggered"}), 200
 
 
@@ -265,18 +268,10 @@ def get_voices():
         voices = text_to_speech_service.voices()
         return jsonify({"voices": voices}), 200
     except Exception as e:
-        return jsonify({"error": "An error occurred"}), 500
+        return jsonify({"error": e}), 500
 
 
 if __name__ == "__main__":
-    # LANGUAGE = LanguageDetection()
-    # lang = LANGUAGE.predict_lang("hola cómo estás")
-    # print(lang)
-    # text = "Keep it up. You are awesome"
-    # translated = MyMemoryTranslator(
-    #     source="english", target="spanish latin america"
-    # ).translate(text)
-    # print(translated)
     if len(sys.argv) > 1:
         settings.read(settingsPath)
         port = int(settings["GENERAL"]["PORT"])

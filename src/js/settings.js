@@ -15,6 +15,8 @@ function getGeneralSettings() {
 
   // Language detection
   document.body.querySelector('#USE_DETECTION').checked = settings.LANGUAGE.USE_DETECTION;
+  document.body.querySelector('#OUTPUT_TO_TTS').checked = settings.LANGUAGE.OUTPUT_TO_TTS;
+  document.body.querySelector('#BROADCAST_TRANSLATION').checked = settings.LANGUAGE.BROADCAST_TRANSLATION;
 
   // TTS
   document.body.querySelector('#USE_TTS').checked = settings.TTS.USE_TTS;
@@ -100,7 +102,7 @@ document.body.querySelector('#sttModel').addEventListener('change', () => {
 document.body.querySelector('#defaultLanguage').addEventListener('change', () => {
   const select = document.querySelector('#defaultLanguage');
   settings.TTS.PRIMARY_TTS_LANGUAGE_INDEX = select.selectedIndex;
-  settings.TTS.PRIMARY_TTS_LANGUAGE = select.options[select.selectedIndex].text;
+  settings.TTS.PRIMARY_TTS_LANGUAGE = select.options[select.selectedIndex].value;
   fs.writeFileSync(settingsPath, ini.stringify(settings));
   createNotification('Saved default language!', 'success');
 });
@@ -115,9 +117,25 @@ document.body.querySelector('#secondaryVoice').addEventListener('change', () => 
 document.body.querySelector('#secondaryLanguage').addEventListener('change', () => {
   const select = document.querySelector('#secondaryLanguage');
   settings.TTS.SECONDARY_TTS_LANGUAGE_INDEX = select.selectedIndex;
-  settings.TTS.SECONDARY_TTS_LANGUAGE = select.options[select.selectedIndex].text;
+  settings.TTS.SECONDARY_TTS_LANGUAGE = select.options[select.selectedIndex].value;
   fs.writeFileSync(settingsPath, ini.stringify(settings));
   createNotification('Saved secondary language!', 'success');
+});
+
+document.body.querySelector('#language').addEventListener('change', () => {
+  const select = document.querySelector('#language');
+  settings.GENERAL.LANGUAGE_INDEX = select.selectedIndex;
+  settings.GENERAL.LANGUAGE = select.options[select.selectedIndex].value;
+  fs.writeFileSync(settingsPath, ini.stringify(settings));
+  createNotification('Saved language!', 'success');
+});
+
+document.body.querySelector('#TRANSLATE_TO').addEventListener('change', () => {
+  const select = document.querySelector('#TRANSLATE_TO');
+  settings.LANGUAGE.TRANSLATE_TO_INDEX = select.selectedIndex;
+  settings.LANGUAGE.TRANSLATE_TO = select.options[select.selectedIndex].value;
+  fs.writeFileSync(settingsPath, ini.stringify(settings));
+  createNotification('Saved primary voice!', 'success');
 });
 
 document.body.querySelector('#ttsAudioDevice').addEventListener('change', () => {
@@ -138,6 +156,7 @@ document.body.querySelector('#TWITCH_CHANNEL_NAME').addEventListener('change', (
   settings.TWITCH.CHANNEL_NAME = document.body.querySelector('#TWITCH_CHANNEL_NAME').value;
   fs.writeFileSync(settingsPath, ini.stringify(settings));
   createNotification('Saved Channel name, please restart the application to reset twitch service', 'warning');
+  twitch.getTwitchChannelId();
 });
 
 document.body.querySelector('#TWITCH_OAUTH_TOKEN').addEventListener('change', () => {
@@ -207,10 +226,13 @@ function createNotification(message = null, type = null) {
     alertSound = 'error.mp3';
   }
 
-  const notfication = new Audio(path.join(resourcesPath, `./sounds/notifications/${alertSound}`));
-  notfication.volume = settings.AUDIO.NOTIFICATION_VOLUME / 100;
-  notfication.play();
-  setTimeout(() => notification.remove(), 10000);
+  if (settings.AUDIO.USE_NOTIFICATION_SOUNDS) {
+    const notfication = new Audio(path.join(resourcesPath, `./sounds/notifications/${alertSound}`));
+    notfication.volume = settings.AUDIO.NOTIFICATION_VOLUME / 100;
+    notfication.play();
+  }
+
+  setTimeout(() => notification.remove(), 3000);
 }
 
 // Check for configs
@@ -242,6 +264,10 @@ function toggleRadio(toggle, inputs) {
   }
 }
 
+document.body.querySelector('#OPEN_SETTINGS_FILE').addEventListener('click', () => {
+  shell.openExternal(settingsPath);
+});
+
 // #region Use Custom theme toggle logic
 document.body.querySelector('#USE_CUSTOM_THEME').addEventListener('click', () => {
   const toggle = document.getElementById('USE_CUSTOM_THEME').checked;
@@ -263,7 +289,7 @@ document.body.querySelector('#min-button').addEventListener('click', () => {
 document.body.querySelector('#Info_USERNAME').addEventListener('click', async () => {
   const element = document.body.querySelector('#TWITCH_OAUTH_TOKEN');
   element.value = await auth.getTwitchOauthToken();
-
+  twitch.checkIfTokenIsValid();
   createNotification('Saved OAuth token!', 'success');
 });
 
@@ -330,11 +356,6 @@ document.body.querySelector('#SoundTestButton').addEventListener('click', () => 
 
 document.body.querySelector('#TestTwitchCredentials').addEventListener('click', () => {
   twitch.ping('#TestTwitchCredentials');
-  // resetTwitch(;
-});
-
-document.body.querySelector('#GetTwitchEmotes').addEventListener('click', () => {
-  twitch.getUserAvailableTwitchEmotes('#GetTwitchEmotes');
   // resetTwitch(;
 });
 
@@ -467,6 +488,36 @@ document.body.querySelector('#USE_STT').addEventListener('change', () => {
   createNotification(`${toggle ? 'Enabled' : 'Disabled'} speech to text!`, 'success');
 });
 
+function toggleOutputToTts() {
+  const toggle = settings.LANGUAGE.OUTPUT_TO_TTS;
+  const inputs = document.getElementsByClassName('outputToTtsInput');
+  toggleRadio(toggle, inputs);
+}
+
+toggleOutputToTts();
+
+document.body.querySelector('#OUTPUT_TO_TTS').addEventListener('change', () => {
+  let toggle = document.getElementById('OUTPUT_TO_TTS').checked;
+  if (!settings.TTS.USE_TTS) {
+    toggle = false;
+    createNotification('Enable TTS first', 'error');
+    return;
+  }
+
+  settings.LANGUAGE.OUTPUT_TO_TTS = toggle;
+  const inputs = document.getElementsByClassName('outputToTtsInput');
+  toggleRadio(toggle, inputs);
+  fs.writeFileSync(settingsPath, ini.stringify(settings));
+  createNotification(`${toggle ? 'Enabled' : 'Disabled'} Outputting translations to TTS!`, 'success');
+});
+
+document.body.querySelector('#BROADCAST_TRANSLATION').addEventListener('change', () => {
+  const toggle = document.getElementById('BROADCAST_TRANSLATION').checked;
+  settings.LANGUAGE.BROADCAST_TRANSLATION = toggle;
+  fs.writeFileSync(settingsPath, ini.stringify(settings));
+  createNotification(`${toggle ? 'Enabled' : 'Disabled'} Language detection!`, 'success');
+});
+
 function toggleLanguageDetection() {
   const toggle = settings.LANGUAGE.USE_DETECTION;
   const inputs = document.getElementsByClassName('languageDetectionInput');
@@ -478,6 +529,14 @@ toggleLanguageDetection();
 document.body.querySelector('#USE_DETECTION').addEventListener('change', () => {
   const toggle = document.getElementById('USE_DETECTION').checked;
   settings.LANGUAGE.USE_DETECTION = toggle;
+
+  if (!toggle) {
+    settings.LANGUAGE.BROADCAST_TRANSLATION = false;
+    document.body.querySelector('#BROADCAST_TRANSLATION').checked = false;
+    settings.LANGUAGE.OUTPUT_TO_TTS = false;
+    document.body.querySelector('#OUTPUT_TO_TTS').checked = false;
+  }
+
   fs.writeFileSync(settingsPath, ini.stringify(settings));
   const inputs = document.getElementsByClassName('languageDetectionInput');
   toggleRadio(toggle, inputs);
@@ -588,6 +647,9 @@ document.body.querySelector('#ttsVolume').addEventListener('change', () => {
 });
 
 document.body.querySelector('#TestDefaultTTSButton').addEventListener('click', async () => {
+  if (!settings.TTS.PRIMARY_VOICE) {
+    return;
+  }
   const text = document.getElementById('testPrimaryTTS').value;
   const requestData = {
     message: `user: ${text}`,
@@ -599,6 +661,9 @@ document.body.querySelector('#TestDefaultTTSButton').addEventListener('click', a
 });
 
 document.body.querySelector('#TestSecondaryTTSButton').addEventListener('click', async () => {
+  if (!settings.TTS.SECONDARY_VOICE) {
+    return;
+  }
   const text = document.getElementById('testSecondaryTTS').value;
   const requestData = {
     message: `user: ${text}`,
@@ -678,13 +743,7 @@ document.body.querySelector('emoji-picker').addEventListener('emoji-click', e =>
   div.focus();
 });
 
-// #region Use Custom theme toggle logic
-document.body.querySelector('#emojis').addEventListener('click', () => {
-  const emojiPicker = document.body.querySelector('#emoji-picker');
-  // console.log(emojiPicker);
-  emojiPicker.style.visibility === 'visible' ? (emojiPicker.style.visibility = 'hidden') : (emojiPicker.style.visibility = 'visible');
-});
-
 module.exports = {
-  getGeneralSettings
+  getGeneralSettings,
+  createNotification
 };

@@ -513,3 +513,32 @@ h1 {
   position: absolute;
   z-index: 1;
 }
+
+.fi {
+  position: relative;
+  z-index: 5;
+  top: 45px;
+  left: 20px;
+  border-radius: 50%;
+}
+
+.translation-header {
+  background-color: var(--main-color4);
+  border-radius: 5px;
+  width: fit-content;
+  padding: 5px;
+  margin: 10px 0px 5px -5px;
+  position: relative;
+}
+
+.translation-message {
+  position: relative;
+  margin: 20px 0px 0px 0px;
+}
+
+.translation-icon {
+  position: relative;
+  padding: 0px 0px 0px 0px;
+  margin: -45px 0px 0px -40px;
+  top: -15px;
+}

@@ -1,4 +1,4 @@
-/* global settings, addVoiceService, internalVoices, ttsRequestCount, main, path, pythonPath, settingsPath, ipcRenderer */
+/* global settings, sound, twitch, getLanguageProperties, addSingleTooltip, showChatMessage, languageObject, addVoiceService, internalVoices, ttsRequestCount, main, path, pythonPath, settingsPath, ipcRenderer */
 
 const spawn = require('child_process').spawn;
 const kill = require('kill-process-by-name');
@@ -14,7 +14,7 @@ async function getInstalledVoices() {
     const response = await fetch(`http://127.0.0.1:${settings.GENERAL.PORT}/voices`, { method: 'GET' });
     if (response.ok) {
       const responseData = await response.json();
-      console.log('Response:', responseData);
+      console.log('Voices:', responseData);
       internalVoices = responseData;
     } else {
       console.error('Failed to send termination signal to Flask server.');
@@ -44,13 +44,137 @@ async function getInstalledVoices() {
   secondaryVoice.value = settings.TTS.SECONDARY_VOICE;
 }
 
+function setTranslatedMessage(message) {
+  const messageBox = document.getElementById(message.messageId).getElementsByClassName('msg-box')[0];
+
+  const translationHeader = document.createElement('div');
+  translationHeader.className = 'translation-header';
+  translationHeader.innerText = 'Translation';
+  messageBox.appendChild(translationHeader);
+
+  const translationIcon = document.createElement('div');
+  translationIcon.className = 'translation-icon';
+  const languageElement = document.createElement('span');
+  const language = getLanguageProperties(settings.LANGUAGE.TRANSLATE_TO);
+  languageElement.classList = `fi fi-${language.ISO3166} fis`;
+  languageElement.setAttribute('tip', language.name);
+  addSingleTooltip(languageElement);
+  translationIcon.appendChild(languageElement);
+  messageBox.appendChild(translationIcon);
+
+  const translationMessage = document.createElement('div');
+  translationMessage.className = 'translation-message';
+  translationMessage.innerText = message.translation;
+  messageBox.appendChild(translationMessage);
+  showChatMessage();
+  if (settings.LANGUAGE.OUTPUT_TO_TTS) {
+    sound.playVoice({
+      filteredMessage: message.translation,
+      logoUrl: message.logoUrl,
+      username: message.username,
+      formattedMessage: message.formattedMessage,
+      language
+    });
+  }
+}
+
+async function getTranslatedMessage(message) {
+  const requestOptions = {
+    method: 'POST', // HTTP method
+    headers: {
+      'Content-Type': 'application/json; charset="utf-8"' // Specify the content type
+    },
+    body: JSON.stringify({
+      message: message.message,
+      language: message.language
+    }) // Convert the data to JSON and include it in the request body
+  };
+
+  try {
+    const response = await fetch(`http://127.0.0.1:${settings.GENERAL.PORT}/translate`, requestOptions);
+    if (response.ok) {
+      const responseData = await response.json();
+
+      console.log('Translated message:', responseData);
+      setTranslatedMessage({
+        translation: responseData.translation,
+        messageId: message.messageId,
+        ISO3166: message.ISO3166,
+        formattedMessage: message.formattedMessage,
+        username: message.username,
+        logoUrl: message.logoUrl
+      });
+      if (settings.LANGUAGE.BROADCAST_TRANSLATION) {
+        twitch.sendMessage(`[${message.language} > ${settings.LANGUAGE.TRANSLATE_TO}] @${message.username}: ${responseData.translation}`);
+      }
+    } else {
+      console.error('Failed to send termination signal to Flask server.');
+      message.message = 'Error,could not translate message';
+      message.languaga = 'en-GB';
+      getTranslatedMessage(message);
+    }
+  } catch (error) {
+    console.error('Error sending termination signal:', error);
+  }
+}
+
+function filterLanguage(message) {
+  const language = getLanguageProperties(message.language);
+
+  if (settings.LANGUAGE.TRANSLATE_TO !== 'none') {
+    getTranslatedMessage({
+      message: message.message,
+      messageId: message.messageId,
+      language: language.IETF,
+      ISO3166: language.ISO3166,
+      username: message.username,
+      formattedMessage: message.formattedMessage
+    });
+  }
+
+  return language;
+}
+
+async function getDetectedLanguage(message) {
+  if (!settings.LANGUAGE.USE_DETECTION) {
+    return;
+  }
+
+  const requestOptions = {
+    method: 'POST', // HTTP method
+    headers: {
+      'Content-Type': 'application/json' // Specify the content type
+    },
+    body: JSON.stringify({ message: message.message }) // Convert the data to JSON and include it in the request body
+  };
+
+  try {
+    const response = await fetch(`http://127.0.0.1:${settings.GENERAL.PORT}/detect`, requestOptions);
+    if (response.ok) {
+      const responseData = await response.json();
+
+      console.log('Detected Languages:', responseData);
+      return filterLanguage({
+        language: responseData.languages[0],
+        message: message.message,
+        messageId: message.messageId,
+        username: message.username,
+        formattedMessage: message.formattedMessage
+      });
+    } else {
+      console.error('Failed to send termination signal to Flask server.');
+    }
+  } catch (error) {
+    console.error('Error sending termination signal:', error);
+  }
+}
+
 async function getBackendServerStatus() {
-  console.log('getting status');
   try {
     const response = await fetch(`http://127.0.0.1:${settings.GENERAL.PORT}/status`, { method: 'GET' });
     if (response.ok) {
       const responseData = await response.json();
-      console.log('Response:', responseData);
+      console.log('Status:', responseData);
     } else {
       console.error('Failed to send termination signal to Flask server.');
     }
@@ -93,7 +217,7 @@ async function getInternalTTSAudio(requestData) {
     const response = await fetch(`http://127.0.0.1:${settings.GENERAL.PORT}/audio`, requestOptions);
     if (response.ok) {
       const responseData = await response.json();
-      console.log('Response:', responseData);
+      console.log('Audio:', responseData);
       return ttsRequestCount;
     } else {
       console.error('Failed to send termination signal to Flask server.');
@@ -113,10 +237,6 @@ const createBackendServer = () =>
     // Capture the stdout of the Python process
     python.stdout.on('data', data => {
       console.info(`${data}`);
-      if (data.toString().startsWith('kees')) {
-        console.log('yess');
-        // getBackendServerStatus();
-      }
     });
 
     // Capture the stderr of the Python process
@@ -175,4 +295,4 @@ ipcRenderer.on('quit-event', async () => {
   }
 });
 
-module.exports = { getInternalTTSAudio };
+module.exports = { getInternalTTSAudio, getDetectedLanguage };

@@ -26,6 +26,7 @@
     />
     <link rel="stylesheet" href="./css/logger.css" />
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css" />
     <!--#endregion -->
   </head>
 
@@ -151,6 +152,15 @@
                       tip="Port to use to host additional services"
                     ></i>
                   </div>
+                  <div class="AdvancedMenuRow">
+                    <div class="AdvancedMenuLabel">Open Settings file</div>
+                    <button type="text" class="AdvancedMenuButton" id="OPEN_SETTINGS_FILE"><i class="fa-solid fa-file-lines"></i></button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_OPEN_SETTINGS_FILE"
+                      tip="Open the settings file"
+                    ></i>
+                  </div>
                 </fieldset>
 
                 <fieldset id="TTSMenu" class="AdvancedMenu">
@@ -160,21 +170,13 @@
                     <label for="USE_TTS" class="toggle-small"></label>
                     <div class="AdvancedMenuLabel3">Enable TTS</div>
                   </legend>
-                  <div class="AdvancedMenuRow inputTTS">
+                  <div class="AdvancedMenuRow inputTTS" style="height: 0; visibility: hidden">
                     <div class="AdvancedMenuLabel">Default TTS Service</div>
                     <select class="menu-select" name="primaryTTSService" id="primaryTTSService"></select>
                   </div>
-                  <div class="AdvancedMenuRow languageDetectionInput">
-                    <div class="AdvancedMenuLabel">Default TTS language</div>
-                    <select class="menu-select" name="defaultLanguage" id="defaultLanguage" tip="Language Service to use"></select>
-                  </div>
-                  <div class="AdvancedMenuRow languageDetectionInput">
+                  <div class="AdvancedMenuRow languageDetectionInput" style="height: 0; visibility: hidden">
                     <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS Service</div>
                     <select class="menu-select" name="secondaryTTSService" id="secondaryTTSService"></select>
-                  </div>
-                  <div class="AdvancedMenuRow languageDetectionInput">
-                    <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS language</div>
-                    <select class="menu-select" name="secondaryLanguage" id="secondaryLanguage" tip="Language Service to use"></select>
                   </div>
                   <div class="AdvancedMenuRow inputTTS">
                     <div class="AdvancedMenuLabel">TTS Output Device</div>
@@ -247,16 +249,25 @@
                   </legend>
                   <div class="AdvancedMenuRow languageDetectionInput">
                     <div class="AdvancedMenuLabel">Translate chat messages to</div>
-                    <select class="menu-select" name="language" id="translateChatMessageLanguage" tip="Language Service to use"></select>
+                    <select class="menu-select" name="language" id="TRANSLATE_TO" tip="Language Service to use"></select>
                   </div>
                   <div class="AdvancedMenuRow languageDetectionInput">
-                    <div class="AdvancedMenuLabel">Broadcast translation</div>
-                    <label for="USE_CHAT_LANGUAGE_DETECTION" class="toggle-small"></label>
-                    <input type="checkbox" id="USE_CHAT_LANGUAGE_DETECTION" class="checkbox" />
+                    <div class="AdvancedMenuLabel">Broadcast translation to chat</div>
+                    <input type="checkbox" id="BROADCAST_TRANSLATION" class="checkbox" />
+                    <label for="BROADCAST_TRANSLATION" class="toggle-small"></label>
                   </div>
                   <div class="AdvancedMenuRow languageDetectionInput">
-                    <div class="AdvancedMenuLabel">Output to TTS service</div>
-                    <select class="menu-select" name="language" id="translateChatMessageLanguage" tip="Language Service to use"></select>
+                    <div class="AdvancedMenuLabel">Output translation to TTS</div>
+                    <input type="checkbox" id="OUTPUT_TO_TTS" class="checkbox" />
+                    <label for="OUTPUT_TO_TTS" class="toggle-small"></label>
+                  </div>
+                  <div class="AdvancedMenuRow outputToTtsInput">
+                    <div class="AdvancedMenuLabel">Default TTS service language</div>
+                    <select class="menu-select" name="defaultLanguage" id="defaultLanguage" tip="Language Service to use"></select>
+                  </div>
+                  <div class="AdvancedMenuRow outputToTtsInput">
+                    <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS service language</div>
+                    <select class="menu-select" name="secondaryLanguage" id="secondaryLanguage" tip="Language Service to use"></select>
                   </div>
                 </fieldset>
 
@@ -267,7 +278,7 @@
                     <label for="USE_NOTIFICATION_SOUNDS" class="toggle-small"></label>
                     <div class="AdvancedMenuLabel3">Enable notification sounds</div>
                   </legend>
-                  <div class="AdvancedMenuRow inputTTS">
+                  <div class="AdvancedMenuRow inputNotificationSound">
                     <div class="AdvancedMenuLabel">Notification sounds Output Device</div>
                     <select class="menu-select" name="notificationSoundAudioDevice" id="notificationSoundAudioDevice"></select>
                     <i
@@ -276,7 +287,6 @@
                       tip="Outputting to specific device will NOT work with voicemeter"
                     ></i>
                   </div>
-
                   <div class="AdvancedMenuRow inputNotificationSound">
                     <div class="AdvancedMenuLabel">Notification Volume</div>
                     <div class="slider-container">
@@ -305,6 +315,20 @@
                     <div class="AdvancedMenuLabel3">Enable Twitch</div>
                   </legend>
                   <div class="AdvancedMenuRow inputTwitch">
+                    <div class="AdvancedMenuLabel">Oauth Token</div>
+                    <input
+                      type="password"
+                      type2="text"
+                      class="fname inputTwitch"
+                      id="TWITCH_OAUTH_TOKEN"
+                      placeholder="click the key icon to get the OAuth token"
+                    />
+                    <button class="password-toggle-btn password-toggle-btn1">
+                      <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
+                    </button>
+                    <i class="fa-solid fa-key fa-2x SmallButton option-icon-container" id="Info_USERNAME" tip="Get OAuth Token"></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputTwitch">
                     <div class="AdvancedMenuLabel">Channel Name</div>
                     <input type="text" class="fname inputTwitch" id="TWITCH_CHANNEL_NAME" />
                     <i
@@ -314,37 +338,12 @@
                     ></i>
                   </div>
                   <div class="AdvancedMenuRow inputTwitch">
-                    <div class="AdvancedMenuLabel">Oauth Token</div>
-                    <input
-                      type="password"
-                      type2="text"
-                      class="fname inputTwitch"
-                      id="TWITCH_OAUTH_TOKEN"
-                      placeholder="click the ? icon to get the OAuth token"
-                    />
-                    <button class="password-toggle-btn password-toggle-btn1">
-                      <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
-                    </button>
-                    <i class="fa fa-question-circle fa-2x SmallButton option-icon-container" id="Info_USERNAME" tip="Get OAuth Token"></i>
-                  </div>
-                  <div class="AdvancedMenuRow inputTwitch">
                     <div class="AdvancedMenuLabel">Test credentials</div>
                     <button type="text" class="AdvancedMenuButton" id="TestTwitchCredentials">Test</button>
                     <i
                       class="fa fa-question-circle fa-2x SmallButton option-icon-container"
                       id="Info_TWITCH_TEST_CREDENTIALS"
                       tip="Test Twitch credentials"
-                    ></i>
-                  </div>
-                  <div class="AdvancedMenuRow inputTwitch">
-                    <div class="AdvancedMenuLabel">Get Twitch emotes</div>
-                    <button type="text" class="AdvancedMenuButton" id="GetTwitchEmotes">
-                      <img src="https://static-cdn.jtvnw.net/emoticons/v2/25/static/light/1.0" />
-                    </button>
-                    <i
-                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                      id="Info_TWITCH_GET_EMOTES"
-                      tip="Get Twitch emotes available to you"
                     ></i>
                   </div>
                 </fieldset>
@@ -356,7 +355,7 @@
                     <label for="USE_MODULES" class="toggle-small"></label>
                     <div class="AdvancedMenuLabel3">Enable Modules</div>
                   </legend>
-                  <div class="AdvancedMenuRow inputServer">
+                  <div class="AdvancedMenuRow inputServer" style="height: 0; visibility: hidden">
                     <div class="AdvancedMenuLabel">Use PNGtuber</div>
                     <input type="checkbox" id="USE_PNGTUBER" class="checkbox" />
                     <label for="USE_PNGTUBER" class="toggle-small"></label>
@@ -389,7 +388,7 @@
                       tip="You can use it as a browsersource on http://localhost:PORT/chat"
                     ></i>
                   </div>
-                  <div class="AdvancedMenuRow inputServer">
+                  <div class="AdvancedMenuRow inputServer" style="height: 0; visibility: hidden">
                     <div class="AdvancedMenuLabel">Use Finger</div>
                     <input type="checkbox" id="USE_CHATBUBBLE" class="checkbox" />
                     <label for="USE_CHATBUBBLE" class="toggle-small"></label>
@@ -402,7 +401,7 @@
                   </div>
                 </fieldset>
 
-                <fieldset id="AdvancedMenuAmazon" class="AdvancedMenu">
+                <fieldset id="AdvancedMenuAmazon" class="AdvancedMenu" style="height: 0; visibility: hidden">
                   <legend class="legendStyle" tip="Enable/Disable Amazon">
                     <img class="AdvancedMenuIcon" src="./images/amazon.png" alt />
                     <input type="checkbox" id="USE_AMAZON" class="checkbox" />
@@ -479,7 +478,7 @@
                   </div>
                 </fieldset>
 
-                <fieldset id="AdvancedMenuGoogle" class="AdvancedMenu">
+                <fieldset id="AdvancedMenuGoogle" class="AdvancedMenu" style="height: 0; visibility: hidden">
                   <legend class="legendStyle" tip="Enable/Disable Google service">
                     <img class="AdvancedMenuIcon" src="./images/google.png" alt />
                     <input type="checkbox" id="USE_GOOGLE" class="checkbox" />
@@ -556,8 +555,8 @@
             <div id="emoji-picker" class="emoji-picker">
               <emoji-picker class="dark"></emoji-picker>
             </div>
-            <button class="SmallButton" id="emojis">
-              <i class="fa-regular fa-grin fa-2x" aria-hidden="true"></i>
+            <button class="SmallButton">
+              <i class="fa-regular fa-grin fa-2x" id="emojis" aria-hidden="true"></i>
             </button>
             <!-- User text input-->
             <input id="textInput" class="input-box" type="text" name="msg" placeholder="Tap 'Enter' to send a message" />

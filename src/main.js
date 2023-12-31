@@ -76,6 +76,7 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', event => {
   if (process.platform !== 'darwin') {
+    kill('loquendoBot_backend');
     app.quit();
   }
 });
@@ -88,6 +89,7 @@ app.on('activate', () => {
 
 app.on('before-quit', () => {
   window.webContents.send('quit-event');
+  kill('loquendoBot_backend');
 });
 
 ipcMain.on('resize-window', (event, width, height) => {
@@ -134,21 +136,28 @@ async function createIniFile() {
       POSITION_Y: 0,
       WIDTH: 1024,
       HEIGHT: 768,
-      LANGUAGE: 'EN',
+      LANGUAGE: 'none',
+      LANGUAGE_INDEX: '0',
       PORT: 9000,
       VIEWERS_PANEL: false,
       LOCATION: pythonPath,
       ZOOMLEVEL: 1
     },
     LANGUAGE: {
-      USE_DETECTION: false
+      USE_DETECTION: false,
+      TRANSLATE_TO: 'none',
+      LANGUAGE_INDEX: '0',
+      BROADCAST_TRANSLATION: false,
+      OUTPUT_TO: false
     },
     TTS: {
-      USE_TTS: true,
+      USE_TTS: false,
       PRIMARY_VOICE: '',
-      PRIMARY_TTS_LANGUAGE: 'EN',
+      PRIMARY_TTS_LANGUAGE: 'none',
       SECONDARY_VOICE: '',
-      SECONDARY_TTS_LANGUAGE: 'EN'
+      SECONDARY_TTS_LANGUAGE: 'none',
+      PRIMARY_TTS_LANGUAGE_INDEX: 0,
+      SECONDARY_TTS_LANGUAGE_INDEX: 0
     },
     STT: {
       USE_STT: false,
@@ -158,7 +167,7 @@ async function createIniFile() {
       LANGUAGE: 'vosk-model-small-es-0.42'
     },
     AUDIO: {
-      USE_NOTIFICATION_SOUNDS: true,
+      USE_NOTIFICATION_SOUNDS: false,
       SELECTED_NOTIFICATION_AUDIO_DEVICE: 'default',
       NOTIFICATION_AUDIO_DEVICE: 0,
       NOTIFICATION_SOUND: 0,
@@ -182,6 +191,7 @@ async function createIniFile() {
     TWITCH: {
       USE_TWITCH: false,
       CHANNEL_NAME: '',
+      CHANNEL_USER_ID: '',
       USERNAME: '',
       USER_ID: '',
       USER_LOGO_URL: '',

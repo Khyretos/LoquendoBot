@@ -1,4 +1,4 @@
-/* global client, fs, main, path, resourcesPath, customEmojis, emojiPicker, settings, options, sound, showChatMessage, messageTemplates, getPostTime */
+/* global client, playNotificationSound, messageId, addSingleTooltip, settingsPath, fs, ini, backend, main, path, resourcesPath, customEmojis, emojiPicker,config, settings, options, sound, showChatMessage, messageTemplates, getPostTime */
 
 const tmi = require('tmi.js');
 const axios = require('axios');
@@ -11,21 +11,75 @@ function sendMessage(message) {
   client.say(settings.TWITCH.CHANNEL_NAME, message).catch(console.error);
 }
 
-client = new tmi.Client({
-  options: {
-    skipUpdatingEmotesets: true
-  },
-  identity: {
-    username: settings.TWITCH.USERNAME,
-    password: settings.TWITCH.OAUTH_TOKEN
-  },
-  channels: [settings.TWITCH.CHANNEL_NAME]
-});
+if (settings.TWITCH.USERNAME && settings.TWITCH.OAUTH_TOKEN) {
+  client = new tmi.Client({
+    options: {
+      skipUpdatingEmotesets: true
+    },
+    identity: {
+      username: settings.TWITCH.USERNAME,
+      password: settings.TWITCH.OAUTH_TOKEN
+    },
+    channels: [settings.TWITCH.CHANNEL_NAME]
+  });
 
-client
-  .connect()
-  .then(data => {})
-  .catch(console.error);
+  client
+    .connect()
+    .then(data => {})
+    .catch(console.error);
+
+  client.on('message', (channel, tags, message, self) => {
+    if (self) {
+      return;
+    }
+    const emotes = tags.emotes || {};
+    const emoteValues = Object.entries(emotes);
+    let filteredMessage = message;
+    let emoteMessage = message;
+
+    emoteValues.forEach(entry => {
+      entry[1].forEach(lol => {
+        const [start, end] = lol.split('-');
+        const emote = `<img src="https://static-cdn.jtvnw.net/emoticons/v2/${entry[0]}/default/dark/1.0"/>`;
+        emoteMessage = emoteMessage.replaceAll(message.slice(parseInt(start), parseInt(end) + 1), emote);
+        filteredMessage = filteredMessage.replaceAll(message.slice(parseInt(start), parseInt(end) + 1), '');
+      });
+    });
+
+    const messageObject = parseString(emoteMessage);
+
+    getProfileImage(tags['user-id'], tags['display-name'], messageObject, filteredMessage);
+  });
+}
+
+function checkIfTokenIsValid() {
+  options = {
+    method: 'GET',
+    url: 'https://id.twitch.tv/oauth2/validate',
+    headers: {
+      Authorization: `OAuth ${settings.TWITCH.OAUTH_TOKEN}`
+    }
+  };
+
+  axios
+    .request(options)
+    .then(response => {
+      document.getElementById('TWITCH_CHANNEL_NAME').disabled = false;
+    })
+    .catch(error => {
+      console.error(error);
+      document.getElementById('TWITCH_CHANNEL_NAME').disabled = true;
+      config.createNotification('Oauth Token is invalid, please obtain a new one', 'error');
+    });
+}
+
+setInterval(checkIfTokenIsValid, 600000);
+
+if (settings.TWITCH.OAUTH_TOKEN) {
+  checkIfTokenIsValid();
+} else {
+  document.getElementById('TWITCH_CHANNEL_NAME').disabled = true;
+}
 
 function ping(element) {
   const value = document.body.querySelector(element);
@@ -42,16 +96,18 @@ function ping(element) {
     });
 }
 
-function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage) {
+async function displayTwitchMessage(logoUrl, username, messageObject, filteredMessage) {
   const article = document.createElement('article');
   article.className = 'msg-container sender';
+  article.setAttribute('id', messageId);
 
   article.innerHTML = messageTemplates.twitchTemplate;
-
   const userImg = article.querySelector('.user-img');
   if (userImg) {
     userImg.src = logoUrl;
+    userImg.setAttribute('tip', '');
   }
+  addSingleTooltip(userImg);
 
   const usernameHtml = article.querySelector('.username');
   if (usernameHtml) {
@@ -66,28 +122,48 @@ function displayTwitchMessage(logoUrl, username, messageObject, fileteredMessage
 
   article.appendChild(postTime);
 
-  const msg = article.querySelector('.msg-box');
-  if (msg) {
+  const formattedMessage = article.querySelector('.msg-box');
+  if (formattedMessage) {
     messageObject.forEach(entry => {
       if (entry.text) {
-        msg.innerHTML += entry.text;
+        formattedMessage.innerHTML += entry.text;
       } else {
-        msg.innerHTML += entry.html;
+        formattedMessage.innerHTML += entry.html;
       }
     });
   }
+  if (settings.LANGUAGE.USE_DETECTION) {
+    await backend.getDetectedLanguage({ message: filteredMessage, messageId, username, logoUrl, formattedMessage }).then(language => {
+      const languageElement = document.createElement('span');
+      languageElement.classList = `fi fi-${language.ISO3166} fis`;
+      languageElement.setAttribute('tip', language.name);
+      article.appendChild(languageElement);
+      addSingleTooltip(languageElement);
 
-  // Appends the message to the main chat box (shows the message)
-  showChatMessage(article);
+      // Appends the message to the main chat box (shows the message)
+      showChatMessage(article);
 
-  if (fileteredMessage) {
-    sound.playVoice(fileteredMessage, logoUrl, username, msg);
+      if (filteredMessage && !settings.LANGUAGE.OUTPUT_TO_TTS) {
+        sound.playVoice({ filteredMessage, logoUrl, username, formattedMessage, language });
+      }
+
+      window.article = article;
+    });
+  } else {
+    showChatMessage(article);
+
+    if (filteredMessage) {
+      sound.playVoice({ filteredMessage, logoUrl, username, formattedMessage });
+    }
+
+    window.article = article;
   }
 
-  window.article = article;
+  messageId++;
+  sound.playNotificationSound();
 }
 
-function getProfileImage(userid, username, message, fileteredMessage) {
+function getProfileImage(userid, username, message, filteredMessage) {
   // Get user Logo with access token
   options = {
     method: 'GET',
@@ -99,7 +175,7 @@ function getProfileImage(userid, username, message, fileteredMessage) {
     .request(options)
     .then(responseLogoUrl => {
       logoUrl = responseLogoUrl.data.data[0].profile_image_url;
-      displayTwitchMessage(logoUrl, username, message, fileteredMessage);
+      displayTwitchMessage(logoUrl, username, message, filteredMessage);
     })
     .catch(error => {
       console.error(error);
@@ -123,28 +199,6 @@ function parseString(inputString) {
   return result;
 }
 
-client.on('message', (channel, tags, message, self) => {
-  if (self) {
-    return;
-  }
-  const emotes = tags.emotes || {};
-  const emoteValues = Object.entries(emotes);
-  let filteredMessage = message;
-  let emoteMessage = message;
-
-  emoteValues.forEach(entry => {
-    entry[1].forEach(lol => {
-      const [start, end] = lol.split('-');
-      const emote = `<img src="https://static-cdn.jtvnw.net/emoticons/v2/${entry[0]}/default/dark/1.0"/>`;
-      emoteMessage = emoteMessage.replaceAll(message.slice(parseInt(start), parseInt(end) + 1), emote);
-      filteredMessage = filteredMessage.replaceAll(message.slice(parseInt(start), parseInt(end) + 1), '');
-    });
-  });
-
-  const messageObject = parseString(emoteMessage);
-  getProfileImage(tags['user-id'], tags['display-name'], messageObject, filteredMessage);
-});
-
 function saveTwitchEmotesToFile(TwitchEmotes) {
   const data = JSON.stringify(TwitchEmotes);
   const savePath =
@@ -164,33 +218,19 @@ function saveTwitchEmotesToFile(TwitchEmotes) {
   });
 }
 
-async function formatGlobalTwitchEmotes(emotes, name) {
-  for (const emote of emotes) {
-    const emojiToBeAdded = {
-      name: emote.name,
-      shortcodes: [emote.name],
-      url: emote.images.url_1x,
-      category: name
-    };
-    await customEmojis.push(emojiToBeAdded);
-  }
-  emojiPicker.customEmoji = customEmojis;
-  saveTwitchEmotesToFile(customEmojis);
-}
-
-function formatFollowedChannelsTwitchEmotes(channel) {
+function formatTwitchEmotes(channel) {
   if (channel.emotes.length === 0) {
     return;
   }
 
   channel.emotes.forEach(emote => {
-    if (emote.emote_type === 'bitstier') {
+    if (channel.name !== 'Twitch Global' && emote.emote_type === 'bitstier') {
       return;
     }
-    if (emote.emote_type === 'subscriptions' && parseInt(channel.tier) < parseInt(emote.tier)) {
+    if (channel.name !== 'Twitch Global' && emote.emote_type === 'subscriptions' && parseInt(channel.tier) < parseInt(emote.tier)) {
       return;
     }
-    if (emote.emote_type === 'follower ' && parseInt(channel.tier) === '0') {
+    if (channel.name !== 'Twitch Global' && emote.emote_type === 'follower ' && parseInt(channel.tier) === 0) {
       return;
     }
     const emojiToBeAdded = {
@@ -205,7 +245,7 @@ function formatFollowedChannelsTwitchEmotes(channel) {
   saveTwitchEmotesToFile(customEmojis);
 }
 
-function getTwitchChannelFollows(paginationToken) {
+function getTwitchUserFollows(paginationToken) {
   let url = '';
   if (!paginationToken) {
     url = `https://api.twitch.tv/helix/channels/followed?user_id=${settings.TWITCH.USER_ID}&first=100`;
@@ -227,11 +267,15 @@ function getTwitchChannelFollows(paginationToken) {
       // console.log(responseLogoUrl);
 
       responseLogoUrl.data.data.forEach(channel => {
-        twitchChannels.push({ broadcaster_id: channel.broadcaster_id, broadcaster_name: channel.broadcaster_name, tier: '0' });
+        twitchChannels.push({
+          broadcaster_id: channel.broadcaster_id,
+          broadcaster_name: channel.broadcaster_name,
+          tier: '0'
+        });
       });
 
       if (Object.keys(responseLogoUrl.data.pagination).length !== 0) {
-        getTwitchChannelFollows(responseLogoUrl.data.pagination.cursor);
+        getTwitchUserFollows(responseLogoUrl.data.pagination.cursor);
       } else {
         getTwitchChannelSubscriptions(twitchChannels);
       }
@@ -255,7 +299,6 @@ function getTwitchChannelSubscriptions(channels) {
     axios
       .request(options)
       .then(responseLogoUrl => {
-        // console.log(responseLogoUrl);
         const objIndex = twitchChannels.findIndex(obj => obj.broadcaster_id === channel.broadcaster_id);
         twitchChannels[objIndex].tier = responseLogoUrl.data.data[0].tier;
         getTwitchChannelEmotes(channel);
@@ -282,14 +325,9 @@ function getTwitchChannelEmotes(channel) {
   axios
     .request(options)
     .then(responseLogoUrl => {
-      // console.log(channel.broadcaster_id);
-      if (channel.broadcaster_id === '98553286') {
-        // console.log(responseLogoUrl);
-        // console.log(channel);
-      }
       if (responseLogoUrl.data.data.length !== 0) {
         channel.emotes = responseLogoUrl.data.data;
-        formatFollowedChannelsTwitchEmotes(channel);
+        formatTwitchEmotes(channel);
       }
     })
     .catch(error => {
@@ -297,7 +335,7 @@ function getTwitchChannelEmotes(channel) {
     });
 }
 
-function getTwitchGLobalEmotes() {
+function getTwitchGlobalEmotes() {
   // Get user Logo with access token
   options = {
     method: 'GET',
@@ -311,37 +349,7 @@ function getTwitchGLobalEmotes() {
   axios
     .request(options)
     .then(responseLogoUrl => {
-      formatGlobalTwitchEmotes(responseLogoUrl.data.data, 'Twitch Global');
-      // console.log(responseLogoUrl);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
-function getCurrentTwitchChannelId(channelId) {
-  let channel = {};
-  options = {
-    method: 'GET',
-    url: `https://api.twitch.tv/helix/users?${channelId !== undefined ? 'id=' + channelId : 'login=' + settings.TWITCH.CHANNEL_NAME}`,
-    headers: {
-      'Client-ID': settings.TWITCH.CLIENT_ID,
-      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
-    }
-  };
-
-  axios
-    .request(options)
-    .then(responseData => {
-      // console.log(responseData);
-      channel = { broadcaster_id: responseData.data.data[0].id, broadcaster_name: responseData.data.data[0].display_name, tier: '0' };
-      if (responseData.data.data[0].id !== settings.TWITCH.USER_ID) {
-        getCurrentTwitchChannelId(settings.TWITCH.USER_ID);
-        channel.tier = '0';
-      } else {
-        channel.tier = '3000';
-      }
-      getTwitchChannelEmotes(channel);
+      formatTwitchEmotes({ broadcaster_name: 'Twitch Global', emotes: responseLogoUrl.data.data });
     })
     .catch(error => {
       console.error(error);
@@ -350,10 +358,90 @@ function getCurrentTwitchChannelId(channelId) {
 
 async function getUserAvailableTwitchEmotes() {
   if (settings.TWITCH.OAUTH_TOKEN) {
-    await getTwitchGLobalEmotes();
-    await getTwitchChannelFollows();
-    await getCurrentTwitchChannelId();
+    await getTwitchGlobalEmotes();
+    await getTwitchUserFollows();
+    await getTwitchChannelEmotes({
+      broadcaster_id: settings.TWITCH.USER_ID,
+      broadcaster_name: settings.TWITCH.USERNAME,
+      tier: '3000'
+    });
+    await getTwitchChannelEmotes({
+      broadcaster_id: settings.TWITCH.CHANNEL_USER_ID,
+      broadcaster_name: settings.TWITCH.CHANNEL_NAME,
+      tier: '1'
+    });
   }
 }
 
-module.exports = { sendMessage, ping, client, getUserAvailableTwitchEmotes };
+function getTwitchChannelId() {
+  options = {
+    method: 'GET',
+    url: `https://api.twitch.tv/helix/users?login=${settings.TWITCH.CHANNEL_NAME}`,
+    headers: {
+      'Client-ID': settings.TWITCH.CLIENT_ID,
+      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
+    }
+  };
+
+  axios
+    .request(options)
+    .then(responseLogoUrl => {
+      settings.TWITCH.CHANNEL_USER_ID = responseLogoUrl.data.data[0].id;
+      fs.writeFileSync(settingsPath, ini.stringify(settings));
+      config.createNotification('Obtained channel info succesfully', 'success');
+      getUserAvailableTwitchEmotes();
+    })
+    .catch(error => {
+      console.error(error);
+      config.createNotification('could not obtain channel info, please try again', 'error');
+    });
+}
+
+function getTwitchUserId() {
+  // Get user Logo with access token
+  options = {
+    method: 'GET',
+    url: 'https://api.twitch.tv/helix/users',
+    headers: {
+      'Client-ID': settings.TWITCH.CLIENT_ID,
+      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
+    }
+  };
+
+  axios
+    .request(options)
+    .then(responseLogoUrl => {
+      // console.log(responseLogoUrl.data.data[0]);
+      settings.TWITCH.USERNAME = responseLogoUrl.data.data[0].display_name;
+      settings.TWITCH.USER_LOGO_URL = responseLogoUrl.data.data[0].profile_image_url;
+      settings.TWITCH.USER_ID = responseLogoUrl.data.data[0].id;
+      fs.writeFileSync(settingsPath, ini.stringify(settings));
+      config.createNotification('Obtained user info succesfully', 'success');
+    })
+    .catch(error => {
+      console.error(error);
+      config.createNotification('could not obtain user info, please try again', 'error');
+    });
+}
+
+// const Sockette = require('sockette');
+
+// const ws = new Sockette('wss://eventsub.wss.twitch.tv/ws', {
+//   timeout: 5e3,
+//   maxAttempts: 10,
+//   onopen: e => console.log('Connected!', e),
+//   onmessage: e => console.log('Received:', e),
+//   onreconnect: e => console.log('Reconnecting...', e),
+//   onmaximum: e => console.log('Stop Attempting!', e),
+//   onclose: e => console.log('Closed!', e),
+//   onerror: e => console.log('Error:', e)
+// });
+
+// ws.send('Hello, world!');
+// ws.json({ type: 'ping' });
+// ws.close(); // graceful shutdown
+
+// Reconnect 10s later
+// setTimeout(ws.reconnect, 10e3);
+
+module.exports = { sendMessage, ping, client, getUserAvailableTwitchEmotes, getTwitchChannelId, getTwitchUserId, checkIfTokenIsValid };

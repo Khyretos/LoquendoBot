@@ -1,4 +1,4 @@
-/* global settings, fs, settingsPath, ini, shell, options, axios */
+/* global settings,twitch, fs, settingsPath, ini, shell, options, axios */
 
 const twitchAuthentication = () =>
   new Promise(resolve => {
@@ -70,34 +70,10 @@ const twitchAuthentication = () =>
     }
   });
 
-function getTwitchUserId() {
-  // Get user Logo with access token
-  options = {
-    method: 'GET',
-    url: 'https://api.twitch.tv/helix/users',
-    headers: {
-      'Client-ID': settings.TWITCH.CLIENT_ID,
-      Authorization: `Bearer ${settings.TWITCH.OAUTH_TOKEN}`
-    }
-  };
-
-  axios
-    .request(options)
-    .then(responseLogoUrl => {
-      console.log(responseLogoUrl.data.data[0]);
-      settings.TWITCH.USERNAME = responseLogoUrl.data.data[0].display_name;
-      settings.TWITCH.USER_LOGO_URL = responseLogoUrl.data.data[0].profile_image_url;
-      settings.TWITCH.USER_ID = responseLogoUrl.data.data[0].id;
-      fs.writeFileSync(settingsPath, ini.stringify(settings));
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
 function getTwitchOauthToken() {
   return twitchAuthentication().then(res => {
-    getTwitchUserId();
+    twitch.getTwitchUserId();
+    // twitch.getTwitchChannelId();
     return res;
   });
 }

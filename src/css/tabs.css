@@ -395,27 +395,6 @@ input[type='lol'] {
   z-index: 999;
 }
 
-/* .tooltip .tooltiptext {
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-}
-
-.tooltip .tooltiptext::after {
-    content: "";
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-} */
-
 div[type='text']:disabled {
   background: #4b4b4b;
   display: none;

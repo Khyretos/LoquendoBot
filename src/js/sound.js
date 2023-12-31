@@ -1,8 +1,5 @@
-/* global ttsAudioFile, path, resourcesPath, settings, fs, notificationSound, backend, socket, requestData */
+/* global ttsAudioFile, path, getLanguageProperties, resourcesPath, settings, fs, notificationSound, backend, socket, requestData */
 
-let trueMessage = '';
-let currentLogoUrl = '';
-let currentUsername = '';
 const voiceSoundArray = [];
 let status = 0;
 const counter = 0;
@@ -11,7 +8,6 @@ const playTTS = data =>
   new Promise(resolve => {
     ttsAudioFile = path.join(resourcesPath, `./sounds/tts/${data.service}_${data.count}.mp3`);
     const tts = new Audio(ttsAudioFile);
-    // console.log(settings.AUDIO.TTS_AUDIO_DEVICE);
     tts.setSinkId(settings.AUDIO.TTS_AUDIO_DEVICE);
 
     tts.addEventListener('ended', () => {
@@ -89,24 +85,20 @@ function playAudio(data) {
   }
 }
 
-async function playVoice(filteredMessage, logoUrl, username, message) {
-  trueMessage = filteredMessage;
-  currentLogoUrl = logoUrl;
-  currentUsername = username;
-  const textObject = { filtered: filteredMessage, formatted: message };
-  let voice;
-  textObject.filtered = `${username}: ${filteredMessage}`;
+async function playVoice(message) {
+  if (!settings.TTS.PRIMARY_VOICE) {
+    return;
+  }
+  const textObject = { filtered: message.filteredMessage, formatted: message.formattedMessage };
+  let voice = settings.TTS.PRIMARY_VOICE;
+  textObject.filtered = `${message.username}: ${message.filteredMessage}`;
 
-  // if (
-  //     settings.TTS.PRIMARY_TTS_LANGUAGE.toLowerCase() !== settings.TTS.SECONDARY_TTS_LANGUAGE.toLowerCase() &&
-  //     language[0].lang === settings.TTS.SECONDARY_TTS_LANGUAGE.toLowerCase()
-  // ) {
-  //     voice = settings.TTS.SECONDARY_TTS_NAME;
-  //     textObject.filtered = `${username}: ${filteredMessage}`;
-  // } else {
-  //     voice = settings.TTS.PRIMARY_TTS_NAME;
-  //     textObject.filtered = `${username}: ${filteredMessage}`;
-  // }
+  if (settings.LANGUAGE.USE_DETECTION && settings.TTS.SECONDARY_VOICE && settings.LANGUAGE.OUTPUT_TO_TTS) {
+    const secondaryTTSLanguage = getLanguageProperties(settings.TTS.SECONDARY_TTS_LANGUAGE);
+    if (message.language.ISO639 === secondaryTTSLanguage.ISO639) {
+      voice = settings.TTS.SECONDARY_VOICE;
+    }
+  }
 
   const service = document.getElementById('primaryTTSService').value;
 
@@ -114,7 +106,7 @@ async function playVoice(filteredMessage, logoUrl, username, message) {
     case 'Internal': {
       const requestData = {
         message: textObject.filtered,
-        voice: settings.TTS.PRIMARY_VOICE
+        voice: voice
       };
 
       const count = await backend.getInternalTTSAudio(requestData);
@@ -130,10 +122,8 @@ async function playVoice(filteredMessage, logoUrl, username, message) {
   }
 
   if (settings.MODULES.USE_CHATBUBBLE) {
-    socket.emit('xxx', currentLogoUrl, currentUsername, textObject);
+    socket.emit('xxx', message);
   }
-
-  playNotificationSound();
 }
 
 module.exports = { playAudio, playVoice, playNotificationSound };

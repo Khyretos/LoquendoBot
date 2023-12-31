@@ -6,9 +6,6 @@ const axios = require('axios');
 const { webFrame, ipcRenderer, shell } = require('electron'); // necessary electron libraries to send data to the app
 const io = require('socket.io-client');
 
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-
 const GoogleTTS = require('node-google-tts-api');
 
 const tts = new GoogleTTS();
@@ -39,6 +36,7 @@ const sttModel = document.querySelector('#sttModel'); // obtain the html referen
 const ttsAudioDevices = document.querySelector('#ttsAudioDevice'); // obtain the html reference of the installedTTS comboBox
 const notificationSoundAudioDevices = document.querySelector('#notificationSoundAudioDevice'); // obtain the html reference of the installedTTS comboBox
 const emojiPicker = document.body.querySelector('emoji-picker');
+const lol = document.body.querySelector('country-flag-emoji-polyfill');
 
 // laod local javascript files
 const chat = require(path.join(__dirname, './js/chat'));
@@ -62,7 +60,8 @@ const server = require(path.join(__dirname, './js/server'));
 const backend = require(path.join(__dirname, './js/backend'));
 const socket = io(`http://localhost:${settings.GENERAL.PORT}`); // Connect to your Socket.IO server
 
-const twitch = settings.TWITCH.USE_TWITCH ? require(path.join(__dirname, './js/twitch')) : '';
+let twitch = null;
+twitch = settings.TWITCH.USE_TWITCH ? require(path.join(__dirname, './js/twitch')) : '';
 const Polly = settings.AMAZON.USE_AMAZON ? require(path.join(__dirname, './js/amazon')) : '';
 const google = settings.GOOGLE.USE_GOOGLE ? require(path.join(__dirname, './js/google')) : '';
 
@@ -73,6 +72,8 @@ let ttsRequestCount = 0;
 ttsRequestCount = 0;
 let customEmojis = [];
 customEmojis = [];
+let messageId = 0;
+messageId = 0;
 
 // initialize values
 config.getGeneralSettings();
@@ -135,6 +136,7 @@ fs.readdir(sttModels, (err, files) => {
   sttModel.value = settings.STT.LANGUAGE;
 });
 
+// TODO: refactor obtaining audio devices.
 async function getAudioDevices() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
     return;
@@ -144,11 +146,14 @@ async function getAudioDevices() {
   const audioOutputDevices = devices.filter(device => device.kind === 'audiooutput');
 
   audioOutputDevices.forEach(device => {
-    const option = document.createElement('option');
-    option.text = device.label || `Output ${device.deviceId}`;
-    option.value = device.deviceId;
-    ttsAudioDevices.appendChild(option);
-    notificationSoundAudioDevices.appendChild(option);
+    const option1 = document.createElement('option');
+    const option2 = document.createElement('option');
+    option1.text = device.label || `Output ${device.deviceId}`;
+    option2.text = device.label || `Output ${device.deviceId}`;
+    option1.value = device.deviceId;
+    option2.value = device.deviceId;
+    ttsAudioDevices.appendChild(option1);
+    notificationSoundAudioDevices.appendChild(option2);
   });
 
   ttsAudioDevices.selectedIndex = settings.AUDIO.SELECTED_TTS_AUDIO_DEVICE;
@@ -162,10 +167,12 @@ function setLanguagesinSelect(languageSelector, setting) {
 
   for (const language in languageObject.languages) {
     if (Object.prototype.hasOwnProperty.call(languageObject.languages, language)) {
-      const iso639 = languageObject.languages[language]['ISO-639'];
+      const IETF = languageObject.languages[language].IETF;
+      const ISO639 = languageObject.languages[language].ISO639;
       const option = document.createElement('option');
-      option.value = iso639;
-      option.innerHTML = `${iso639} - ${language}`;
+
+      option.value = IETF;
+      option.innerHTML = `${ISO639} : ${language}`;
       languageSelect.appendChild(option);
     }
   }
@@ -173,9 +180,10 @@ function setLanguagesinSelect(languageSelector, setting) {
   languageSelect.selectedIndex = setting;
 }
 
-setLanguagesinSelect('#language', settings.GENERAL.LANGUAGE);
+setLanguagesinSelect('#language', settings.GENERAL.LANGUAGE_INDEX);
 setLanguagesinSelect('#defaultLanguage', settings.TTS.PRIMARY_TTS_LANGUAGE_INDEX);
 setLanguagesinSelect('#secondaryLanguage', settings.TTS.SECONDARY_TTS_LANGUAGE_INDEX);
+setLanguagesinSelect('#TRANSLATE_TO', settings.LANGUAGE.TRANSLATE_TO_INDEX);
 
 function addVoiceService(name) {
   function addToselect(select) {
@@ -191,13 +199,17 @@ function addVoiceService(name) {
 }
 
 // Small tooltip
-Array.from(document.body.querySelectorAll('[tip]')).forEach(el => {
+function addSingleTooltip(el) {
   const tip = document.createElement('div');
   const body = document.querySelector('.container');
   const element = el;
   tip.classList.add('tooltip');
-  tip.classList.add('tooltiptext');
   tip.innerText = el.getAttribute('tip');
+  if (el.src) {
+    const image = document.createElement('img');
+    image.src = el.src;
+    tip.appendChild(image);
+  }
   tip.style.transform = `translate(${el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px'}, ${
     el.hasAttribute('tip-top') ? '-100%' : '15px'
   })`;
@@ -205,16 +217,21 @@ Array.from(document.body.querySelectorAll('[tip]')).forEach(el => {
   element.onmousemove = e => {
     tip.style.left = `${e.x}px`;
     tip.style.top = `${e.y}px`;
-    tip.style.zIndex = 1;
     tip.style.visibility = 'visible';
   };
   element.onmouseleave = e => {
     tip.style.visibility = 'hidden';
   };
+}
+
+Array.from(document.body.querySelectorAll('[tip]')).forEach(el => {
+  addSingleTooltip(el);
 });
 
 function showChatMessage(article) {
-  document.querySelector('#chatBox').appendChild(article);
+  if (article !== undefined) {
+    document.querySelector('#chatBox').appendChild(article);
+  }
 
   const messages = Array.from(document.body.querySelectorAll('.msg-container'));
 
@@ -285,3 +302,35 @@ if (fs.existsSync(emoteListSavePath)) {
     emojiPicker.customEmoji = emotes;
   });
 }
+
+function getLanguageProperties(languageToDetect) {
+  const filteredLanguage = Object.keys(languageObject.languages).reduce(function (accumulator, currentValue) {
+    if (
+      languageObject.languages[currentValue].IETF === languageToDetect ||
+      languageObject.languages[currentValue].ISO639 === languageToDetect ||
+      languageObject.languages[currentValue].ISO3166 === languageToDetect
+    ) {
+      accumulator[currentValue] = languageObject.languages[currentValue];
+    }
+    return accumulator;
+  }, {});
+
+  const language = {
+    name: Object.getOwnPropertyNames(filteredLanguage)[0],
+    ISO3166: filteredLanguage[Object.keys(filteredLanguage)[0]].ISO3166,
+    ISO639: filteredLanguage[Object.keys(filteredLanguage)[0]].ISO639,
+    IETF: filteredLanguage[Object.keys(filteredLanguage)[0]].IETF
+  };
+
+  return language;
+}
+
+document.body.querySelector('#emojis').addEventListener('click', () => {
+  emojiPicker.style.visibility === 'visible' ? (emojiPicker.style.visibility = 'hidden') : (emojiPicker.style.visibility = 'visible');
+});
+
+document.body.addEventListener('click', e => {
+  if (e.target.id !== 'emojis' && e.target.nodeName !== 'EMOJI-PICKER' && emojiPicker.style.visibility === 'visible') {
+    emojiPicker.style.visibility = 'hidden';
+  }
+});
