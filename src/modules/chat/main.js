@@ -63,8 +63,8 @@ function streamText() {
   }
 }
 
-function displayTwitchMessage(logoUrl, username, messageObject) {
-  if (!messageObject) {
+function displayTwitchMessage(message) {
+  if (!message.filteredMessage) {
     return;
   }
 
@@ -88,7 +88,7 @@ function displayTwitchMessage(logoUrl, username, messageObject) {
   article.innerHTML = placeMessage;
   const msg = article.querySelector('.message');
 
-  msg.innerHTML = `<div class="sender">${username}</div>`; // \n${message}`;
+  msg.innerHTML = `<div class="sender">${message.username}</div>`; // \n${message}`;
 
   msg.style.fontSize = '12pt';
 
@@ -114,12 +114,12 @@ function displayTwitchMessage(logoUrl, username, messageObject) {
     });
   }
   // fullMessageLength = getFullMessageLength(messageObject);
-  messageStream = messageObject.filtered;
+  messageStream = message.filteredMessage;
   textStreamContainer = document.querySelector('.message');
   streamText();
 }
 
 // // Receive a message from the server
-socket.on('message', (logoUrl, username, message, messageDuration) => {
-  displayTwitchMessage(logoUrl, username, message);
+socket.on('message', message => {
+  displayTwitchMessage(message);
 });
