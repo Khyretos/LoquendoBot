@@ -1,4 +1,4 @@
-/* global ttsAudioFile, path, getLanguageProperties, resourcesPath, settings, fs, notificationSound, backend, socket, requestData */
+/* global ttsAudioFile, main, path, getLanguageProperties, resourcesPath, settings, fs, notificationSound, backend, socket, requestData */
 
 const voiceSoundArray = [];
 let status = 0;
@@ -6,7 +6,10 @@ const counter = 0;
 
 const playTTS = data =>
   new Promise(resolve => {
-    ttsAudioFile = path.join(resourcesPath, `./sounds/tts/${data.service}_${data.count}.mp3`);
+    ttsAudioFile = path.join(
+      resourcesPath,
+      main.isPackaged ? `./sounds/${data.service}_${data.count}.mp3` : `../sounds/${data.service}_${data.count}.mp3`
+    );
     const tts = new Audio(ttsAudioFile);
     tts.setSinkId(settings.AUDIO.TTS_AUDIO_DEVICE);
 
@@ -58,7 +61,12 @@ function add(data) {
 function playNotificationSound() {
   if (settings.AUDIO.USE_NOTIFICATION_SOUNDS) {
     const notfication = new Audio(
-      path.join(resourcesPath, `./sounds/notifications/${notificationSound.options[settings.AUDIO.NOTIFICATION_SOUND].text}`)
+      path.join(
+        resourcesPath,
+        main.isPackaged
+          ? `./sounds/notifications/${notificationSound.options[settings.AUDIO.NOTIFICATION_SOUND].text}`
+          : `../sounds/notifications/${notificationSound.options[settings.AUDIO.NOTIFICATION_SOUND].text}`
+      )
     );
 
     notfication
@@ -93,10 +101,11 @@ async function playVoice(message) {
   let voice = settings.TTS.PRIMARY_VOICE;
   textObject.filtered = `${message.username}: ${message.filteredMessage}`;
 
-  if (settings.LANGUAGE.USE_DETECTION && settings.TTS.SECONDARY_VOICE && settings.LANGUAGE.OUTPUT_TO_TTS) {
+  if (settings.LANGUAGE.USE_DETECTION && settings.TTS.SECONDARY_VOICE) {
     const secondaryTTSLanguage = getLanguageProperties(settings.TTS.SECONDARY_TTS_LANGUAGE);
-    if (message.language.ISO639 === secondaryTTSLanguage.ISO639) {
+    if (message.language.detectedLanguage === null || message.language.detectedLanguage.ISO639 === secondaryTTSLanguage.ISO639) {
       voice = settings.TTS.SECONDARY_VOICE;
+      textObject.filtered = message.originalMessage ? message.originalMessage : message.filteredMessage;
     }
   }
 

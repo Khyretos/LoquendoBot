@@ -97,6 +97,7 @@ function ping(element) {
 }
 
 async function displayTwitchMessage(logoUrl, username, messageObject, filteredMessage) {
+  messageId++;
   const article = document.createElement('article');
   article.className = 'msg-container sender';
   article.setAttribute('id', messageId);
@@ -144,7 +145,13 @@ async function displayTwitchMessage(logoUrl, username, messageObject, filteredMe
       showChatMessage(article);
 
       if (filteredMessage && !settings.LANGUAGE.OUTPUT_TO_TTS) {
-        sound.playVoice({ filteredMessage, logoUrl, username, formattedMessage, language });
+        sound.playVoice({
+          filteredMessage,
+          logoUrl,
+          username,
+          formattedMessage,
+          language: { selectedLanguage: null, detectedLanguage: language }
+        });
       }
 
       window.article = article;
@@ -159,7 +166,6 @@ async function displayTwitchMessage(logoUrl, username, messageObject, filteredMe
     window.article = article;
   }
 
-  messageId++;
   sound.playNotificationSound();
 }
 

@@ -1,14 +1,37 @@
 {
   "name": "loquendo-bot",
+  "productName": "LoquendoBot",
   "version": "2.5.0",
   "description": "Bot assistant for streamers over different platforms",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "package": "npm run backend && electron-forge package",
-    "make": "electron-forge make",
+    "build": "npm run backend && electron-builder",
     "publish": "electron-forge publish",
-    "backend": "pyinstaller --noconsole --onefile --collect-all vosk --distpath ./backend ./src/backend/loquendoBot_backend.py"
+    "backend": "pyinstaller --noconsole --onefile --collect-all vosk --distpath ./backend ./backend/loquendoBot_backend.py"
+  },
+  "build": {
+    "appId": "LoquendoBot",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "./src/images/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "installerIcon": "./src/images/icon.ico",
+      "uninstallerIcon": "./src/images/icon.ico",
+      "uninstallDisplayName": "LoquendoBot-uninstaller",
+      "license": "license.md",
+      "allowToChangeInstallationDirectory": "true"
+    },
+    "extraResources": [
+      "speech_to_text_models/Where to get STT models.txt",
+      "backend/loquendoBot_backend.exe",
+      "language_detection_model",
+      "sounds"
+    ]
   },
   "keywords": [],
   "author": {
@@ -18,7 +41,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
-    "electron-squirrel-startup": "^1.0.0",
     "emoji-picker-element": "^1.21.0",
     "express": "^4.18.2",
     "flag-icons": "^7.1.0",
@@ -38,12 +60,12 @@
     "@electron-forge/cli": "^6.2.1",
     "@electron-forge/maker-deb": "^6.2.1",
     "@electron-forge/maker-rpm": "^6.2.1",
-    "@electron-forge/maker-squirrel": "^6.2.1",
     "@electron-forge/maker-zip": "^6.2.1",
     "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
     "@electron-internal/eslint-config": "^1.0.1",
     "@electron-toolkit/eslint-config": "^1.0.2",
     "electron": "^25.9.8",
+    "electron-builder": "^24.9.1",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.2",

@@ -1,4 +1,4 @@
-/* global settings, sound, twitch, getLanguageProperties, addSingleTooltip, showChatMessage, languageObject, addVoiceService, internalVoices, ttsRequestCount, main, path, pythonPath, settingsPath, ipcRenderer */
+/* global settings, resourcesPath, sound, twitch, getLanguageProperties, addSingleTooltip, showChatMessage, languageObject, addVoiceService, internalVoices, ttsRequestCount, main, path, pythonPath, settingsPath, ipcRenderer */
 
 const spawn = require('child_process').spawn;
 const kill = require('kill-process-by-name');
@@ -45,35 +45,39 @@ async function getInstalledVoices() {
 }
 
 function setTranslatedMessage(message) {
-  const messageBox = document.getElementById(message.messageId).getElementsByClassName('msg-box')[0];
+  if (message.language.selectedLanguage.ISO639 !== message.language.detectedLanguage.ISO639) {
+    const messageBox = document.getElementById(message.messageId).getElementsByClassName('msg-box')[0];
 
-  const translationHeader = document.createElement('div');
-  translationHeader.className = 'translation-header';
-  translationHeader.innerText = 'Translation';
-  messageBox.appendChild(translationHeader);
+    const translationHeader = document.createElement('div');
+    translationHeader.className = 'translation-header';
+    translationHeader.innerText = 'Translation';
+    messageBox.appendChild(translationHeader);
 
-  const translationIcon = document.createElement('div');
-  translationIcon.className = 'translation-icon';
-  const languageElement = document.createElement('span');
-  const language = getLanguageProperties(settings.LANGUAGE.TRANSLATE_TO);
-  languageElement.classList = `fi fi-${language.ISO3166} fis`;
-  languageElement.setAttribute('tip', language.name);
-  addSingleTooltip(languageElement);
-  translationIcon.appendChild(languageElement);
-  messageBox.appendChild(translationIcon);
+    const translationIcon = document.createElement('div');
+    translationIcon.className = 'translation-icon';
+    const languageElement = document.createElement('span');
+    const language = getLanguageProperties(settings.LANGUAGE.TRANSLATE_TO);
+    languageElement.classList = `fi fi-${message.language.selectedLanguage.ISO3166} fis`;
+    languageElement.setAttribute('tip', message.language.selectedLanguage.name);
+    addSingleTooltip(languageElement);
+    translationIcon.appendChild(languageElement);
+    messageBox.appendChild(translationIcon);
 
-  const translationMessage = document.createElement('div');
-  translationMessage.className = 'translation-message';
-  translationMessage.innerText = message.translation;
-  messageBox.appendChild(translationMessage);
-  showChatMessage();
+    const translationMessage = document.createElement('div');
+    translationMessage.className = 'translation-message';
+    translationMessage.innerText = message.translation;
+    messageBox.appendChild(translationMessage);
+    showChatMessage();
+  }
+
   if (settings.LANGUAGE.OUTPUT_TO_TTS) {
     sound.playVoice({
+      originalMessage: message.originalMessage,
       filteredMessage: message.translation,
       logoUrl: message.logoUrl,
       username: message.username,
       formattedMessage: message.formattedMessage,
-      language
+      language: message.language
     });
   }
 }
@@ -86,7 +90,7 @@ async function getTranslatedMessage(message) {
     },
     body: JSON.stringify({
       message: message.message,
-      language: message.language
+      language: message.language.detectedLanguage.IETF
     }) // Convert the data to JSON and include it in the request body
   };
 
@@ -97,15 +101,18 @@ async function getTranslatedMessage(message) {
 
       console.log('Translated message:', responseData);
       setTranslatedMessage({
+        originalMessage: message.message,
         translation: responseData.translation,
         messageId: message.messageId,
-        ISO3166: message.ISO3166,
+        language: message.language,
         formattedMessage: message.formattedMessage,
         username: message.username,
         logoUrl: message.logoUrl
       });
       if (settings.LANGUAGE.BROADCAST_TRANSLATION) {
-        twitch.sendMessage(`[${message.language} > ${settings.LANGUAGE.TRANSLATE_TO}] @${message.username}: ${responseData.translation}`);
+        twitch.sendMessage(
+          `[${message.language.detectedLanguage.name} ${message.language.detectedLanguage.ISO639} > ${message.language.selectedLanguage.name} ${message.language.selectedLanguage.ISO639}] @${message.username}: ${responseData.translation}`
+        );
       }
     } else {
       console.error('Failed to send termination signal to Flask server.');
@@ -119,19 +126,40 @@ async function getTranslatedMessage(message) {
 }
 
 function filterLanguage(message) {
-  const language = getLanguageProperties(message.language);
-
-  if (settings.LANGUAGE.TRANSLATE_TO !== 'none') {
+  const selectedPrimaryLanguage = getLanguageProperties(settings.LANGUAGE.TRANSLATE_TO);
+  const selectedPrimaryLanguageIndex =
+    message.languages.indexOf(selectedPrimaryLanguage.ISO639) === -1 ? 99 : message.languages.indexOf(selectedPrimaryLanguage.ISO639);
+  const selectedSecondaryLanguage = getLanguageProperties(settings.TTS.SECONDARY_TTS_LANGUAGE);
+  const selectedSecondaryLanguageIndex =
+    message.languages.indexOf(selectedSecondaryLanguage.ISO639) === -1 ? 99 : message.languages.indexOf(selectedSecondaryLanguage.ISO639);
+  const detectedLanguage = getLanguageProperties(message.languages[0]);
+  const language = selectedPrimaryLanguageIndex < selectedSecondaryLanguageIndex ? selectedPrimaryLanguage : detectedLanguage;
+  if (settings.LANGUAGE.TRANSLATE_TO !== 'none' && selectedPrimaryLanguage.ISO639 !== detectedLanguage.ISO639) {
     getTranslatedMessage({
       message: message.message,
       messageId: message.messageId,
-      language: language.IETF,
-      ISO3166: language.ISO3166,
+      language: {
+        selectedLanguage: selectedPrimaryLanguage,
+        detectedLanguage
+      },
       username: message.username,
-      formattedMessage: message.formattedMessage
+      formattedMessage: message.formattedMessage,
+      logoUrl: message.logoUrl
+    });
+  } else {
+    setTranslatedMessage({
+      originalMessage: message.message,
+      translation: message.message,
+      messageId: message.messageId,
+      language: {
+        selectedLanguage: selectedPrimaryLanguage,
+        detectedLanguage: selectedPrimaryLanguage
+      },
+      formattedMessage: message.formattedMessage,
+      username: message.username,
+      logoUrl: message.logoUrl
     });
   }
-
   return language;
 }
 
@@ -155,7 +183,7 @@ async function getDetectedLanguage(message) {
 
       console.log('Detected Languages:', responseData);
       return filterLanguage({
-        language: responseData.languages[0],
+        languages: responseData.languages,
         message: message.message,
         messageId: message.messageId,
         username: message.username,
@@ -232,7 +260,7 @@ const createBackendServer = () =>
     if (main.isPackaged) {
       python = spawn(path.join(pythonPath, './loquendoBot_backend.exe'), [settingsPath, 'prod']);
     } else {
-      python = spawn('python', ['-u', path.join(pythonPath, './loquendoBot_backend.py'), settingsPath, 'dev']);
+      python = spawn('python', ['-u', path.join(resourcesPath, '../backend/loquendoBot_backend.py'), settingsPath, 'dev']);
     }
     // Capture the stdout of the Python process
     python.stdout.on('data', data => {
@@ -266,7 +294,7 @@ async function initiateBackend() {
     createBackendServer().then(() => {
       getBackendServerStatus();
       getInstalledVoices();
-      if (settings.STT.USE_STT) {
+      if (settings.STT.USE_STT && !settings.STT.LANGUAGE === '') {
         startSTT();
       }
     });

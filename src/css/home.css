@@ -36,25 +36,14 @@ html {
   box-sizing: inherit;
 }
 
-html,
 body {
   height: 100%;
   margin: 0;
-  /* border-top-left-radius: 20px; */
-  /* border-top-right-radius: 20px; */
-  overflow-x: hidden;
-}
-
-body {
   font-family: 'Segoe UI', sans-serif;
   background: transparent;
-}
-
-/* Styling of window frame and titlebar */
-
-body {
-  /* border: 1px solid #48545c; */
-  overflow-y: hidden;
+  position: relative;
+  /* overflow-y: hidden;
+  overflow-x: hidden; */
 }
 
 #titlebar {

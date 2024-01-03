@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const fs = require('fs');
 const ini = require('ini');
 const path = require('path'); // get directory path
@@ -49,8 +50,8 @@ const config = require(path.join(__dirname, './js/settings'));
 
 const mediaDevices = require(path.join(__dirname, './js/mediaDevices'));
 
-const notificationSounds = path.join(__dirname, './sounds/notifications');
-const sttModels = path.join(__dirname, '../speech_to_text_models');
+const notificationSounds = path.join(resourcesPath, main.isPackaged ? './sounds/notifications' : '../sounds/notifications');
+const sttModels = path.join(resourcesPath, main.isPackaged ? './speech_to_text_models' : '../speech_to_text_models');
 
 function reset() {
   ipcRenderer.send('restart');
@@ -233,10 +234,10 @@ function showChatMessage(article) {
     document.querySelector('#chatBox').appendChild(article);
   }
 
-  const messages = Array.from(document.body.querySelectorAll('.msg-container'));
+  const messages = document.body.querySelectorAll('.msg-container');
 
   const lastMessage = messages[messages.length - 1];
-  lastMessage.scrollIntoView({ behavior: 'smooth' });
+  lastMessage.scrollIntoView();
 }
 
 function getPostTime() {

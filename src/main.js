@@ -24,11 +24,6 @@ if (app.isPackaged) {
   pythonPath = path.join(resourcesPath, './backend');
 }
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
-
 async function createWindow() {
   if (!fs.existsSync(settingsPath)) {
     console.log(resourcesPath);
@@ -164,7 +159,7 @@ async function createIniFile() {
       MICROPHONE_ID: 'default',
       SELECTED_MICROPHONE: 'default',
       MICROPHONE: 0,
-      LANGUAGE: 'vosk-model-small-es-0.42'
+      LANGUAGE: ''
     },
     AUDIO: {
       USE_NOTIFICATION_SOUNDS: false,

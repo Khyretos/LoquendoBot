@@ -1,1 +1,3 @@
-https://alphacephei.com/vosk/models
+Download the model from here: https://alphacephei.com/vosk/models unzip it
+and drop the folder in the 'speech_to_text_models' folder. Restart the app
+to load the changes.

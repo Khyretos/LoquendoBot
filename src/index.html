@@ -212,6 +212,11 @@
                   <div class="AdvancedMenuRow inputTTS">
                     <div class="AdvancedMenuLabel">2<sup>nd</sup> Internal Voice</div>
                     <select class="menu-select" name="secondaryVoice" id="secondaryVoice"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_SECONDARY_TTS"
+                      tip="This will only work if Language detection is enabled and a language for this voice has been selected"
+                    ></i>
                   </div>
                   <div class="AdvancedMenuRow inputTTS">
                     <div class="AdvancedMenuLabel">Test 2<sup>nd</sup> Internal Voice</div>
@@ -235,8 +240,13 @@
                     <select class="menu-select" name="microphone" id="microphone"></select>
                   </div>
                   <div class="AdvancedMenuRow voiceLanguageDetection inputSTT">
-                    <div class="AdvancedMenuLabel">Voice Language</div>
+                    <div class="AdvancedMenuLabel">Voice Language model</div>
                     <select class="menu-select" name="sttModel" id="sttModel" tip="Language Service to use"></select>
+                    <i
+                      class="fa-solid fa-folder-open fa-2x SmallButton option-icon-container"
+                      id="Info_VOICE_MODELS_FOLDER"
+                      tip="Open Voice models folder"
+                    ></i>
                   </div>
                 </fieldset>
 
@@ -247,27 +257,42 @@
                     <label for="USE_DETECTION" class="toggle-small"></label>
                     <div class="AdvancedMenuLabel3">Enable Language detection</div>
                   </legend>
-                  <div class="AdvancedMenuRow languageDetectionInput">
-                    <div class="AdvancedMenuLabel">Translate chat messages to</div>
-                    <select class="menu-select" name="language" id="TRANSLATE_TO" tip="Language Service to use"></select>
-                  </div>
-                  <div class="AdvancedMenuRow languageDetectionInput">
-                    <div class="AdvancedMenuLabel">Broadcast translation to chat</div>
-                    <input type="checkbox" id="BROADCAST_TRANSLATION" class="checkbox" />
-                    <label for="BROADCAST_TRANSLATION" class="toggle-small"></label>
-                  </div>
-                  <div class="AdvancedMenuRow languageDetectionInput">
-                    <div class="AdvancedMenuLabel">Output translation to TTS</div>
-                    <input type="checkbox" id="OUTPUT_TO_TTS" class="checkbox" />
-                    <label for="OUTPUT_TO_TTS" class="toggle-small"></label>
-                  </div>
                   <div class="AdvancedMenuRow outputToTtsInput">
                     <div class="AdvancedMenuLabel">Default TTS service language</div>
                     <select class="menu-select" name="defaultLanguage" id="defaultLanguage" tip="Language Service to use"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_PRIMARY_TTS_LANGUAGE"
+                      tip="When the selected language is detected Your Primary TTS voice will sound"
+                    ></i>
                   </div>
                   <div class="AdvancedMenuRow outputToTtsInput">
                     <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS service language</div>
                     <select class="menu-select" name="secondaryLanguage" id="secondaryLanguage" tip="Language Service to use"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_SECONDARY_TTS_LANGUAGE"
+                      tip="When the selected language is detected Your Secondary TTS voice will sound"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput">
+                    <div class="AdvancedMenuLabel">Translate chat messages to</div>
+                    <select class="menu-select" name="language" id="TRANSLATE_TO" tip="Language Service to use"></select>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput TRANSLATE_TO">
+                    <div class="AdvancedMenuLabel">Broadcast translation to chat</div>
+                    <input type="checkbox" id="BROADCAST_TRANSLATION" class="checkbox TRANSLATE_TO" />
+                    <label for="BROADCAST_TRANSLATION" class="toggle-small"></label>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput TRANSLATE_TO">
+                    <div class="AdvancedMenuLabel">Output translation to TTS</div>
+                    <input type="checkbox" id="OUTPUT_TO_TTS" class="checkbox TRANSLATE_TO" />
+                    <label for="OUTPUT_TO_TTS" class="toggle-small"></label>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_OUTPUT_TO_TTS"
+                      tip="All translated messages will be send to primary TTS voice but if message is detected in Secondary TTS language it will output it to the Secondary TTS voice"
+                    ></i>
                   </div>
                 </fieldset>
 

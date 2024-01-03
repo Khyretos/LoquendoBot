@@ -1,4 +1,4 @@
-/* global settings, setZoomLevel, webFrame, theme, fs, settingsPath, ini, startVoiceRecognition,notificationSoundAudioDevices, ttsAudioDevices, notificationSound, path, resourcesPath, ipcRenderer, auth, shell, sound, twitch, server, backend */
+/* global settings,main sttModels, setZoomLevel, webFrame, theme, fs, settingsPath, ini, startVoiceRecognition,notificationSoundAudioDevices, ttsAudioDevices, notificationSound, path, resourcesPath, ipcRenderer, auth, shell, sound, twitch, server, backend */
 
 function getGeneralSettings() {
   // General
@@ -130,10 +130,34 @@ document.body.querySelector('#language').addEventListener('change', () => {
   createNotification('Saved language!', 'success');
 });
 
+function setTranslateToOptions() {
+  const options = document.querySelectorAll('.TRANSLATE_TO');
+  const index = parseInt(settings.LANGUAGE.TRANSLATE_TO_INDEX);
+
+  if (index === 0) {
+    settings.LANGUAGE.BROADCAST_TRANSLATION = false;
+    settings.LANGUAGE.OUTPUT_TO_TTS = false;
+    options.forEach(item => {
+      item.style.visibility = 'hidden';
+      item.style.height = '0px';
+      item.checked = false;
+    });
+  } else {
+    options.forEach(item => {
+      item.style.visibility = '';
+      item.style.height = '';
+    });
+  }
+}
+
+setTranslateToOptions();
+
 document.body.querySelector('#TRANSLATE_TO').addEventListener('change', () => {
   const select = document.querySelector('#TRANSLATE_TO');
   settings.LANGUAGE.TRANSLATE_TO_INDEX = select.selectedIndex;
   settings.LANGUAGE.TRANSLATE_TO = select.options[select.selectedIndex].value;
+  setTranslateToOptions();
+
   fs.writeFileSync(settingsPath, ini.stringify(settings));
   createNotification('Saved primary voice!', 'success');
 });
@@ -227,7 +251,9 @@ function createNotification(message = null, type = null) {
   }
 
   if (settings.AUDIO.USE_NOTIFICATION_SOUNDS) {
-    const notfication = new Audio(path.join(resourcesPath, `./sounds/notifications/${alertSound}`));
+    const notfication = new Audio(
+      path.join(resourcesPath, main.isPackaged ? `./sounds/notifications/${alertSound}` : `../sounds/notifications/${alertSound}`)
+    );
     notfication.volume = settings.AUDIO.NOTIFICATION_VOLUME / 100;
     notfication.play();
   }
@@ -266,6 +292,10 @@ function toggleRadio(toggle, inputs) {
 
 document.body.querySelector('#OPEN_SETTINGS_FILE').addEventListener('click', () => {
   shell.openExternal(settingsPath);
+});
+
+document.body.querySelector('#Info_VOICE_MODELS_FOLDER').addEventListener('click', () => {
+  shell.openExternal(sttModels);
 });
 
 // #region Use Custom theme toggle logic
@@ -488,14 +518,6 @@ document.body.querySelector('#USE_STT').addEventListener('change', () => {
   createNotification(`${toggle ? 'Enabled' : 'Disabled'} speech to text!`, 'success');
 });
 
-function toggleOutputToTts() {
-  const toggle = settings.LANGUAGE.OUTPUT_TO_TTS;
-  const inputs = document.getElementsByClassName('outputToTtsInput');
-  toggleRadio(toggle, inputs);
-}
-
-toggleOutputToTts();
-
 document.body.querySelector('#OUTPUT_TO_TTS').addEventListener('change', () => {
   let toggle = document.getElementById('OUTPUT_TO_TTS').checked;
   if (!settings.TTS.USE_TTS) {
@@ -505,8 +527,6 @@ document.body.querySelector('#OUTPUT_TO_TTS').addEventListener('change', () => {
   }
 
   settings.LANGUAGE.OUTPUT_TO_TTS = toggle;
-  const inputs = document.getElementsByClassName('outputToTtsInput');
-  toggleRadio(toggle, inputs);
   fs.writeFileSync(settingsPath, ini.stringify(settings));
   createNotification(`${toggle ? 'Enabled' : 'Disabled'} Outputting translations to TTS!`, 'success');
 });

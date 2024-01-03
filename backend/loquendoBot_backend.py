@@ -11,7 +11,7 @@ logger = logging.getLogger("waitress")
 logger.setLevel(logging.INFO)
 
 gevent.monkey.patch_all()
-import gevent.queue
+# import gevent.queue
 
 import configparser
 import pyttsx3
@@ -27,8 +27,6 @@ import fasttext
 from deep_translator import (
     MyMemoryTranslator,
 )
-
-import emoji
 
 from vosk import Model, KaldiRecognizer, SetLogLevel
 
@@ -68,7 +66,7 @@ class LanguageDetection:
         self.model = fasttext.load_model(language_detection_model)
 
     def predict_lang(self, text):
-        predictions = self.model.predict(text, k=5)  # returns top 2 matching languages
+        predictions = self.model.predict(text, k=3)  # returns top 2 matching languages
         language_codes = []
         for prediction in predictions[0]:
             language_codes.append(prediction.replace("__label__", ""))
@@ -98,6 +96,7 @@ class STT:
             vosk_model = os.path.join(
                 resources_folder, "speech_to_text_models", settings["STT"]["LANGUAGE"]
             )
+        print(vosk_model)
 
         self.model = Model(rf"{vosk_model}")
         self.dump_fn = None
@@ -137,8 +136,10 @@ class STT:
     def stop_recognition(self):
         self.is_running = False
 
-
-speech_recognition_service = STT()
+settings.read(settingsPath)
+print(settingsPath)
+if settings["STT"]["USE_STT"] and bool(settings["STT"]["LANGUAGE"]):
+  speech_recognition_service = STT()
 
 
 class TTS:
@@ -156,16 +157,16 @@ class TTS:
                 break
         self.engine.setProperty("voice", matching_id)
 
+        settings_folder = os.path.dirname(settingsPath)
         if environment == "dev":
-            settings_folder = os.path.dirname(settingsPath)
             src_folder = os.path.dirname(settings_folder)
+            bot_folder = os.path.dirname(src_folder)
             saveLocation = os.path.join(
-                src_folder, "sounds\\tts", f"Internal_{count}.mp3"
+                bot_folder, "sounds", f"Internal_{count}.mp3"
             )
         else:
-            resources_folder = os.path.dirname(settingsPath)
             saveLocation = os.path.join(
-                resources_folder, "sounds\\tts", f"Internal_{count}.mp3"
+                settings_folder, "sounds", f"Internal_{count}.mp3"
             )
 
         self.engine.save_to_file(message, saveLocation)
@@ -180,8 +181,9 @@ class TTS:
 
         return [voice.name for voice in voices]
 
-
-text_to_speech_service = TTS()
+settings.read(settingsPath)
+if settings["TTS"]["USE_TTS"]:
+  text_to_speech_service = TTS()
 
 # endpoints
 
