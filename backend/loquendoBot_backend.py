@@ -240,7 +240,7 @@ def get_translation():
             source=detectedLanguage, target=settings["LANGUAGE"]["TRANSLATE_TO"]
         ).translate(message)
     except Exception as e:
-        return jsonify({"error": e}), 500
+        return jsonify({"error": "Could not translate, continuing with next language"}), 500
     return jsonify({"translation": translated}), 200
 
 

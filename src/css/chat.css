@@ -274,7 +274,7 @@ h1 {
 
 .username.sender {
   padding: 0px 5px 5px 30px;
-  margin: 20px 5px 5px 30px;
+  margin: 20px 5px 5px 25px;
 }
 
 .username.user {
@@ -505,13 +505,20 @@ h1 {
   background-color: var(--main-color1);
 }
 
-.emoji-picker {
-  margin-left: auto;
-  visibility: hidden;
-  bottom: 50px;
-  left: 0px;
+.emotes {
+  position: relative;
+  cursor: pointer;
+}
+
+.dark {
+  display: none;
   position: absolute;
   z-index: 1;
+  top: -400px;
+}
+
+.emotes:hover .dark {
+  display: block;
 }
 
 .fi {
@@ -539,11 +546,15 @@ h1 {
   padding: 0px 0px 0px 0px;
   margin: -45px 0px 0px -40px;
   top: 30px;
-  left: 20px;
 }
 
 .language-icon {
   position: relative;
   top: 45px;
-  left: 20px;
+}
+
+.flag-icon {
+  width: 20px !important;
+  height: 20px !important;
+  left: 18px;
 }

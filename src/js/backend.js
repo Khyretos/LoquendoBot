@@ -47,6 +47,10 @@ async function getInstalledVoices() {
 function setTranslatedMessage(message) {
   if (message.language.selectedLanguage.ISO639 !== message.language.detectedLanguage.ISO639) {
     const messageBox = document.getElementById(message.messageId).getElementsByClassName('msg-box')[0];
+    const languageBox = document.getElementById(message.messageId).getElementsByClassName('language-icon flag-icon')[0];
+
+    languageBox.classList = `fi fi-${message.language.detectedLanguage.ISO3166} fis language-icon flag-icon`;
+    languageBox.setAttribute('tip', message.language.detectedLanguage.name);
 
     const translationHeader = document.createElement('div');
     translationHeader.className = 'translation-header';
@@ -57,7 +61,7 @@ function setTranslatedMessage(message) {
     translationIcon.className = 'translation-icon';
     const languageElement = document.createElement('span');
     const language = getLanguageProperties(settings.LANGUAGE.TRANSLATE_TO);
-    languageElement.classList = `fi fi-${message.language.selectedLanguage.ISO3166} fis`;
+    languageElement.classList = `fi fi-${message.language.selectedLanguage.ISO3166} fis flag-icon`;
     languageElement.setAttribute('tip', message.language.selectedLanguage.name);
     addSingleTooltip(languageElement);
     translationIcon.appendChild(languageElement);
@@ -80,6 +84,7 @@ function setTranslatedMessage(message) {
       language: message.language
     });
   }
+  return message.language.detectedLanguage;
 }
 
 async function getTranslatedMessage(message) {
@@ -90,16 +95,23 @@ async function getTranslatedMessage(message) {
     },
     body: JSON.stringify({
       message: message.message,
+      remainder: message.remainingDetectedLanguages,
       language: message.language.detectedLanguage.IETF
     }) // Convert the data to JSON and include it in the request body
   };
 
   try {
     const response = await fetch(`http://127.0.0.1:${settings.GENERAL.PORT}/translate`, requestOptions);
+    const responseData = await response.json();
     if (response.ok) {
-      const responseData = await response.json();
-
       console.log('Translated message:', responseData);
+
+      if (settings.LANGUAGE.BROADCAST_TRANSLATION) {
+        twitch.sendMessage(
+          `[${message.language.detectedLanguage.name} ${message.language.detectedLanguage.ISO639} > ${message.language.selectedLanguage.name} ${message.language.selectedLanguage.ISO639}] @${message.username}: ${responseData.translation}`
+        );
+      }
+
       setTranslatedMessage({
         originalMessage: message.message,
         translation: responseData.translation,
@@ -109,38 +121,65 @@ async function getTranslatedMessage(message) {
         username: message.username,
         logoUrl: message.logoUrl
       });
-      if (settings.LANGUAGE.BROADCAST_TRANSLATION) {
-        twitch.sendMessage(
-          `[${message.language.detectedLanguage.name} ${message.language.detectedLanguage.ISO639} > ${message.language.selectedLanguage.name} ${message.language.selectedLanguage.ISO639}] @${message.username}: ${responseData.translation}`
-        );
-      }
+      return message.language.detectedLanguage;
     } else {
-      console.error('Failed to send termination signal to Flask server.');
-      message.message = 'Error,could not translate message';
-      message.languaga = 'en-GB';
-      getTranslatedMessage(message);
+      console.error(responseData);
+      if (message.remainingDetectedLanguages.length > 0) {
+        message.language.detectedLanguage = getLanguageProperties(message.remainingDetectedLanguages[0]);
+        message.remainingDetectedLanguages.shift();
+        return getTranslatedMessage(message);
+      } else {
+        message.message = 'Error, Could not translate message';
+        message.language.detectedLanguage = getLanguageProperties('en-GB');
+        return getTranslatedMessage(message);
+      }
     }
   } catch (error) {
     console.error('Error sending termination signal:', error);
+    message.message = 'Error, Could not translate message';
+    message.language.detectedLanguage = getLanguageProperties('en-GB');
+    getTranslatedMessage(message);
   }
 }
 
-function filterLanguage(message) {
+async function filterLanguage(message) {
   const selectedPrimaryLanguage = getLanguageProperties(settings.LANGUAGE.TRANSLATE_TO);
   const selectedPrimaryLanguageIndex =
     message.languages.indexOf(selectedPrimaryLanguage.ISO639) === -1 ? 99 : message.languages.indexOf(selectedPrimaryLanguage.ISO639);
+
   const selectedSecondaryLanguage = getLanguageProperties(settings.TTS.SECONDARY_TTS_LANGUAGE);
   const selectedSecondaryLanguageIndex =
     message.languages.indexOf(selectedSecondaryLanguage.ISO639) === -1 ? 99 : message.languages.indexOf(selectedSecondaryLanguage.ISO639);
-  const detectedLanguage = getLanguageProperties(message.languages[0]);
+
+  let detectedLanguage = '';
+  const remainingDetectedLanguages = [];
+  const detectedLanguages = message.languages.slice();
+
+  for (const [index, language] of detectedLanguages.entries()) {
+    detectedLanguage = getLanguageProperties(language);
+
+    if (detectedLanguage !== 'error') {
+      detectedLanguages.splice(index, 1);
+      break;
+    }
+  }
+
+  for (const [index, language] of detectedLanguages.entries()) {
+    const remainderLanguage = getLanguageProperties(language);
+    if (remainderLanguage !== 'error') {
+      remainingDetectedLanguages.push(remainderLanguage.IETF);
+    }
+  }
+
   const language = selectedPrimaryLanguageIndex < selectedSecondaryLanguageIndex ? selectedPrimaryLanguage : detectedLanguage;
   if (settings.LANGUAGE.TRANSLATE_TO !== 'none' && selectedPrimaryLanguage.ISO639 !== detectedLanguage.ISO639) {
     getTranslatedMessage({
       message: message.message,
       messageId: message.messageId,
+      remainingDetectedLanguages,
       language: {
         selectedLanguage: selectedPrimaryLanguage,
-        detectedLanguage
+        detectedLanguage: detectedLanguage
       },
       username: message.username,
       formattedMessage: message.formattedMessage,
@@ -160,6 +199,7 @@ function filterLanguage(message) {
       logoUrl: message.logoUrl
     });
   }
+
   return language;
 }
 
@@ -182,7 +222,7 @@ async function getDetectedLanguage(message) {
       const responseData = await response.json();
 
       console.log('Detected Languages:', responseData);
-      return filterLanguage({
+      return await filterLanguage({
         languages: responseData.languages,
         message: message.message,
         messageId: message.messageId,

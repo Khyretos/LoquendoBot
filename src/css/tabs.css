@@ -377,22 +377,17 @@ input[type='lol'] {
 
 .tooltip {
   position: absolute;
-  display: inline-block;
-  visibility: hidden;
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 12pt;
   padding: 5px;
   background: var(--main-color3);
   border-radius: 5px;
   visibility: hidden;
-  opacity: 1;
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
-  transition:
-    opacity 0.3s,
-    visibility 0s;
   color: var(--main-color2);
   font-family: 'xxii_avenmedium';
   z-index: 999;
+  max-width: 200px;
+  width: max-content;
 }
 
 div[type='text']:disabled {

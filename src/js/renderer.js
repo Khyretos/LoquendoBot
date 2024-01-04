@@ -163,8 +163,25 @@ async function getAudioDevices() {
 
 getAudioDevices();
 
-function setLanguagesinSelectx() {
-  const languageSelect = document.querySelector('.pop-content'); // obtain the html reference of the google voices comboBox
+function setSelectedLanguageinSelect(languageSelect, language) {
+  const button = languageSelect.querySelector('.SmallButton');
+  const languageElement = document.createElement('span');
+  languageElement.classList = `fi fi-${language.ISO3166} fis pop-selection`;
+  languageElement.setAttribute('tip', language.name);
+  button.innerHTML = '';
+  button.appendChild(languageElement);
+  addSingleTooltip(languageElement);
+}
+
+function setLanguagesinSelectx(languageSelector, language) {
+  const languageSelect = document.querySelector(languageSelector); // obtain the html reference of the google voices comboBox
+  const languageSelectContent = languageSelect.querySelector('.pop-content');
+
+  languageSelectContent.addEventListener('click', e => {
+    console.log(e.target);
+    language = getLanguageProperties(e.target.getAttribute('value'));
+    setSelectedLanguageinSelect(languageSelect, language);
+  });
 
   for (const language in languageObject.languages) {
     if (Object.prototype.hasOwnProperty.call(languageObject.languages, language)) {
@@ -177,24 +194,27 @@ function setLanguagesinSelectx() {
 
       const languageElement = document.createElement('span');
       languageElement.classList = `fi fi-${ISO3166} fis`;
+      languageElement.style.pointerEvents = 'none';
       option.setAttribute('tip', language);
 
       const text = document.createElement('span');
+      text.style.pointerEvents = 'none';
       text.innerHTML = ` - ${ISO639}`;
 
-      option.value = IETF;
+      option.setAttribute('value', IETF);
 
-      languageSelect.appendChild(option);
+      languageSelectContent.appendChild(option);
       option.appendChild(languageElement);
       option.appendChild(text);
       addSingleTooltip(option);
     }
   }
 
-  // languageSelect.selectedIndex = setting;
+  setSelectedLanguageinSelect(languageSelect, language);
 }
 
-setLanguagesinSelectx();
+setLanguagesinSelectx('.pop.in', getLanguageProperties(settings.LANGUAGE.SEND_TRANSLATION_IN));
+setLanguagesinSelectx('.pop.out', getLanguageProperties(settings.LANGUAGE.SEND_TRANSLATION_OUT));
 
 function setLanguagesinSelect(languageSelector, setting) {
   const languageSelect = document.querySelector(languageSelector); // obtain the html reference of the google voices comboBox
@@ -232,6 +252,38 @@ function addVoiceService(name) {
   addToselect('#secondaryTTSService');
 }
 
+function determineTootlTipPosition(element) {
+  const horizontal = document.body.clientWidth / 2;
+  const vertical = document.body.clientHeight / 2;
+
+  element.tip.style.left = `${element.mouse.x}px`;
+  element.tip.style.top = `${element.mouse.y}px`;
+
+  const tipPosition = element.tip.getBoundingClientRect();
+
+  if (element.position.x < horizontal && element.position.y < vertical) {
+    element.tip.style.top = `${parseInt(element.tip.style.top) + 25}px`;
+    element.tip.style.left = `${parseInt(element.tip.style.left) + 10}px`;
+  }
+
+  if (element.position.x < horizontal && element.position.y > vertical) {
+    element.tip.style.top = `${parseInt(element.tip.style.top) - tipPosition.height}px`;
+    element.tip.style.left = `${parseInt(element.tip.style.left) + 10}px`;
+  }
+
+  if (element.position.x > horizontal && element.position.y < vertical) {
+    element.tip.style.top = `${parseInt(element.tip.style.top) + 25}px`;
+    element.tip.style.left = `${parseInt(element.tip.style.left) - tipPosition.width}px`;
+  }
+
+  if (element.position.x > horizontal && element.position.y > vertical) {
+    element.tip.style.top = `${parseInt(element.tip.style.top) - tipPosition.height}px`;
+    element.tip.style.left = `${parseInt(element.tip.style.left) - tipPosition.width}px`;
+  }
+
+  element.tip.style.visibility = 'visible';
+}
+
 // Small tooltip
 function addSingleTooltip(el) {
   const tip = document.createElement('div');
@@ -244,14 +296,14 @@ function addSingleTooltip(el) {
     image.src = el.src;
     tip.appendChild(image);
   }
-  tip.style.transform = `translate(${el.hasAttribute('tip-left') ? 'calc(-100% - 5px)' : '15px'}, ${
-    el.hasAttribute('tip-top') ? '-100%' : '15px'
-  })`;
   body.appendChild(tip);
+  tip.pointerEvents = 'none';
   element.onmousemove = e => {
-    tip.style.left = `${e.x}px`;
-    tip.style.top = `${e.y}px`;
-    tip.style.visibility = 'visible';
+    determineTootlTipPosition({
+      position: element.getBoundingClientRect(),
+      mouse: { x: e.x, y: e.y },
+      tip
+    });
   };
   element.onmouseleave = e => {
     tip.style.visibility = 'hidden';
@@ -270,7 +322,7 @@ function showChatMessage(article) {
   const messages = document.body.querySelectorAll('.msg-container');
 
   const lastMessage = messages[messages.length - 1];
-  lastMessage.scrollIntoView();
+  lastMessage.scrollIntoView({ block: 'end', behavior: 'smooth' });
 }
 
 function getPostTime() {
@@ -338,33 +390,28 @@ if (fs.existsSync(emoteListSavePath)) {
 }
 
 function getLanguageProperties(languageToDetect) {
-  const filteredLanguage = Object.keys(languageObject.languages).reduce(function (accumulator, currentValue) {
-    if (
-      languageObject.languages[currentValue].IETF === languageToDetect ||
-      languageObject.languages[currentValue].ISO639 === languageToDetect ||
-      languageObject.languages[currentValue].ISO3166 === languageToDetect
-    ) {
-      accumulator[currentValue] = languageObject.languages[currentValue];
-    }
-    return accumulator;
-  }, {});
+  try {
+    const filteredLanguage = Object.keys(languageObject.languages).reduce(function (accumulator, currentValue) {
+      if (
+        languageObject.languages[currentValue].IETF === languageToDetect ||
+        languageObject.languages[currentValue].ISO639 === languageToDetect ||
+        languageObject.languages[currentValue].ISO3166 === languageToDetect
+      ) {
+        accumulator[currentValue] = languageObject.languages[currentValue];
+      }
+      return accumulator;
+    }, {});
 
-  const language = {
-    name: Object.getOwnPropertyNames(filteredLanguage)[0],
-    ISO3166: filteredLanguage[Object.keys(filteredLanguage)[0]].ISO3166,
-    ISO639: filteredLanguage[Object.keys(filteredLanguage)[0]].ISO639,
-    IETF: filteredLanguage[Object.keys(filteredLanguage)[0]].IETF
-  };
+    const language = {
+      name: Object.getOwnPropertyNames(filteredLanguage)[0],
+      ISO3166: filteredLanguage[Object.keys(filteredLanguage)[0]].ISO3166,
+      ISO639: filteredLanguage[Object.keys(filteredLanguage)[0]].ISO639,
+      IETF: filteredLanguage[Object.keys(filteredLanguage)[0]].IETF
+    };
 
-  return language;
-}
-
-document.body.querySelector('#emojis').addEventListener('click', () => {
-  emojiPicker.style.visibility === 'visible' ? (emojiPicker.style.visibility = 'hidden') : (emojiPicker.style.visibility = 'visible');
-});
-
-document.body.addEventListener('click', e => {
-  if (e.target.id !== 'emojis' && e.target.nodeName !== 'EMOJI-PICKER' && emojiPicker.style.visibility === 'visible') {
-    emojiPicker.style.visibility = 'hidden';
+    return language;
+  } catch (e) {
+    // console.error(error);
+    return 'error';
   }
-});
+}

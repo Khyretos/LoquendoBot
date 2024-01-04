@@ -44,13 +44,13 @@
           <select name="defaultLanguage" class="top-select" id="language"></select>
         </div>
         <div id="window-controls">
-          <div class="button" id="min-button" tip="Minimize window" tip-left>
+          <div class="button" id="min-button" tip="Minimize window">
             <i class="fa-solid fa-window-minimize"></i>
           </div>
-          <div class="button" id="max-button" tip="Maximize window" tip-left>
+          <div class="button" id="max-button" tip="Maximize window">
             <i class="fa-solid fa-window-maximize"></i>
           </div>
-          <div class="button" id="close-button" tip="Close application" tip-left>
+          <div class="button" id="close-button" tip="Close application">
             <i class="fa-solid fa-xmark"></i>
           </div>
         </div>
@@ -577,13 +577,21 @@
           <div id="chatBox" class="message-window"></div>
           <!-- User input box-->
           <div id="userInput" class="chat-input">
-            <div id="emoji-picker" class="emoji-picker">
+            <div class="emotes">
+              <button class="SmallButton">
+                <i class="fa-regular fa-grin fa-2x" id="emojis" aria-hidden="true"></i>
+              </button>
               <emoji-picker class="dark"></emoji-picker>
             </div>
-            <button class="SmallButton">
-              <i class="fa-regular fa-grin fa-2x" id="emojis" aria-hidden="true"></i>
-            </button>
-            <div class="pop">
+            <div class="pop in">
+              <div class="miniText">In</div>
+              <button class="SmallButton">
+                <i class="fa-solid fa-globe fa-2x" aria-hidden="true"></i>
+              </button>
+              <div class="pop-content"></div>
+            </div>
+            <div class="pop out">
+              <div class="miniText">Out</div>
               <button class="SmallButton">
                 <i class="fa-solid fa-globe fa-2x" aria-hidden="true"></i>
               </button>
@@ -697,7 +705,7 @@
           </section>
         </div>
       </div>
-      <div id="VIEWERS_PANEL" tip="Hide Viewers" tip-left>
+      <div id="VIEWERS_PANEL" tip="Hide Viewers">
         <div class="circle-right">
           <i class="fa fa-eye hide" aria-hidden="true"></i>
         </div>

@@ -752,7 +752,7 @@ document.body.querySelector('#ZOOMLEVEL').addEventListener('change', () => {
 });
 
 document.body.querySelector('emoji-picker').addEventListener('emoji-click', e => {
-  console.log(e.detail);
+  // console.log(e.detail);
   const div = document.getElementById('textInput');
   if (e.detail.unicode === undefined) {
     div.value += e.detail.name + ' ';

@@ -78,24 +78,18 @@ textarea {
     0 0 5px #070607,
     0 0 5px #070607,
     0 0 5px #070607;
-  /* transition: all 0.15s ease-in-out; */
+  transition: all 0.15s ease-in-out;
   text-align: center;
 }
 
 .SmallButton:hover {
-  /* color: var(--main-color1); */
-  width: 50px;
+  color: var(--main-color1);
   cursor: pointer;
-  /* filter: brightness(150%); */
 }
 
 .SmallButton:active {
   color: var(--main-color1);
   transform: translateY(4px);
-  text-shadow:
-    0 0 5px #000,
-    0 0 5px #000,
-    0 0 5px #000;
 }
 
 .AdvancedMenuButton {

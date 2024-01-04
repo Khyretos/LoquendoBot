@@ -133,16 +133,17 @@ async function displayTwitchMessage(logoUrl, username, messageObject, filteredMe
       }
     });
   }
+
+  showChatMessage(article);
+
   if (settings.LANGUAGE.USE_DETECTION) {
     await backend.getDetectedLanguage({ message: filteredMessage, messageId, username, logoUrl, formattedMessage }).then(language => {
+      console.log(language);
       const languageElement = document.createElement('span');
-      languageElement.classList = `fi fi-${language.ISO3166} fis language-icon`;
+      languageElement.classList = `fi fi-${language.ISO3166} fis language-icon flag-icon`;
       languageElement.setAttribute('tip', language.name);
       article.appendChild(languageElement);
       addSingleTooltip(languageElement);
-
-      // Appends the message to the main chat box (shows the message)
-      showChatMessage(article);
 
       if (filteredMessage && !settings.LANGUAGE.OUTPUT_TO_TTS) {
         sound.playVoice({
@@ -154,16 +155,14 @@ async function displayTwitchMessage(logoUrl, username, messageObject, filteredMe
         });
       }
 
-      window.article = article;
+      // window.article = article;
     });
   } else {
-    showChatMessage(article);
-
     if (filteredMessage) {
       sound.playVoice({ filteredMessage, logoUrl, username, formattedMessage });
     }
 
-    window.article = article;
+    // window.article = article;
   }
 
   sound.playNotificationSound();

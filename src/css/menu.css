@@ -61,11 +61,6 @@
   color: var(--main-color2);
 }
 
-.hdp:hover {
-  position: fixed;
-  /* filter: brightness(150%); */
-}
-
 .menu .items .item-active {
   background: -webkit-linear-gradient(left, var(--main-color2) 10%, var(--main-color2), var(--main-color1) 10%, var(--main-color1) 10%);
   color: var(--main-color2);
@@ -229,60 +224,50 @@
   height: 100%;
 }
 
-.btn {
-  background-color: blue;
-  color: red;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
 .pop {
   position: relative;
-  display: inline-block;
+  cursor: pointer;
 }
 
-.pop.up {
+.pop-selection {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.miniText {
+  position: absolute;
+  font-size: 8pt;
+  color: white;
+  padding: 3px;
 }
 
 .pop-content {
   display: none;
   position: absolute;
-  background-color: black;
+  background-color: var(--main-color3);
   z-index: 1;
   height: 400px;
   width: max-content;
   overflow: auto;
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
   top: -400px;
   color: white;
+  border: 1px solid #444;
 }
 pop-content div {
   color: white;
-  padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
 .pop-content div:hover {
-  display: none;
-  /* background-color: black; */
+  backdrop-filter: invert(50%);
 }
 .pop:hover .pop-content {
   display: grid;
-  /* display: none; */
   grid-template-columns: repeat(3, 1fr);
-  /* display: block; */
-}
-.pop:hover .btn {
-  background-color: blue;
 }
 
 .language-select {
-  margin: 5px;
+  padding: 5px;
   position: relative;
-}
-
-.language-select:hover {
-  background-color: blue;
 }
