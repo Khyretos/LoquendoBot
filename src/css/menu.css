@@ -228,3 +228,61 @@
   background-color: var(--main-color4-temp);
   height: 100%;
 }
+
+.btn {
+  background-color: blue;
+  color: red;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+.pop {
+  position: relative;
+  display: inline-block;
+}
+
+.pop.up {
+}
+
+.pop-content {
+  display: none;
+  position: absolute;
+  background-color: black;
+  z-index: 1;
+  height: 400px;
+  width: max-content;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  top: -400px;
+  color: white;
+}
+pop-content div {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.pop-content div:hover {
+  display: none;
+  /* background-color: black; */
+}
+.pop:hover .pop-content {
+  display: grid;
+  /* display: none; */
+  grid-template-columns: repeat(3, 1fr);
+  /* display: block; */
+}
+.pop:hover .btn {
+  background-color: blue;
+}
+
+.language-select {
+  margin: 5px;
+  position: relative;
+}
+
+.language-select:hover {
+  background-color: blue;
+}

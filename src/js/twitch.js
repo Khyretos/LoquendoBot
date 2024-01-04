@@ -136,7 +136,7 @@ async function displayTwitchMessage(logoUrl, username, messageObject, filteredMe
   if (settings.LANGUAGE.USE_DETECTION) {
     await backend.getDetectedLanguage({ message: filteredMessage, messageId, username, logoUrl, formattedMessage }).then(language => {
       const languageElement = document.createElement('span');
-      languageElement.classList = `fi fi-${language.ISO3166} fis`;
+      languageElement.classList = `fi fi-${language.ISO3166} fis language-icon`;
       languageElement.setAttribute('tip', language.name);
       article.appendChild(languageElement);
       addSingleTooltip(languageElement);

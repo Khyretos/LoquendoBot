@@ -96,7 +96,6 @@ class STT:
             vosk_model = os.path.join(
                 resources_folder, "speech_to_text_models", settings["STT"]["LANGUAGE"]
             )
-        print(vosk_model)
 
         self.model = Model(rf"{vosk_model}")
         self.dump_fn = None
@@ -137,7 +136,6 @@ class STT:
         self.is_running = False
 
 settings.read(settingsPath)
-print(settingsPath)
 if settings["STT"]["USE_STT"] and bool(settings["STT"]["LANGUAGE"]):
   speech_recognition_service = STT()
 

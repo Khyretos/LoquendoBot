@@ -161,7 +161,7 @@ const languages = {
   kisii: { IETF: 'guz-KE', ISO639: 'guz', ISO3166: 'ke' },
   kongo: { IETF: 'kg-CG', ISO639: 'kg', ISO3166: 'cg' },
   konkani: { IETF: 'kok-IN', ISO639: 'kok', ISO3166: 'in' },
-  korean: { IETF: 'ko-KR', ISO639: 'ko', ISO3166: 'ko' },
+  korean: { IETF: 'ko-KR', ISO639: 'ko', ISO3166: 'kr' },
   'northern kurdish': { IETF: 'kmr-TR', ISO639: 'kmr', ISO3166: 'tr' },
   'kurdish sorani': { IETF: 'ckb-IQ', ISO639: 'ckb', ISO3166: 'iq' },
   kyrgyz: { IETF: 'ky-KG', ISO639: 'ky', ISO3166: 'kg' },

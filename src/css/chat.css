@@ -517,8 +517,6 @@ h1 {
 .fi {
   position: relative;
   z-index: 5;
-  top: 45px;
-  left: 20px;
   border-radius: 50%;
 }
 
@@ -540,5 +538,12 @@ h1 {
   position: relative;
   padding: 0px 0px 0px 0px;
   margin: -45px 0px 0px -40px;
-  top: -15px;
+  top: 30px;
+  left: 20px;
+}
+
+.language-icon {
+  position: relative;
+  top: 45px;
+  left: 20px;
 }

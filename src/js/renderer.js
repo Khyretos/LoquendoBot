@@ -163,6 +163,39 @@ async function getAudioDevices() {
 
 getAudioDevices();
 
+function setLanguagesinSelectx() {
+  const languageSelect = document.querySelector('.pop-content'); // obtain the html reference of the google voices comboBox
+
+  for (const language in languageObject.languages) {
+    if (Object.prototype.hasOwnProperty.call(languageObject.languages, language)) {
+      const IETF = languageObject.languages[language].IETF;
+      const ISO639 = languageObject.languages[language].ISO639;
+      const ISO3166 = languageObject.languages[language].ISO3166;
+
+      const option = document.createElement('div');
+      option.classList = 'language-select';
+
+      const languageElement = document.createElement('span');
+      languageElement.classList = `fi fi-${ISO3166} fis`;
+      option.setAttribute('tip', language);
+
+      const text = document.createElement('span');
+      text.innerHTML = ` - ${ISO639}`;
+
+      option.value = IETF;
+
+      languageSelect.appendChild(option);
+      option.appendChild(languageElement);
+      option.appendChild(text);
+      addSingleTooltip(option);
+    }
+  }
+
+  // languageSelect.selectedIndex = setting;
+}
+
+setLanguagesinSelectx();
+
 function setLanguagesinSelect(languageSelector, setting) {
   const languageSelect = document.querySelector(languageSelector); // obtain the html reference of the google voices comboBox
 
