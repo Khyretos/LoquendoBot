@@ -1,253 +1,262 @@
 /* Basic styling */
 
 :root {
-    overflow: hidden;
-    --main-color1: #6e2c8c;
-    --main-color1-temp: #6e2c8c;
-    /*Left bar and top right bar*/
-    --main-color2: white;
-    --main-color2-temp: white;
-    /*Icons and text*/
-    --main-color3: #211e1e;
-    --main-color3-temp: #211e1e;
-    /*Buttons and input*/
-    --main-color4: #2f2c34;
-    --main-color4-temp: #2f2c34;
-    --top-bar: #100b12;
-    --top-bar-temp: #100b12;
-    --mid-section: #352d3d;
-    --mid-section-temp: #352d3d;
-    --chat-bubble: #7a6d7f;
-    --chat-bubble-header: #141414;
-    --chat-bubble-username: white;
-    --chat-bubble-message: white;
-    --chat-bubble-temp: #7a6d7f;
-    --chat-bubble-header-temp: #141414;
-    --chat-bubble-message-temp: white;
+  overflow: hidden;
+  --main-color1: #6e2c8c;
+  --main-color1-temp: #6e2c8c;
+  /*Left bar and top right bar*/
+  --main-color2: white;
+  --main-color2-temp: white;
+  /*Icons and text*/
+  --main-color3: #211e1e;
+  --main-color3-temp: #211e1e;
+  /*Buttons and input*/
+  --main-color4: #2f2c34;
+  --main-color4-temp: #2f2c34;
+  --top-bar: #100b12;
+  --top-bar-temp: #100b12;
+  --mid-section: #352d3d;
+  --mid-section-temp: #352d3d;
+  --chat-bubble: #7a6d7f;
+  --chat-bubble-header: #141414;
+  --chat-bubble-username: white;
+  --chat-bubble-message: white;
+  --chat-bubble-temp: #7a6d7f;
+  --chat-bubble-header-temp: #141414;
+  --chat-bubble-message-temp: white;
 }
 
 html {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *,
 *:before,
 *:after {
-    box-sizing: inherit;
-}
-
-html,
-body {
-    height: 100%;
-    margin: 0;
-    /* border-top-left-radius: 20px; */
-    /* border-top-right-radius: 20px; */
-    overflow-x: hidden;
+  box-sizing: inherit;
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: transparent;
-}
-
-/* Styling of window frame and titlebar */
-
-body {
-    /* border: 1px solid #48545c; */
-    overflow-y: hidden;
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: transparent;
+  position: relative;
+  /* overflow-y: hidden;
+  overflow-x: hidden; */
 }
 
 #titlebar {
-    display: block;
-    /* position: fixed; */
-    height: 32px;
-    width: calc(100%);
-    background-color: var(--top-bar);
-    /* border-top-left-radius: 20px;
+  display: block;
+  /* position: fixed; */
+  height: 32px;
+  width: calc(100%);
+  background-color: var(--top-bar);
+  /* border-top-left-radius: 20px;
     border-top-right-radius: 20px; */
 }
 
 .maximized #titlebar {
-    width: 100%;
-    padding: 0;
+  width: 100%;
+  padding: 0;
 }
 
 #main {
-    height: calc(100% - 32px);
-    margin-top: 32px;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
+  height: calc(100% - 32px);
+  margin-top: 32px;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
 }
 
 #titlebar {
-    padding: 4px;
+  padding: 4px;
 }
 
 #titlebar #drag-region {
-    width: 100%;
-    height: 100%;
-    -webkit-app-region: drag;
-    display: inline-flex;
+  width: 100%;
+  height: 100%;
+  -webkit-app-region: drag;
+  display: inline-flex;
 }
 
 #titlebar {
-    color: var(--main-color2);
+  color: var(--main-color2);
 }
 
 #window-title {
-    grid-column: 1;
-    display: flex;
-    align-items: center;
-    margin-left: 8px;
-    overflow: hidden;
-    font-family: 'Segoe UI', sans-serif;
-    font-size: 12px;
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 12px;
 }
 
 .maximized #window-title {
-    margin-left: 12px;
+  margin-left: 12px;
 }
 
 #window-title span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.5;
 }
 
 #window-controls {
-    display: grid;
-    grid-template-columns: repeat(3, 46px);
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 32px;
-    -webkit-app-region: no-drag;
+  display: grid;
+  grid-template-columns: repeat(3, 46px);
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 32px;
+  -webkit-app-region: no-drag;
 }
 
 #window-controls .button {
-    grid-row: 1 / span 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 32px;
+  grid-row: 1 / span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 32px;
 }
 
 @media (-webkit-device-pixel-ratio: 1.5),
-    (device-pixel-ratio: 1.5),
-    (-webkit-device-pixel-ratio: 2),
-    (device-pixel-ratio: 2),
-    (-webkit-device-pixel-ratio: 3),
-    (device-pixel-ratio: 3) {
-    #window-controls .icon {
-        width: 10px;
-        height: 10px;
-    }
+  (device-pixel-ratio: 1.5),
+  (-webkit-device-pixel-ratio: 2),
+  (device-pixel-ratio: 2),
+  (-webkit-device-pixel-ratio: 3),
+  (device-pixel-ratio: 3) {
+  #window-controls .icon {
+    width: 10px;
+    height: 10px;
+  }
 }
 
 #window-controls .button {
-    user-select: none;
+  user-select: none;
 }
 
 #window-controls .button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    /* filter: brightness(150%); */
+  background: rgba(255, 255, 255, 0.1);
+  /* filter: brightness(150%); */
 }
 
 #window-controls .button:active {
-    background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 #close-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    /* border-top-right-radius: 20px; */
-    background: #f1707a !important;
+  background: rgba(255, 255, 255, 0.1);
+  /* border-top-right-radius: 20px; */
+  background: #f1707a !important;
 }
 
 #close-button:active {
-    background: #f1707a !important;
+  background: #f1707a !important;
 }
 
 #close-button:active .icon {
-    filter: invert(1);
-    background: #f1707a !important;
+  filter: invert(1);
+  background: #f1707a !important;
 }
 
 #min-button {
-    grid-column: 1;
+  grid-column: 1;
 }
 
 #max-button,
 #restore-button {
-    grid-column: 2;
+  grid-column: 2;
 }
 
 #close-button {
-    grid-column: 3;
+  grid-column: 3;
 }
 
 #restore-button {
-    display: none !important;
+  display: none !important;
 }
 
 .maximized #restore-button {
-    display: flex !important;
+  display: flex !important;
 }
 
 .maximized #max-button {
-    display: none;
+  display: none;
 }
 
 .active-mic {
-    position: absolute;
-    bottom: 0;
+  position: absolute;
+  bottom: 0;
 }
 
 .about {
-    -webkit-app-region: no-drag;
-    position: absolute;
-    left: 0;
-    width: 32px;
-    text-align: -webkit-center;
+  -webkit-app-region: no-drag;
+  position: absolute;
+  left: 0;
+  width: 32px;
+  text-align: -webkit-center;
 }
 
 .language-selector {
-    position: absolute;
-    -webkit-app-region: no-drag;
-    display: inline-block;
-    background-color: transparent;
-    cursor: pointer;
-    font-family: 'NotoColorEmojiLimited', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-    left: 50%;
-    transform: translateX(-50%);
+  position: absolute;
+  -webkit-app-region: no-drag;
+  display: inline-block;
+  background-color: transparent;
+  cursor: pointer;
+  font-family:
+    'NotoColorEmojiLimited',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol';
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .language-dropdown {
-    display: none;
-    position: absolute;
-    background-color: #fff;
-    width: 55px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 2;
-    font-family: 'NotoColorEmojiLimited', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  width: 55px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  font-family:
+    'NotoColorEmojiLimited',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol';
 }
 
 .language-item {
-    padding: 5px;
-    cursor: pointer;
-    background-color: var(--top-bar);
+  padding: 5px;
+  cursor: pointer;
+  background-color: var(--top-bar);
 }
 
-.language-item:hover {
-    /* filter: brightness(150%); */
-}
+/* .language-item:hover {
+  filter: brightness(150%);
+} */
 
 @font-face {
-    font-family: NotoColorEmojiLimited;
-    unicode-range: U+1F1E6-1F1FF;
-    src: url(https://raw.githack.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf);
+  font-family: NotoColorEmojiLimited;
+  unicode-range: U+1F1E6-1F1FF;
+  src: url(https://raw.githack.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf);
 }

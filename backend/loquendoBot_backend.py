@@ -1,10 +1,17 @@
 from flask import Flask, Response, jsonify, request
 import gevent
+
+import re
 import gevent.monkey
 import json
+from waitress import serve
+import logging
+
+logger = logging.getLogger("waitress")
+logger.setLevel(logging.INFO)
 
 gevent.monkey.patch_all()
-import gevent.queue
+# import gevent.queue
 
 import configparser
 import pyttsx3
@@ -20,8 +27,6 @@ import fasttext
 from deep_translator import (
     MyMemoryTranslator,
 )
-
-import emoji
 
 from vosk import Model, KaldiRecognizer, SetLogLevel
 
@@ -40,6 +45,7 @@ q = queue.Queue()
 
 # gobal functions
 
+
 # classes
 class LanguageDetection:
     def __init__(self):
@@ -55,19 +61,18 @@ class LanguageDetection:
             language_detection_model = os.path.join(
                 resources_folder, "language_detection_model", f"lid.176.bin"
             )
-            
-        language_detection_model = (
-            rf"{language_detection_model}"
-        )
+
+        language_detection_model = rf"{language_detection_model}"
         self.model = fasttext.load_model(language_detection_model)
 
     def predict_lang(self, text):
-        predictions = self.model.predict(text, k=5)  # returns top 2 matching languages
+        predictions = self.model.predict(text, k=3)  # returns top 2 matching languages
         language_codes = []
         for prediction in predictions[0]:
             language_codes.append(prediction.replace("__label__", ""))
 
         return language_codes
+
 
 class STT:
     samplerate = None
@@ -92,9 +97,7 @@ class STT:
                 resources_folder, "speech_to_text_models", settings["STT"]["LANGUAGE"]
             )
 
-        self.model = Model(
-            rf"{vosk_model}"
-        )
+        self.model = Model(rf"{vosk_model}")
         self.dump_fn = None
 
         self.q = gevent.queue.Queue()
@@ -132,8 +135,9 @@ class STT:
     def stop_recognition(self):
         self.is_running = False
 
-
-speech_recognition_service = STT()
+settings.read(settingsPath)
+if settings["STT"]["USE_STT"] and bool(settings["STT"]["LANGUAGE"]):
+  speech_recognition_service = STT()
 
 
 class TTS:
@@ -151,16 +155,16 @@ class TTS:
                 break
         self.engine.setProperty("voice", matching_id)
 
+        settings_folder = os.path.dirname(settingsPath)
         if environment == "dev":
-            settings_folder = os.path.dirname(settingsPath)
             src_folder = os.path.dirname(settings_folder)
+            bot_folder = os.path.dirname(src_folder)
             saveLocation = os.path.join(
-                src_folder, "sounds\\tts", f"Internal_{count}.mp3"
+                bot_folder, "sounds", f"Internal_{count}.mp3"
             )
         else:
-            resources_folder = os.path.dirname(settingsPath)
             saveLocation = os.path.join(
-                resources_folder, "sounds\\tts", f"Internal_{count}.mp3"
+                settings_folder, "sounds", f"Internal_{count}.mp3"
             )
 
         self.engine.save_to_file(message, saveLocation)
@@ -175,10 +179,12 @@ class TTS:
 
         return [voice.name for voice in voices]
 
-
-text_to_speech_service = TTS()
+settings.read(settingsPath)
+if settings["TTS"]["USE_TTS"]:
+  text_to_speech_service = TTS()
 
 # endpoints
+
 
 @app.route("/stream", methods=["GET"])
 def stream_recognition():
@@ -194,14 +200,6 @@ def stop_recording():
     return Response("Speech recognition stopped", status=200)
 
 
-# @app.before_request
-# def custom_warning():
-#     if environment == "dev":
-#         print(
-#             # "Running in internal development environment. This server is not for production use."
-#         )
-
-
 @app.route("/terminate", methods=["GET"])
 def terminate_processes():
     shutdown_server()
@@ -215,23 +213,38 @@ def shutdown_server():
     func()
 
 
-# @app.route("/detect", methods=["POST"])
-# def server_status():
-#     try:
-#         request_data = request.json
-#         message = request_data.get("message", "")
-#         confidence_values = detector.compute_language_confidence_values(message)
-#         for language, value in confidence_values:
-#             print(f"{language.name}: {value:.2f}")
-#             message = request_data.get("message", "")
-#     except Exception as e:
-#         return jsonify({"error": "An error occurred"}), 500
-#     return jsonify({"message": "Audio triggered"}), 200
-
-
 @app.route("/status", methods=["GET"])
 def server_status():
     return jsonify({"status": "server is running"})
+
+
+@app.route("/detect", methods=["POST"])
+def get_language():
+    try:
+        request_data = request.json
+        message = request_data.get("message", "")
+        lang = LanguageDetection().predict_lang(message)
+    except Exception as e:
+        return jsonify({"error": "An error occurred"}), 500
+    return jsonify({"languages": lang}), 200
+
+
+@app.route("/translate", methods=["POST"])
+def get_translation():
+    try:
+        settings.read(settingsPath)
+        request_data = request.json
+        message = request_data.get("message", "")
+        detectedLanguage = request_data.get("language", "")
+        try:
+          translated = MyMemoryTranslator(
+              source=detectedLanguage, target=settings["LANGUAGE"]["TRANSLATE_TO"]
+          ).translate(message)
+        except Exception as e:
+          return jsonify({"error": str(e), "code":429 }), 429
+    except Exception as e:
+        return jsonify({"error": str(e), "code":500 }), 500
+    return jsonify({"translation": translated}), 200
 
 
 @app.route("/audio", methods=["POST"])
@@ -239,11 +252,16 @@ def trigger_backend_event():
     try:
         request_data = request.json
         message = request_data.get("message", "")
+        filteredMessage = re.sub(
+            r"https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+            "a link",
+            message,
+        )
         voice = request_data.get("voice")
         count = request_data.get("count")
-        text_to_speech_service.say(message, voice, count)
+        text_to_speech_service.say(filteredMessage, voice, count)
     except Exception as e:
-        return jsonify({"error": "An error occurred"}), 500
+        return jsonify({"error": e}), 500
     return jsonify({"message": "Audio triggered"}), 200
 
 
@@ -253,18 +271,10 @@ def get_voices():
         voices = text_to_speech_service.voices()
         return jsonify({"voices": voices}), 200
     except Exception as e:
-        return jsonify({"error": "An error occurred"}), 500
+        return jsonify({"error": e}), 500
 
 
 if __name__ == "__main__":
-    LANGUAGE = LanguageDetection()
-    lang = LANGUAGE.predict_lang("hola cómo estás")
-    print(lang)
-    text = "Keep it up. You are awesome"
-    translated = MyMemoryTranslator(
-        source="english", target="spanish latin america"
-    ).translate(text)
-    print(translated)
     if len(sys.argv) > 1:
         settings.read(settingsPath)
         port = int(settings["GENERAL"]["PORT"])
@@ -273,5 +283,4 @@ if __name__ == "__main__":
         port = 9000
         stream_recognition()
 
-    app.run(host="127.0.0.1", port=port)
-    app.terminate()
+    serve(app, host="0.0.0.0", port=port)

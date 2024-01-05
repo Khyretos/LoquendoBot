@@ -20,8 +20,8 @@ body {
   padding-left: 40dip;
   padding-right: 10dip;
   vertical-align: top;
-  foreground-repeat: no-repeat;
-  foreground-position: 16dip 50%;
+  /* foreground-repeat: no-repeat;
+  foreground-position: 16dip 50%; */
   background-repeat: no-repeat;
   background-position: 10dip 50%;
   background-size: 64dip 64dip;
@@ -37,7 +37,7 @@ body {
 
 .title {
   font-weight: bold !important;
-  flow: column !important;
+  /* flow: column !important; */
   text-align: left !important;
   margin: auto !important;
   width: min-content !important;
@@ -86,12 +86,12 @@ img {
 }
 
 #button-bar {
-  flow: horizontal;
+  /* flow: horizontal; */
   padding: 10dip;
   border-spacing: 10dip;
   margin: 0;
-  flow: horizontal;
-  horizontal-align: right;
+  /* flow: horizontal; */
+  /* horizontal-align: right; */
 }
 
 label {
@@ -103,7 +103,7 @@ label {
   text-shadow: #fff 0px 1px;
   min-width: 4em;
   line-height: 2em;
-  vertical-align: middle;
+  /* vertical-align: middle; */
   width: min-intrinsic;
   text-align: center;
 }

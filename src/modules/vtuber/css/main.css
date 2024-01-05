@@ -1,386 +1,380 @@
 * {
-    box-sizing: border-box;
-    image-rendering: optimize-quality;
+  box-sizing: border-box;
+  image-rendering: optimize-quality;
 }
 
 :disabled {
-    display: none;
+  display: none;
 }
 
 html {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 body {
-    margin: 0;
-    padding: 16dip;
-    position: relative;
-    background-image: url('../png/grid.png');
-    background-size: 70px;
-    background-repeat: repeat;
+  margin: 0;
+  padding: 16dip;
+  position: relative;
+  background-image: url('../png/grid.png');
+  background-size: 70px;
+  background-repeat: repeat;
 }
 
 #controls {
-    height: 100%;
-    width: 100%;
-    /* flow: horizontal; */
-    overflow: hidden;
-    display: flex;
+  height: 100%;
+  width: 100%;
+  /* flow: horizontal; */
+  overflow: hidden;
+  display: flex;
 }
 
 #controls-left {
-    order: 2px solid cyan;
-    width: 7%;
-    height: 10%;
-    /* flow: vertical; */
-    border-spacing: 1%;
+  order: 2px solid cyan;
+  width: 7%;
+  height: 10%;
+  /* flow: vertical; */
+  border-spacing: 1%;
 }
 
 #controls-top {
-    height: 10%;
-    width: 100%;
-    /* flow: horizontal; */
-    border-spacing: 1%;
-    margin-left: 10px;
+  height: 10%;
+  width: 100%;
+  /* flow: horizontal; */
+  border-spacing: 1%;
+  margin-left: 10px;
 }
 
 #meters {
-    display: flex;
-    height: 50vh;
-    /* flow: horizontal; */
-    /* border-spacing: *; */
-    position: relative;
+  display: flex;
+  height: 50vh;
+  /* flow: horizontal; */
+  /* border-spacing: *; */
+  position: relative;
 }
 
 #meter-microphone {
-    margin-left: 10%;
-    margin-right: 10%;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 #meter-delay {
-    margin-right: 20%;
+  margin-right: 20%;
 }
 
 #meter-microphone,
 #meter-delay {
-    height: 45vh;
-    width: 25%;
-    background-repeat: no-repeat;
+  height: 45vh;
+  width: 25%;
+  background-repeat: no-repeat;
 }
 
-input[type='vslider']>button.slider {
-    background-size: 100% auto;
-    border-radius: 0;
-    width: 275%;
-    height: 5%;
-    background-position: 0 50%;
-    border-width: 0;
+input[type='vslider'] > button.slider {
+  background-size: 100% auto;
+  border-radius: 0;
+  width: 275%;
+  height: 5%;
+  background-position: 0 50%;
+  border-width: 0;
 }
 
 button {
-    height: 50px;
-    width: 50px;
-    background-size: cover;
-    overflow: hidden;
-    border-style: none;
-    background-color: transparent;
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+  overflow: hidden;
+  border-style: none;
+  background-color: transparent;
 }
 
-#meter-microphone>button.slider {
-    background-image: url('../png/controls/meters/left.png');
+#meter-microphone > button.slider {
+  background-image: url('../png/controls/meters/left.png');
 }
 
-#meter-delay>button.slider {
-    background-image: url('../png/controls/meters/right.png');
+#meter-delay > button.slider {
+  background-image: url('../png/controls/meters/right.png');
 }
 
 #meter-microphone {
-    color: #2ebe38;
+  color: #2ebe38;
 }
 
 #meter-delay {
-    color: #453be2;
+  color: #453be2;
 }
 
 #slider-left {
-    left: -25%;
+  left: -25%;
 }
 
 #slider-right {
-    right: -25%;
+  right: -25%;
 }
 
 #buttons-left {
-    width: 100%;
-    height: 100%;
-    box-shadow: none;
+  width: 100%;
+  height: 100%;
+  box-shadow: none;
 }
 
 #buttons-top {
-    height: 50px;
-    width: 100%;
-    display: flex;
+  height: 50px;
+  width: 100%;
+  display: flex;
 }
 
 #buttons-left button {
-    width: 50;
-    height: 50px;
-    display: flex;
-    background-size: cover;
-    overflow: hidden;
+  width: 50;
+  height: 50px;
+  display: flex;
+  background-size: cover;
+  overflow: hidden;
 }
 
 #buttons-top button {
-    background-size: auto 100%;
-    background-position: 50% 50%;
-    border-width: 0;
-    border-radius: 0;
+  background-size: auto 100%;
+  background-position: 50% 50%;
+  border-width: 0;
+  border-radius: 0;
 }
 
 #buttons-left button:active,
 #about:active,
 #close:active {
-    filter: brightness(-10%);
+  filter: brightness(-10%);
 }
 
 popup[role='tooltip'] {
-    color: white;
-    background: rgba(0, 0, 0, 0.666);
-    border-width: 0;
-    padding: 0.333em;
-    font-size: 1.25em;
-    font-family: Calibri;
+  color: white;
+  background: rgba(0, 0, 0, 0.666);
+  border-width: 0;
+  padding: 0.333em;
+  font-size: 1.25em;
+  font-family: Calibri;
 }
 
 #microphone-device {
-    background-image: url('../png/controls/buttons/left/mic.png');
+  background-image: url('../png/controls/buttons/left/mic.png');
 }
 
 #background-color {
-    background-image: url('../png/controls/buttons/left/bg.png');
+  background-image: url('../png/controls/buttons/left/bg.png');
 }
 
 #open-file {
-    background-image: url('../png/controls/buttons/left/open.png');
+  background-image: url('../png/controls/buttons/left/open.png');
 }
 
 #save-file {
-    background-image: url('../png/controls/buttons/left/save.png');
+  background-image: url('../png/controls/buttons/left/save.png');
 }
 
 /* TOP ROW BUTTONS */
 
 button.mouth-image.border-default {
-    background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    top: 0;
-    bottom: 0;
+  background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  bottom: 0;
 }
 
 button.mouth-image.border-add {
-    background-image: url('../png/controls/buttons/top/avatar-change/border/add.png');
+  background-image: url('../png/controls/buttons/top/avatar-change/border/add.png');
 }
 
 button.mouth-image:active {
-    filter: brightness(-10%);
+  filter: brightness(-10%);
 }
 
 button.mouth-image::before {
-    position: absolute;
-    top: 5%;
-    right: 10%;
-    width: 50px;
-    height: 66%;
-    background-size: 100% 100%;
-    z-index: -1;
+  position: absolute;
+  top: 5%;
+  right: 10%;
+  width: 50px;
+  height: 66%;
+  background-size: 100% 100%;
+  z-index: -1;
 }
 
 button.mouth-image::after {
-    position: absolute;
-    top: 69%;
-    left: 37%;
-    width: 50px;
-    height: 35%;
-    transform: translate(-50%, -50%);
-    background-size: 100% 100%;
+  position: absolute;
+  top: 69%;
+  left: 37%;
+  width: 50px;
+  height: 35%;
+  transform: translate(-50%, -50%);
+  background-size: 100% 100%;
 }
 
 #closed-mouth-image.border-default::before {
-    background-image: url('../png/avatars/crab/closed.png');
+  background-image: url('../png/avatars/crab/closed.png');
 }
 
 #closed-mouth-image::after {
-    background-image: url('../png/controls/buttons/top/avatar-change/closed.png');
+  background-image: url('../png/controls/buttons/top/avatar-change/closed.png');
 }
 
 #open-mouth-image.border-default::before {
-    background-image: url('../png/avatars/crab/open.png');
+  background-image: url('../png/avatars/crab/open.png');
 }
 
 #open-mouth-image::after {
-    background-image: url('../png/controls/buttons/top/avatar-change/open.png');
+  background-image: url('../png/controls/buttons/top/avatar-change/open.png');
 }
 
 #closed-mouth-blinking-image.border-default::before {
-    background-image: url('../png/avatars/crab/closed-blink.png');
+  background-image: url('../png/avatars/crab/closed-blink.png');
 }
 
 #closed-mouth-blinking-image::after {
-    background-image: url('../png/controls/buttons/top/avatar-change/closed-blink.png');
+  background-image: url('../png/controls/buttons/top/avatar-change/closed-blink.png');
 }
 
 #open-mouth-blinking-image.border-default::before {
-    background-image: url('../png/avatars/crab/open-blink.png');
+  background-image: url('../png/avatars/crab/open-blink.png');
 }
 
 #open-mouth-blinking-image::after {
-    background-image: url('../png/controls/buttons/top/avatar-change/open-blink.png');
+  background-image: url('../png/controls/buttons/top/avatar-change/open-blink.png');
 }
 
 button.motion {
-    /* background-image: url('../png/controls/buttons/top/motion/template.png'); */
-    position: relative;
-    /* var(x): 0dip;
+  /* background-image: url('../png/controls/buttons/top/motion/template.png'); */
+  position: relative;
+  /* var(x): 0dip;
     var(y): height(33%); */
-    height: 50px;
-    width: 50px;
+  height: 50px;
+  width: 50px;
 }
 
-
 .closed-mouth-motion {
-    background-image: url('../png/controls/buttons/top/motion/closed.png');
-    box-sizing: border-box;
-    image-rendering: optimize-quality;
-    height: 50px;
-    width: 50px;
-    background-color: #9bccd4;
+  background-image: url('../png/controls/buttons/top/motion/closed.png');
+  box-sizing: border-box;
+  image-rendering: optimize-quality;
+  height: 50px;
+  width: 50px;
+  background-color: #9bccd4;
 }
 
 .test {
-    width: 50px;
-    height: 50px;
-    background-size: cover;
-    overflow: hidden;
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  overflow: hidden;
 }
 
 .avatar-change {
-    background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
-    background-size: cover;
-    width: 50px;
-    height: 50px;
-    position: relative;
-    left: -5px;
+  background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  left: -5px;
 }
 
 .border {
-    background-image: url('../png/controls/buttons/top/motion/border.png');
-    background-size: cover;
-    width: 50px;
-    height: 50px;
-    position: relative;
-    top: -50px;
+  background-image: url('../png/controls/buttons/top/motion/border.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  top: -50px;
 }
 
 .open-mouth-motion {
-    background-image: url('../png/controls/buttons/top/motion/open.png');
-    box-sizing: border-box;
-    image-rendering: optimize-quality;
-    height: 50px;
-    width: 50px;
+  background-image: url('../png/controls/buttons/top/motion/open.png');
+  box-sizing: border-box;
+  image-rendering: optimize-quality;
+  height: 50px;
+  width: 50px;
 }
 
 .mouth-transition {
-    background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
-    box-sizing: border-box;
-    image-rendering: optimize-quality;
-    height: 50px;
-    width: 50px;
-    background-position: 50% 50%;
-    background-color: yellow;
+  background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
+  box-sizing: border-box;
+  image-rendering: optimize-quality;
+  height: 50px;
+  width: 50px;
+  background-position: 50% 50%;
+  background-color: yellow;
 }
 
 .mouth-transitionx {
-    background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
-    box-sizing: border-box;
-    image-rendering: optimize-quality;
-    height: 50px;
-    width: 50px;
-    background-position: 50% 50%;
-    background-color: red;
+  background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
+  box-sizing: border-box;
+  image-rendering: optimize-quality;
+  height: 50px;
+  width: 50px;
+  background-position: 50% 50%;
+  background-color: red;
 }
 
-
 #mouth-transition::before {
-    background-color: red;
-    background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
+  background-color: red;
+  background-image: url('../png/controls/buttons/top/avatar-change/border/default.png');
 }
 
 button.motion::before {
-    position: absolute;
-    width: 50px;
-    height: 90%;
-    background-size: 105% 105%;
-    transform: translate(-11%, -11%);
-    /* background-position: -50% -50%; */
-    overflow: hidden;
-    z-index: -1;
-    /* hit-margin: -999px; */
+  position: absolute;
+  width: 50px;
+  height: 90%;
+  background-size: 105% 105%;
+  transform: translate(-11%, -11%);
+  /* background-position: -50% -50%; */
+  overflow: hidden;
+  z-index: -1;
+  /* hit-margin: -999px; */
 }
 
 #closed-mouth-motion::before {
-    background-color: #2ebe38;
+  background-color: #2ebe38;
 }
 
 #open-mouth-motion::before {
-    background-image: url('../png/controls/buttons/top/motion/open.png');
-    height: 50px;
-    width: 50px;
-    pointer-events: none;
-    background-color: yellow;
+  background-image: url('../png/controls/buttons/top/motion/open.png');
+  height: 50px;
+  width: 50px;
+  pointer-events: none;
+  background-color: yellow;
 }
 
 button.motion::after {
-    position: absolute;
-    width: 80%;
-    height: 80%;
-    background-color: red;
-    overflow: hidden;
-    z-index: -1;
-    transform: translate(11%, 11%);
-    /* hit-margin: -999px; */
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  background-color: red;
+  overflow: hidden;
+  z-index: -1;
+  transform: translate(11%, 11%);
+  /* hit-margin: -999px; */
 }
 
 #set-hotkey {
-    background-image: url('../png/controls/buttons/top/hotkey/set/default.png');
+  background-image: url('../png/controls/buttons/top/hotkey/set/default.png');
 }
 
 #hotkey-mode {
-    background-image: url('../png/controls/buttons/top/hotkey/mode/0.png');
+  background-image: url('../png/controls/buttons/top/hotkey/mode/0.png');
 }
 
 #delete-state {
-    background-image: url('../png/controls/buttons/right/delete.png');
+  background-image: url('../png/controls/buttons/right/delete.png');
 }
 
 #about {
-    background-image: url('../png/controls/buttons/top/info.png');
+  background-image: url('../png/controls/buttons/top/info.png');
 }
 
 #close {
-    background-image: url('../png/controls/buttons/top/close.png');
+  background-image: url('../png/controls/buttons/top/close.png');
 }
 
 #avatar {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 40%;
-    height: width(100%);
-}
-
-menu.popup {
-    /* box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.692); */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: width(100%);
 }

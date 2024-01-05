@@ -1,34 +1,34 @@
 table {
-	margin-left: 10px;
-	background-color: white;
-	border-collapse: collapse;
-	width: 100%;
-	margin-top: 60px;
+  margin-left: 10px;
+  background-color: white;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 60px;
 }
 
 th,
 td {
-	border: 1px solid black;
-	padding: 8px;
-	text-align: left;
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
 }
 
 .info {
-	background-color: lightblue !important;
+  background-color: lightblue !important;
 }
 
 .warn {
-	background-color: #f39c12 !important;
+  background-color: #f39c12 !important;
 }
 
 .error {
-	background-color: #e74c3c !important;
+  background-color: #e74c3c !important;
 }
 
 #logTable {
-	width: 95%;
+  width: 95%;
 }
 
 #Logs {
-	overflow: auto;
+  overflow: auto;
 }

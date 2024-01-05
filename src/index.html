@@ -1,652 +1,740 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LoquendoBot</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoquendoBot</title>
 
-        <!--#region css styles -->
-        <link rel="stylesheet" href="./fonts/FRAMCDN/font.css" />
-        <link rel="stylesheet" href="./fonts/Aven/stylesheet.css" />
-        <link rel="stylesheet" href="./css/checkbox.css" />
-        <link rel="stylesheet" href="./css/chat.css" />
-        <link rel="stylesheet" href="./css/home.css" />
-        <link rel="stylesheet" href="./css/menu.css" />
-        <link rel="stylesheet" href="./css/tabs.css" />
-        <link rel="stylesheet" href="./css/tts-menu.css" />
-        <link rel="stylesheet" href="./css/volume-slider.css" />
-        <link rel="stylesheet" href="./css/sliders.css" />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
-        <link rel="stylesheet" href="./css/logger.css" />
-        <!--#endregion -->
-    </head>
-
-    <body>
-        <div id="toasts"></div>
-        <!--#region title bar -->
-        <header id="titlebar">
-            <div id="drag-region">
-                <div id="BtnInfo" class="about" tip="About">
-                    <!-- <i class="fa-solid fa-microphone-lines"></i> -->
-                    <img class="AdvancedMenuIcon2" src="./images/icon-256.png" alt=" " />
-                </div>
-                <div class="language-selector" tip="Selected language">
-                    <i class="fa-solid fa-globe"></i>
-                    <select name="defaultLanguage" class="top-select" id="language"></select>
-                </div>
-                <div id="window-controls">
-                    <div class="button" id="min-button" tip="Minimize window" tip-left>
-                        <i class="fa-solid fa-window-minimize"></i>
-                    </div>
-                    <div class="button" id="max-button" tip="Maximize window" tip-left>
-                        <i class="fa-solid fa-window-maximize"></i>
-                    </div>
-                    <div class="button" id="close-button" tip="Close application" tip-left>
-                        <i class="fa-solid fa-xmark"></i>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!--#endregion -->
-        <div class="container">
-            <!--#endregion -->
-
-            <!--#region Menu, left section-->
-            <div class="sidepanel-left" id="sidepanel-left">
-                <nav class="menu">
-                    <ul class="items">
-                        <li class="item item-active" tip="Chat" id="btnChat">
-                            <i class="fa fa-comments"></i>
-                        </li>
-                        <li class="item" tip="Configuration" id="btnConfiguration">
-                            <i class="fa fa-cogs menu-icon"></i>
-                        </li>
-                        <li class="item" tip="Theme Creator" id="btnThemeCreator">
-                            <i class="fa-solid fa-palette"></i>
-                        </li>
-                        <li class="item" tip="Chat Creator" id="btnChatCreator">
-                            <i class="fa-solid fa-spray-can"></i>
-                        </li>
-                        <li class="item" tip="BrowserSource ChatBubble" id="btnBrowsersourceChat">
-                            <i class="fa fa-history menu-icon"></i>
-                        </li>
-                        <li class="item" tip="BrowserSource Vtuber" id="btnBrowsersourceVtuber">
-                            <i class="fa fa-user menu-icon"></i>
-                        </li>
-                        <li class="item" tip="Logs" id="btnLogs">
-                            <i class="fa fa-clipboard menu-icon"></i>
-                        </li>
-                        <li class="item active-mic" tip="Info" id="btnConfiguration">
-                            <i class="fa-solid fa-microphone-lines"></i>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div tip="Hide Menu">
-                <div class="circle-left">
-                    <i class="fa fa-cog hide"></i>
-                </div>
-            </div>
-            <!--#endregion -->
-
-            <!-- #region Chat, middle section-->
-            <div class="mid">
-                <!-- #region Commands Screen-->
-                <div class="OptionPanel" id="Logs">
-                    <table id="logTable">
-                        <thead>
-                            <tr>
-                                <th>Level</th>
-                                <th>Message</th>
-                                <th>Metadata</th>
-                                <th>Timestamp</th>
-                            </tr>
-                        </thead>
-                        <tbody id="logContent"></tbody>
-                    </table>
-                </div>
-                <!--#endregion -->
-
-                <!-- #region Commands Screen-->
-                <div class="OptionPanel" id="BrowsersourceChat"></div>
-                <!--#endregion -->
-
-                <!-- #region Commands Screen-->
-                <div class="OptionPanel" id="BrowsersourceVtuber"></div>
-                <!--#endregion -->
-
-                <!-- #region Configuration Screen-->
-                <div class="OptionPanel" id="Configuration">
-                    <div id="tstx">
-                        <div>
-                            <div class="SaveConfig">
-                                <fieldset id="STTMenu" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="General settings">
-                                        <img class="AdvancedMenuIcon" src="./images/settings.png" alt=" " />
-                                        <div class="AdvancedMenuLabel3">General settings</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputServer">
-                                        <div class="AdvancedMenuLabel">Port</div>
-                                        <input type="text" class="fname inputServer" id="PORT" />
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_PORT"
-                                            tip="Port to use to host additional services"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow">
-                                        <div class="AdvancedMenuLabel">Default TTS Service</div>
-                                        <select class="menu-select" name="primaryTTSService" id="primaryTTSService"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow">
-                                        <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS Service</div>
-                                        <select class="menu-select" name="secondaryTTSService" id="secondaryTTSService"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow">
-                                        <div class="AdvancedMenuLabel">TTS Output Device</div>
-                                        <select class="menu-select" name="ttsAudioDevice" id="ttsAudioDevice"></select>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_OUTPUT_TTS"
-                                            tip="Outputting to specific device will NOT work with voicemeter"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow">
-                                        <div class="AdvancedMenuLabel">TTS Volume</div>
-                                        <div class="slider-container">
-                                            <input id="ttsVolumeSlider" class="styled-slider slider-progress1" type="range" />
-                                        </div>
-                                        <div class="option-icon-container">
-                                            <i class="fa fa-volume-up fa-2x" id="volume-icon"></i>
-                                            <input type="text" id="ttsVolume" class="inputBox" />
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset id="STTMenu" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable STT">
-                                        <img class="AdvancedMenuIcon" src="./images/stt.png" alt=" " />
-                                        <input type="checkbox" id="USE_STT" class="checkbox" />
-                                        <label for="USE_STT" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable STT</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputSTT">
-                                        <div class="AdvancedMenuLabel">STT Input Device</div>
-                                        <select class="menu-select" name="microphone" id="microphone"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow voiceLanguageDetection inputSTT">
-                                        <div class="AdvancedMenuLabel">Voice Language</div>
-                                        <select class="menu-select" name="sttModel" id="sttModel" tip="Language Service to use"></select>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset id="AdvancedMenuGoogle" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable Language service">
-                                        <img class="AdvancedMenuIcon" src="./images/translate.png" alt />
-                                        <input type="checkbox" id="USE_DETECTION" class="checkbox" />
-                                        <label for="USE_DETECTION" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable Language detection</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow languageDetectionInput">
-                                        <div class="AdvancedMenuLabel">Language detection service</div>
-                                        <select
-                                            class="menu-select"
-                                            name="language"
-                                            id="languageService"
-                                            tip="Language Service to use"
-                                        ></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow languageDetectionInput">
-                                        <div class="AdvancedMenuLabel">Translate incoming chat messages to</div>
-                                        <label for="USE_CHAT_LANGUAGE_DETECTION" class="toggle-small "></label>
-                                        <input type="checkbox" id="USE_CHAT_LANGUAGE_DETECTION" class="checkbox" />
-                                        <select
-                                            class="menu-select"
-                                            name="language"
-                                            id="translateChatMessageLanguage"
-                                            tip="Language Service to use"
-                                        ></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow languageDetectionInput">
-                                        <div class="AdvancedMenuLabel">Default TTS language</div>
-                                        <select
-                                            class="menu-select"
-                                            name="defaultLanguage"
-                                            id="defaultLanguage"
-                                            tip="Language Service to use"
-                                        ></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow languageDetectionInput">
-                                        <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS language</div>
-                                        <select
-                                            class="menu-select"
-                                            name="secondaryLanguage"
-                                            id="secondaryLanguage"
-                                            tip="Language Service to use"
-                                        ></select>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset id="TTSMenu" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable TTS">
-                                        <img class="AdvancedMenuIcon" src="./images/tts.png" alt=" " />
-                                        <input type="checkbox" id="USE_TTS" class="checkbox" />
-                                        <label for="USE_TTS" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable internal TTS</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputTTS">
-                                        <div class="AdvancedMenuLabel">Default Internal Voice</div>
-                                        <select class="menu-select" name="primaryVoice" id="primaryVoice"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputTTS">
-                                        <div class="AdvancedMenuLabel">Test default Internal Voice</div>
-                                        <textarea id="testPrimaryTTS">Hi, This is a test</textarea>
-                                        <div class="option-icon-container" tip="Test internal TTS">
-                                            <i
-                                                class="fa fa-play-circle fa-2x SmallButton option-icon-container"
-                                                id="TestDefaultTTSButton"
-                                            ></i>
-                                            <label class="testLabel Basiclabel"></label>
-                                        </div>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputTTS">
-                                        <div class="AdvancedMenuLabel">2<sup>nd</sup> Internal Voice</div>
-                                        <select class="menu-select" name="secondaryVoice" id="secondaryVoice"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputTTS">
-                                        <div class="AdvancedMenuLabel">Test 2<sup>nd</sup> Internal Voice</div>
-                                        <textarea id="testSecondaryTTS">Hi, This is a test</textarea>
-                                        <div class="option-icon-container" tip="Test internal TTS">
-                                            <i
-                                                class="fa fa-play-circle fa-2x SmallButton option-icon-container"
-                                                id="TestSecondaryTTSButton"
-                                            ></i>
-                                            <label class="testLabel Basiclabel"></label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                <fieldset id="NotificationMenu" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable notification sounds">
-                                        <img class="AdvancedMenuIcon" src="./images/sound.png" alt=" " />
-                                        <input type="checkbox" id="USE_NOTIFICATION_SOUNDS" class="checkbox" />
-                                        <label for="USE_NOTIFICATION_SOUNDS" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable notification sounds</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputNotificationSound">
-                                        <div class="AdvancedMenuLabel">Notification Volume</div>
-                                        <div class="slider-container">
-                                            <input id="notificationVolumeSlider" class="styled-slider slider-progress2" type="range" />
-                                        </div>
-                                        <div class="option-icon-container">
-                                            <i class="fa fa-volume-up fa-2x" id="volume-icon"></i>
-                                            <input type="text" id="notificationVolume" class="inputBox" />
-                                        </div>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputNotificationSound">
-                                        <div class="AdvancedMenuLabel">Notification Sound</div>
-                                        <select class="menu-select" name="notification" id="notification"></select>
-                                        <div class="option-icon-container">
-                                            <i
-                                                class="fa fa-play-circle fa-2x SmallButton option-icon-container"
-                                                id="SoundTestButton"
-                                                tip="Test Sound"
-                                            ></i>
-                                            <label class="testLabel Basiclabel"></label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset id="TwitchMenu" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable Twitch">
-                                        <img class="AdvancedMenuIcon" src="./images/twitch.png" alt=" " />
-                                        <input type="checkbox" id="USE_TWITCH" class="checkbox" />
-                                        <label for="USE_TWITCH" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable Twitch</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputTwitch">
-                                        <div class="AdvancedMenuLabel">Channel Name</div>
-                                        <input type="text" class="fname inputTwitch" id="TWITCH_CHANNEL_NAME" />
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_TWITCH_CHANNEL_NAME"
-                                            tip="The channel you want to connect to"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputTwitch">
-                                        <div class="AdvancedMenuLabel">Oauth Token</div>
-                                        <input
-                                            type="password"
-                                            type2="text"
-                                            class="fname inputTwitch"
-                                            id="TWITCH_OAUTH_TOKEN"
-                                            placeholder="click the ? icon to get the OAuth token"
-                                        />
-                                        <button class="password-toggle-btn password-toggle-btn1">
-                                            <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
-                                        </button>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_USERNAME"
-                                            tip="Get OAuth Token"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputTwitch">
-                                        <div class="AdvancedMenuLabel">Test credentials</div>
-                                        <button type="text" class="AdvancedMenuButton" id="TestTwitchCredentials">Test</button>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_TWITCH_TEST_CREDENTIALS"
-                                            tip="Test Twitch credentials"
-                                        ></i>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset id="AdvancedMenuServer" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable Server">
-                                        <img class="AdvancedMenuIcon" src="./images/server.png" alt />
-                                        <input type="checkbox" id="USE_MODULES" class="checkbox" />
-                                        <label for="USE_MODULES" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable Modules</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputServer">
-                                        <div class="AdvancedMenuLabel">Use Vtuber</div>
-                                        <input type="checkbox" id="USE_VTUBER" class="checkbox" />
-                                        <label for="USE_VTUBER" class="toggle-small "></label>
-                                        <input type="url" type2="text" class="fname inputServer" id="VTUBER_URL" />
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_VTUBER"
-                                            tip="You can use it as a browsersource on http://localhost:PORT/vtuber"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputServer">
-                                        <div class="AdvancedMenuLabel">Use ChatBubble</div>
-                                        <input type="checkbox" id="USE_CHATBUBBLE" class="checkbox" />
-                                        <label for="USE_CHATBUBBLE" class="toggle-small "></label>
-                                        <input type="url" type2="text" class="fname inputServer" id="CHATBUBBLE_URL" />
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_CHATBUBBLE"
-                                            tip="You can use it as a browsersource on http://localhost:PORT/chat"
-                                        ></i>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset id="AdvancedMenuAmazon" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable Amazon">
-                                        <img class="AdvancedMenuIcon" src="./images/amazon.png" alt />
-                                        <input type="checkbox" id="USE_AMAZON" class="checkbox" />
-                                        <label for="USE_AMAZON" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable Amazon services</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">Access Key</div>
-                                        <input type="password" type2="text" class="fname inputAmazon" id="AMAZON_ACCESS_KEY" /><button
-                                            class="password-toggle-btn password-toggle-btn4"
-                                        >
-                                            <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
-                                        </button>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_AMAZON_ACCESS_KEY"
-                                            tip="Amazon Access Key"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">Access Secret</div>
-                                        <input type="password" type2="text" class="fname inputAmazon" id="AMAZON_ACCESS_SECRET" /><button
-                                            class="password-toggle-btn password-toggle-btn5"
-                                        >
-                                            <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
-                                        </button>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_AMAZON_ACCESS_SECRET"
-                                            tip="Amazon Access Secret"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">Test credentials</div>
-                                        <button type="text" class="AdvancedMenuButton" id="TestAmazonCredentials">Test</button>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_AMAZON_TEST_CREDENTIALS"
-                                            tip="Test Amazon credentials"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">Characters used</div>
-                                        <input type="text" class="fname inputAmazon" id="CharactersUsedAmazon" />
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_Characters_Amazon"
-                                            tip="Characters that already have been used in Amazon TTS service"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">Default Amazon Voice</div>
-                                        <select class="menu-select" name="primaryAmazonVoice" id="primaryAmazonVoice"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">Test Default Amazon Voice</div>
-                                        <textarea id="testPrimaryAmazonVoice">Hi, This is a test</textarea>
-                                        <div class="option-icon-container" tip="Test internal TTS">
-                                            <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
-                                            <label class="testLabel Basiclabel"></label>
-                                        </div>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">2<sup>nd</sup> Amazon Voice</div>
-                                        <select class="menu-select" name="secondaryAmazonVoice" id="secondaryAmazonVoice"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputAmazon">
-                                        <div class="AdvancedMenuLabel">Test 2<sup>nd</sup> Amazon Voice</div>
-                                        <textarea id="testSecondaryAmazonVoice">Hi, This is a test</textarea>
-                                        <div class="option-icon-container" tip="Test internal TTS">
-                                            <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
-                                            <label class="testLabel Basiclabel"></label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset id="AdvancedMenuGoogle" class="AdvancedMenu">
-                                    <legend class="legendStyle" tip="Enable/Disable Google service">
-                                        <img class="AdvancedMenuIcon" src="./images/google.png" alt />
-                                        <input type="checkbox" id="USE_GOOGLE" class="checkbox" />
-                                        <label for="USE_GOOGLE" class="toggle-small "></label>
-                                        <div class="AdvancedMenuLabel3">Enable Google services</div>
-                                    </legend>
-                                    <div class="AdvancedMenuRow inputGoogle">
-                                        <div class="AdvancedMenuLabel">API Key</div>
-                                        <input type="password" type2="text" class="fname inputGoogle" id="GOOGLE_API_KEY" /><button
-                                            class="password-toggle-btn password-toggle-btn6"
-                                        >
-                                            <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
-                                        </button>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_GOOGLE_APPI_KEY"
-                                            tip="Google API Key"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputGoogle">
-                                        <div class="AdvancedMenuLabel">Test credentials</div>
-                                        <button type="text" class="AdvancedMenuButton" id="TestGoogleCredentials">Test</button>
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_GOOGLE_TEST_CREDENTIALS"
-                                            tip="Test Google credentials"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputGoogle">
-                                        <div class="AdvancedMenuLabel">Characters used</div>
-                                        <input type="text" class="fname inputGoogle" id="CharactersUsedGoogle" />
-                                        <i
-                                            class="fa fa-question-circle fa-2x SmallButton option-icon-container"
-                                            id="Info_Characters_Google"
-                                            tip="Characters that already have been used in Google TTS service"
-                                        ></i>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputGoogle">
-                                        <div class="AdvancedMenuLabel">Default Google Voice</div>
-                                        <select class="menu-select" name="primaryGoogleVoice" id="primaryGoogleVoice"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputGoogle">
-                                        <div class="AdvancedMenuLabel">Test default Google Voice</div>
-                                        <textarea id="testPrimaryGoogleVoice">Hi, This is a test</textarea>
-                                        <div class="option-icon-container" tip="Test internal TTS">
-                                            <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
-                                            <label class="testLabel Basiclabel"></label>
-                                        </div>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputGoogle">
-                                        <div class="AdvancedMenuLabel">2<sup>nd</sup> Google Voice</div>
-                                        <select class="menu-select" name="secondaryGoogleVoice" id="secondaryGoogleVoice"></select>
-                                    </div>
-                                    <div class="AdvancedMenuRow inputGoogle">
-                                        <div class="AdvancedMenuLabel">Test 2<sup>nd</sup> Google Voice</div>
-                                        <textarea id="testSecondaryGoogleVoice">Hi, This is a test</textarea>
-                                        <div class="option-icon-container" tip="Test internal TTS">
-                                            <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
-                                            <label class="testLabel Basiclabel"></label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--#endregion -->
-
-                <!-- #region Main chat box-->
-                <div class="OptionPanel show" id="Chat">
-                    <div id="chatBox" class="message-window"></div>
-                    <!-- User input box-->
-                    <div id="userInput" class="chat-input">
-                        <!-- User text input-->
-                        <input id="textInput" class="input-box" type="text" name="msg" placeholder="Tap 'Enter' to send a message" />
-
-                        <!-- Send button-->
-                        <button class="SmallButton" id="SendButton">
-                            <i class="fa fa-play-circle fa-2x" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-                <!--#endregion -->
-
-                <div class="OptionPanel" id="ThemeCreator">
-                    <div class="SaveConfig">
-                        <div class="AdvancedMenuRow">
-                            <button class="AdvancedMenuButton" id="HideThemeCreator">Close Theme Creator</button>
-                            <label class="testLabel Basiclabel"></label>
-                        </div>
-
-                        <div id="mini-container">
-                            <div id="mini-top-bar"></div>
-                            <div id="mini-main">
-                                <div id="mini-left"></div>
-                                <div id="mini-mid"></div>
-                                <div id="mini-right"></div>
-                            </div>
-                        </div>
-
-                        <fieldset>
-                            <legend class="legendStyle" tip="Enable/Disable Custom Theme">
-                                <img class="AdvancedMenuIcon" src="./images/theme.png" alt />
-                                <input type="checkbox" id="USE_CUSTOM_THEME" class="checkbox" />
-                                <label for="USE_CUSTOM_THEME" class="toggle-small"></label>
-                                <div class="AdvancedMenuLabel">Enable Custom Theme</div>
-                            </legend>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="MAIN_COLOR_1" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Main Color 1</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="MAIN_COLOR_2" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Main Color 2</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="MAIN_COLOR_3" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Main Color 3</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="MAIN_COLOR_4" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Main Color 4</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="TOP_BAR" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Top Bar</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="MID_SECTION" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Mid Section</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="CHAT_BUBBLE_BG" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Chat Bubble Background</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="CHAT_BUBBLE_HEADER" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Chat Bubble Header</div>
-                            </div>
-                            <div class="AdvancedMenuRow">
-                                <input type="color" id="CHAT_BUBBLE_MESSAGE" value="#0000ff" />
-                                <div class="AdvancedMenuLabel2">Chat Bubble Message</div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-
-                <div class="OptionPanel" id="ChatCreator"></div>
-            </div>
-            <!--#endregion -->
-
-            <!-- #region Viewer list, right section-->
-            <div class="sidepanel-right">
-                <div class="viewer-list">
-                    <div class="tabx-bar">
-                        <a class="AdvancedMenuIcon" href="#" data-text="Twitch">
-                            <img class="tab" src="./images/twitch.png" alt=" " />
-                        </a>
-                    </div>
-                    <section id="content1">
-                        <h1 class="titles">Moderators</h1>
-                        <ul class="no-bullets" id="moderators"></ul>
-                        <h1 class="titles">Viewers</h1>
-                        <ul class="no-bullets" id="viewers"></ul>
-                    </section>
-                    <section id="content2">
-                        <ul class="no-bullets">
-                            <li>a</li>
-                            <li>b</li>
-                            <li>c</li>
-                        </ul>
-                    </section>
-                    <section id="content3">
-                        <ul class="no-bullets">
-                            <li>1</li>
-                            <li>2</li>
-                            <li>3</li>
-                        </ul>
-                    </section>
-                </div>
-            </div>
-            <div id="VIEWERS_PANEL" tip="Hide Viewers" tip-left>
-                <div class="circle-right">
-                    <i class="fa fa-eye hide" aria-hidden="true"></i>
-                </div>
-            </div>
-            <!-- #endregion -->
-        </div>
-    </body>
-    <!-- #region js scripts -->
-    <script src="./js/renderer.js"></script>
+    <!--#region css styles -->
+    <link rel="stylesheet" href="./fonts/FRAMCDN/font.css" />
+    <link rel="stylesheet" href="./fonts/Aven/stylesheet.css" />
+    <link rel="stylesheet" href="./css/checkbox.css" />
+    <link rel="stylesheet" href="./css/chat.css" />
+    <link rel="stylesheet" href="./css/home.css" />
+    <link rel="stylesheet" href="./css/menu.css" />
+    <link rel="stylesheet" href="./css/tabs.css" />
+    <link rel="stylesheet" href="./css/tts-menu.css" />
+    <link rel="stylesheet" href="./css/volume-slider.css" />
+    <link rel="stylesheet" href="./css/sliders.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./css/logger.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css" />
     <!--#endregion -->
+  </head>
+
+  <body>
+    <div id="toasts"></div>
+    <!--#region title bar -->
+    <header id="titlebar">
+      <div id="drag-region">
+        <div id="BtnInfo" class="about" tip="About">
+          <!-- <i class="fa-solid fa-microphone-lines"></i> -->
+          <img class="AdvancedMenuIcon2" src="./images/icon-256.png" alt=" " />
+        </div>
+        <div class="language-selector" tip="Selected language">
+          <i class="fa-solid fa-globe"></i>
+          <select name="defaultLanguage" class="top-select" id="language"></select>
+        </div>
+        <div id="window-controls">
+          <div class="button" id="min-button" tip="Minimize window">
+            <i class="fa-solid fa-window-minimize"></i>
+          </div>
+          <div class="button" id="max-button" tip="Maximize window">
+            <i class="fa-solid fa-window-maximize"></i>
+          </div>
+          <div class="button" id="close-button" tip="Close application">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!--#endregion -->
+    <div class="container">
+      <!--#endregion -->
+
+      <!--#region Menu, left section-->
+      <div class="sidepanel-left" id="sidepanel-left">
+        <nav class="menu">
+          <ul class="items">
+            <li class="item item-active" tip="Chat" id="btnChat">
+              <i class="fa fa-comments"></i>
+            </li>
+            <li class="item" tip="Configuration" id="btnConfiguration">
+              <i class="fa fa-cogs menu-icon"></i>
+            </li>
+            <li class="item" tip="Theme Creator" id="btnThemeCreator">
+              <i class="fa-solid fa-palette"></i>
+            </li>
+            <li class="item" tip="Chat Creator" id="btnChatCreator">
+              <i class="fa-solid fa-spray-can"></i>
+            </li>
+            <li class="item" tip="BrowserSource ChatBubble" id="btnBrowsersourceChat">
+              <i class="fa fa-history menu-icon"></i>
+            </li>
+            <li class="item" tip="BrowserSource Vtuber" id="btnBrowsersourceVtuber">
+              <i class="fa fa-user menu-icon"></i>
+            </li>
+            <li class="item" tip="Logs" id="btnLogs">
+              <i class="fa fa-clipboard menu-icon"></i>
+            </li>
+            <li class="item active-mic" tip="Info" id="btnConfiguration">
+              <i class="fa-solid fa-microphone-lines"></i>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div tip="Hide Menu">
+        <div class="circle-left">
+          <i class="fa fa-cog hide"></i>
+        </div>
+      </div>
+      <!--#endregion -->
+
+      <!-- #region Chat, middle section-->
+      <div class="mid">
+        <!-- #region Commands Screen-->
+        <div class="OptionPanel" id="Logs">
+          <table id="logTable">
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Message</th>
+                <th>Metadata</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="logContent"></tbody>
+          </table>
+        </div>
+        <!--#endregion -->
+
+        <!-- #region Commands Screen-->
+        <div class="OptionPanel" id="BrowsersourceChat"></div>
+        <!--#endregion -->
+
+        <!-- #region Commands Screen-->
+        <div class="OptionPanel" id="BrowsersourceVtuber"></div>
+        <!--#endregion -->
+
+        <!-- #region Configuration Screen-->
+        <div class="OptionPanel" id="Configuration">
+          <div id="tstx">
+            <div>
+              <div class="SaveConfig">
+                <fieldset id="STTMenu" class="AdvancedMenu">
+                  <legend class="legendStyle" tip="General settings">
+                    <img class="AdvancedMenuIcon" src="./images/settings.png" alt=" " />
+                    <div class="AdvancedMenuLabel3">General settings</div>
+                  </legend>
+                  <div class="AdvancedMenuRow">
+                    <div class="AdvancedMenuLabel">Port</div>
+                    <input type="text" class="fname" id="PORT" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_PORT"
+                      tip="Port to use to host additional services"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow">
+                    <div class="AdvancedMenuLabel">Zoom level %</div>
+                    <input type="text" class="fname" id="ZOOMLEVEL" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_ZOOMLEVEL"
+                      tip="Port to use to host additional services"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow">
+                    <div class="AdvancedMenuLabel">Open Settings file</div>
+                    <button type="text" class="AdvancedMenuButton" id="OPEN_SETTINGS_FILE"><i class="fa-solid fa-file-lines"></i></button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_OPEN_SETTINGS_FILE"
+                      tip="Open the settings file"
+                    ></i>
+                  </div>
+                </fieldset>
+
+                <fieldset id="TTSMenu" class="AdvancedMenu">
+                  <legend class="legendStyle" tip="Enable/Disable TTS">
+                    <img class="AdvancedMenuIcon" src="./images/tts.png" alt=" " />
+                    <input type="checkbox" id="USE_TTS" class="checkbox" />
+                    <label for="USE_TTS" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable TTS</div>
+                  </legend>
+                  <div class="AdvancedMenuRow inputTTS" style="height: 0; visibility: hidden">
+                    <div class="AdvancedMenuLabel">Default TTS Service</div>
+                    <select class="menu-select" name="primaryTTSService" id="primaryTTSService"></select>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput" style="height: 0; visibility: hidden">
+                    <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS Service</div>
+                    <select class="menu-select" name="secondaryTTSService" id="secondaryTTSService"></select>
+                  </div>
+                  <div class="AdvancedMenuRow inputTTS">
+                    <div class="AdvancedMenuLabel">TTS Output Device</div>
+                    <select class="menu-select" name="ttsAudioDevice" id="ttsAudioDevice"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_OUTPUT_TTS"
+                      tip="Outputting to specific device will NOT work with voicemeter"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputTTS">
+                    <div class="AdvancedMenuLabel">TTS Volume</div>
+                    <div class="slider-container">
+                      <input id="ttsVolumeSlider" class="styled-slider slider-progress1" type="range" />
+                    </div>
+                    <div class="option-icon-container">
+                      <i class="fa fa-volume-up fa-2x" id="volume-icon"></i>
+                      <input type="text" id="ttsVolume" class="inputBox" />
+                    </div>
+                  </div>
+                  <div class="AdvancedMenuRow inputTTS">
+                    <div class="AdvancedMenuLabel">Default Internal Voice</div>
+                    <select class="menu-select" name="primaryVoice" id="primaryVoice"></select>
+                  </div>
+                  <div class="AdvancedMenuRow inputTTS">
+                    <div class="AdvancedMenuLabel">Test default Internal Voice</div>
+                    <textarea id="testPrimaryTTS">Hi, This is a test</textarea>
+                    <div class="option-icon-container" tip="Test internal TTS">
+                      <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TestDefaultTTSButton"></i>
+                      <label class="testLabel Basiclabel"></label>
+                    </div>
+                  </div>
+                  <div class="AdvancedMenuRow inputTTS">
+                    <div class="AdvancedMenuLabel">2<sup>nd</sup> Internal Voice</div>
+                    <select class="menu-select" name="secondaryVoice" id="secondaryVoice"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_SECONDARY_TTS"
+                      tip="This will only work if Language detection is enabled and a language for this voice has been selected"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputTTS">
+                    <div class="AdvancedMenuLabel">Test 2<sup>nd</sup> Internal Voice</div>
+                    <textarea id="testSecondaryTTS">Hi, This is a test</textarea>
+                    <div class="option-icon-container" tip="Test internal TTS">
+                      <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TestSecondaryTTSButton"></i>
+                      <label class="testLabel Basiclabel"></label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset id="STTMenu" class="AdvancedMenu">
+                  <legend class="legendStyle" tip="Enable/Disable STT">
+                    <img class="AdvancedMenuIcon" src="./images/stt.png" alt=" " />
+                    <input type="checkbox" id="USE_STT" class="checkbox" />
+                    <label for="USE_STT" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable STT</div>
+                  </legend>
+                  <div class="AdvancedMenuRow inputSTT">
+                    <div class="AdvancedMenuLabel">STT Input Device</div>
+                    <select class="menu-select" name="microphone" id="microphone"></select>
+                  </div>
+                  <div class="AdvancedMenuRow voiceLanguageDetection inputSTT">
+                    <div class="AdvancedMenuLabel">Voice Language model</div>
+                    <select class="menu-select" name="sttModel" id="sttModel" tip="Language Service to use"></select>
+                    <i
+                      class="fa-solid fa-folder-open fa-2x SmallButton option-icon-container"
+                      id="Info_VOICE_MODELS_FOLDER"
+                      tip="Open Voice models folder"
+                    ></i>
+                  </div>
+                </fieldset>
+
+                <fieldset id="AdvancedMenuGoogle" class="AdvancedMenu">
+                  <legend class="legendStyle" tip="Enable/Disable Language service">
+                    <img class="AdvancedMenuIcon" src="./images/translate.png" alt />
+                    <input type="checkbox" id="USE_DETECTION" class="checkbox" />
+                    <label for="USE_DETECTION" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable Language detection</div>
+                  </legend>
+                  <div class="AdvancedMenuRow languageDetectionInput">
+                    <div class="AdvancedMenuLabel">Default TTS service language</div>
+                    <select class="menu-select" name="defaultLanguage" id="defaultLanguage" tip="Language Service to use"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_PRIMARY_TTS_LANGUAGE"
+                      tip="When the selected language is detected Your Primary TTS voice will sound"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput">
+                    <div class="AdvancedMenuLabel">2<sup>nd</sup> TTS service language</div>
+                    <select class="menu-select" name="secondaryLanguage" id="secondaryLanguage" tip="Language Service to use"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_SECONDARY_TTS_LANGUAGE"
+                      tip="When the selected language is detected Your Secondary TTS voice will sound"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput">
+                    <div class="AdvancedMenuLabel">Translate chat messages to</div>
+                    <select class="menu-select" name="language" id="TRANSLATE_TO" tip="Language Service to use"></select>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput TRANSLATE_TO">
+                    <div class="AdvancedMenuLabel">Broadcast translation to chat</div>
+                    <input type="checkbox" id="BROADCAST_TRANSLATION" class="checkbox TRANSLATE_TO" />
+                    <label for="BROADCAST_TRANSLATION" class="toggle-small" style="margin-right: 260px"></label>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput TRANSLATE_TO">
+                    <div class="AdvancedMenuLabel">Output translation to TTS</div>
+                    <input type="checkbox" id="OUTPUT_TO_TTS" class="checkbox TRANSLATE_TO" />
+                    <label for="OUTPUT_TO_TTS" class="toggle-small" style="margin-right: 260px"></label>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_OUTPUT_TO_TTS"
+                      tip="All translated messages will be send to primary TTS voice but if message is detected in Secondary TTS language it will output it to the Secondary TTS voice"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow languageDetectionInput">
+                    <div class="AdvancedMenuLabel">Send translated messages</div>
+                    <input type="checkbox" id="SEND_TRANSLATION" class="checkbox" />
+                    <label for="SEND_TRANSLATION" class="toggle-small" style="margin-right: 260px"></label>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_SEND_TRANSLATION"
+                      tip="Enable sending translated messages to the chat."
+                    ></i>
+                  </div>
+                </fieldset>
+
+                <fieldset id="NotificationMenu" class="AdvancedMenu">
+                  <legend class="legendStyle" tip="Enable/Disable notification sounds">
+                    <img class="AdvancedMenuIcon" src="./images/sound.png" alt=" " />
+                    <input type="checkbox" id="USE_NOTIFICATION_SOUNDS" class="checkbox" />
+                    <label for="USE_NOTIFICATION_SOUNDS" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable notification sounds</div>
+                  </legend>
+                  <div class="AdvancedMenuRow inputNotificationSound">
+                    <div class="AdvancedMenuLabel">Notification sounds Output Device</div>
+                    <select class="menu-select" name="notificationSoundAudioDevice" id="notificationSoundAudioDevice"></select>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_OUTPUT_NOTIFIACTION_SOUNDS"
+                      tip="Outputting to specific device will NOT work with voicemeter"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputNotificationSound">
+                    <div class="AdvancedMenuLabel">Notification Volume</div>
+                    <div class="slider-container">
+                      <input id="notificationVolumeSlider" class="styled-slider slider-progress2" type="range" />
+                    </div>
+                    <div class="option-icon-container">
+                      <i class="fa fa-volume-up fa-2x" id="volume-icon"></i>
+                      <input type="text" id="notificationVolume" class="inputBox" />
+                    </div>
+                  </div>
+                  <div class="AdvancedMenuRow inputNotificationSound">
+                    <div class="AdvancedMenuLabel">Notification Sound</div>
+                    <select class="menu-select" name="notification" id="notification"></select>
+                    <div class="option-icon-container">
+                      <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="SoundTestButton" tip="Test Sound"></i>
+                      <label class="testLabel Basiclabel"></label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset id="TwitchMenu" class="AdvancedMenu">
+                  <legend class="legendStyle" tip="Enable/Disable Twitch">
+                    <img class="AdvancedMenuIcon" src="./images/twitch.png" alt=" " />
+                    <input type="checkbox" id="USE_TWITCH" class="checkbox" />
+                    <label for="USE_TWITCH" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable Twitch</div>
+                  </legend>
+                  <div class="AdvancedMenuRow inputTwitch">
+                    <div class="AdvancedMenuLabel">Oauth Token</div>
+                    <input
+                      type="password"
+                      type2="text"
+                      class="fname inputTwitch"
+                      id="TWITCH_OAUTH_TOKEN"
+                      placeholder="click the key icon to get the OAuth token"
+                    />
+                    <button class="password-toggle-btn password-toggle-btn1">
+                      <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
+                    </button>
+                    <i class="fa-solid fa-key fa-2x SmallButton option-icon-container" id="Info_USERNAME" tip="Get OAuth Token"></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputTwitch">
+                    <div class="AdvancedMenuLabel">Channel Name</div>
+                    <input type="text" class="fname inputTwitch" id="TWITCH_CHANNEL_NAME" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_TWITCH_CHANNEL_NAME"
+                      tip="The channel you want to connect to"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputTwitch">
+                    <div class="AdvancedMenuLabel">Test credentials</div>
+                    <button type="text" class="AdvancedMenuButton" id="TestTwitchCredentials">Test</button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_TWITCH_TEST_CREDENTIALS"
+                      tip="Test Twitch credentials"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputTwitch">
+                    <div class="AdvancedMenuLabel">Get BetterTTV emotes</div>
+                    <button type="text" class="AdvancedMenuButton" id="GetBetterTtvEmotes">
+                      <img src="https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/3x.webp" width="30px" height="30px" />
+                    </button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_BETTERTTV_EMOTES"
+                      tip="Test Twitch credentials"
+                    ></i>
+                  </div>
+                </fieldset>
+
+                <fieldset id="AdvancedMenuServer" class="AdvancedMenu">
+                  <legend class="legendStyle" tip="Enable/Disable Server">
+                    <img class="AdvancedMenuIcon" src="./images/server.png" alt />
+                    <input type="checkbox" id="USE_MODULES" class="checkbox" />
+                    <label for="USE_MODULES" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable Modules</div>
+                  </legend>
+                  <div class="AdvancedMenuRow inputServer" style="height: 0; visibility: hidden">
+                    <div class="AdvancedMenuLabel">Use PNGtuber</div>
+                    <input type="checkbox" id="USE_PNGTUBER" class="checkbox" />
+                    <label for="USE_PNGTUBER" class="toggle-small"></label>
+                    <input type="url" type2="text" class="fname inputServer" id="PNGTUBER_URL" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_PNGTUBER"
+                      tip="You can use it as a browsersource on http://localhost:PORT/pngtuber"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputServer">
+                    <div class="AdvancedMenuLabel">Use Vtuber</div>
+                    <input type="checkbox" id="USE_VTUBER" class="checkbox" />
+                    <label for="USE_VTUBER" class="toggle-small"></label>
+                    <input type="url" type2="text" class="fname inputServer" id="VTUBER_URL" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_VTUBER"
+                      tip="You can use it as a browsersource on http://localhost:PORT/vtuber"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputServer">
+                    <div class="AdvancedMenuLabel">Use ChatBubble</div>
+                    <input type="checkbox" id="USE_CHATBUBBLE" class="checkbox" />
+                    <label for="USE_CHATBUBBLE" class="toggle-small"></label>
+                    <input type="url" type2="text" class="fname inputServer" id="CHATBUBBLE_URL" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_CHATBUBBLE"
+                      tip="You can use it as a browsersource on http://localhost:PORT/chat"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputServer" style="height: 0; visibility: hidden">
+                    <div class="AdvancedMenuLabel">Use Finger</div>
+                    <input type="checkbox" id="USE_CHATBUBBLE" class="checkbox" />
+                    <label for="USE_CHATBUBBLE" class="toggle-small"></label>
+                    <input type="url" type2="text" class="fname inputServer" id="CHATBUBBLE_URL" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_CHATBUBBLE"
+                      tip="You can use it as a browsersource on http://localhost:PORT/chat"
+                    ></i>
+                  </div>
+                </fieldset>
+
+                <fieldset id="AdvancedMenuAmazon" class="AdvancedMenu" style="height: 0; visibility: hidden">
+                  <legend class="legendStyle" tip="Enable/Disable Amazon">
+                    <img class="AdvancedMenuIcon" src="./images/amazon.png" alt />
+                    <input type="checkbox" id="USE_AMAZON" class="checkbox" />
+                    <label for="USE_AMAZON" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable Amazon services</div>
+                  </legend>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">Access Key</div>
+                    <input type="password" type2="text" class="fname inputAmazon" id="AMAZON_ACCESS_KEY" /><button
+                      class="password-toggle-btn password-toggle-btn4"
+                    >
+                      <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
+                    </button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_AMAZON_ACCESS_KEY"
+                      tip="Amazon Access Key"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">Access Secret</div>
+                    <input type="password" type2="text" class="fname inputAmazon" id="AMAZON_ACCESS_SECRET" /><button
+                      class="password-toggle-btn password-toggle-btn5"
+                    >
+                      <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
+                    </button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_AMAZON_ACCESS_SECRET"
+                      tip="Amazon Access Secret"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">Test credentials</div>
+                    <button type="text" class="AdvancedMenuButton" id="TestAmazonCredentials">Test</button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_AMAZON_TEST_CREDENTIALS"
+                      tip="Test Amazon credentials"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">Characters used</div>
+                    <input type="text" class="fname inputAmazon" id="CharactersUsedAmazon" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_Characters_Amazon"
+                      tip="Characters that already have been used in Amazon TTS service"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">Default Amazon Voice</div>
+                    <select class="menu-select" name="primaryAmazonVoice" id="primaryAmazonVoice"></select>
+                  </div>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">Test Default Amazon Voice</div>
+                    <textarea id="testPrimaryAmazonVoice">Hi, This is a test</textarea>
+                    <div class="option-icon-container" tip="Test internal TTS">
+                      <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
+                      <label class="testLabel Basiclabel"></label>
+                    </div>
+                  </div>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">2<sup>nd</sup> Amazon Voice</div>
+                    <select class="menu-select" name="secondaryAmazonVoice" id="secondaryAmazonVoice"></select>
+                  </div>
+                  <div class="AdvancedMenuRow inputAmazon">
+                    <div class="AdvancedMenuLabel">Test 2<sup>nd</sup> Amazon Voice</div>
+                    <textarea id="testSecondaryAmazonVoice">Hi, This is a test</textarea>
+                    <div class="option-icon-container" tip="Test internal TTS">
+                      <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
+                      <label class="testLabel Basiclabel"></label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset id="AdvancedMenuGoogle" class="AdvancedMenu" style="height: 0; visibility: hidden">
+                  <legend class="legendStyle" tip="Enable/Disable Google service">
+                    <img class="AdvancedMenuIcon" src="./images/google.png" alt />
+                    <input type="checkbox" id="USE_GOOGLE" class="checkbox" />
+                    <label for="USE_GOOGLE" class="toggle-small"></label>
+                    <div class="AdvancedMenuLabel3">Enable Google services</div>
+                  </legend>
+                  <div class="AdvancedMenuRow inputGoogle">
+                    <div class="AdvancedMenuLabel">API Key</div>
+                    <input type="password" type2="text" class="fname inputGoogle" id="GOOGLE_API_KEY" /><button
+                      class="password-toggle-btn password-toggle-btn6"
+                    >
+                      <span class="password-toggle-icon"><i class="fa-regular fa-eye-slash"></i></span>
+                    </button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_GOOGLE_APPI_KEY"
+                      tip="Google API Key"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputGoogle">
+                    <div class="AdvancedMenuLabel">Test credentials</div>
+                    <button type="text" class="AdvancedMenuButton" id="TestGoogleCredentials">Test</button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_GOOGLE_TEST_CREDENTIALS"
+                      tip="Test Google credentials"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputGoogle">
+                    <div class="AdvancedMenuLabel">Characters used</div>
+                    <input type="text" class="fname inputGoogle" id="CharactersUsedGoogle" />
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_Characters_Google"
+                      tip="Characters that already have been used in Google TTS service"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputGoogle">
+                    <div class="AdvancedMenuLabel">Default Google Voice</div>
+                    <select class="menu-select" name="primaryGoogleVoice" id="primaryGoogleVoice"></select>
+                  </div>
+                  <div class="AdvancedMenuRow inputGoogle">
+                    <div class="AdvancedMenuLabel">Test default Google Voice</div>
+                    <textarea id="testPrimaryGoogleVoice">Hi, This is a test</textarea>
+                    <div class="option-icon-container" tip="Test internal TTS">
+                      <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
+                      <label class="testLabel Basiclabel"></label>
+                    </div>
+                  </div>
+                  <div class="AdvancedMenuRow inputGoogle">
+                    <div class="AdvancedMenuLabel">2<sup>nd</sup> Google Voice</div>
+                    <select class="menu-select" name="secondaryGoogleVoice" id="secondaryGoogleVoice"></select>
+                  </div>
+                  <div class="AdvancedMenuRow inputGoogle">
+                    <div class="AdvancedMenuLabel">Test 2<sup>nd</sup> Google Voice</div>
+                    <textarea id="testSecondaryGoogleVoice">Hi, This is a test</textarea>
+                    <div class="option-icon-container" tip="Test internal TTS">
+                      <i class="fa fa-play-circle fa-2x SmallButton option-icon-container" id="TTSTestButton"></i>
+                      <label class="testLabel Basiclabel"></label>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--#endregion -->
+
+        <!-- #region Main chat box-->
+        <div class="OptionPanel show" id="Chat">
+          <div id="chatBox" class="message-window"></div>
+          <!-- User input box-->
+          <div id="userInput" class="chat-input">
+            <div class="emotes">
+              <button class="SmallButton">
+                <i class="fa-regular fa-grin fa-2x" id="emojis" aria-hidden="true"></i>
+              </button>
+              <emoji-picker class="dark"></emoji-picker>
+            </div>
+            <div class="pop in send-translation">
+              <div class="miniText">In</div>
+              <button class="SmallButton">
+                <i class="fa-solid fa-globe fa-2x" aria-hidden="true"></i>
+              </button>
+              <div class="pop-content" id="SEND_TRANSLATION_IN"></div>
+            </div>
+            <div class="pop out send-translation">
+              <div class="miniText">Out</div>
+              <button class="SmallButton">
+                <i class="fa-solid fa-globe fa-2x" aria-hidden="true"></i>
+              </button>
+              <div class="pop-content" id="SEND_TRANSLATION_OUT"></div>
+            </div>
+            <!-- User text input-->
+            <input id="textInput" class="input-box" type="text" name="msg" placeholder="Tap 'Enter' to send a message" />
+
+            <!-- Send button-->
+            <button class="SmallButton" id="SendButton">
+              <i class="fa fa-play-circle fa-2x" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <!--#endregion -->
+
+        <div class="OptionPanel" id="ThemeCreator">
+          <div class="SaveConfig">
+            <div class="AdvancedMenuRow">
+              <button class="AdvancedMenuButton" id="HideThemeCreator">Close Theme Creator</button>
+              <label class="testLabel Basiclabel"></label>
+            </div>
+
+            <div id="mini-container">
+              <div id="mini-top-bar"></div>
+              <div id="mini-main">
+                <div id="mini-left"></div>
+                <div id="mini-mid"></div>
+                <div id="mini-right"></div>
+              </div>
+            </div>
+
+            <fieldset>
+              <legend class="legendStyle" tip="Enable/Disable Custom Theme">
+                <img class="AdvancedMenuIcon" src="./images/theme.png" alt />
+                <input type="checkbox" id="USE_CUSTOM_THEME" class="checkbox" />
+                <label for="USE_CUSTOM_THEME" class="toggle-small"></label>
+                <div class="AdvancedMenuLabel">Enable Custom Theme</div>
+              </legend>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="MAIN_COLOR_1" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Main Color 1</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="MAIN_COLOR_2" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Main Color 2</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="MAIN_COLOR_3" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Main Color 3</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="MAIN_COLOR_4" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Main Color 4</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="TOP_BAR" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Top Bar</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="MID_SECTION" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Mid Section</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="CHAT_BUBBLE_BG" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Chat Bubble Background</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="CHAT_BUBBLE_HEADER" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Chat Bubble Header</div>
+              </div>
+              <div class="AdvancedMenuRow">
+                <input type="color" id="CHAT_BUBBLE_MESSAGE" value="#0000ff" />
+                <div class="AdvancedMenuLabel2">Chat Bubble Message</div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="OptionPanel" id="ChatCreator"></div>
+      </div>
+      <!--#endregion -->
+
+      <!-- #region Viewer list, right section-->
+      <div class="sidepanel-right">
+        <div class="viewer-list">
+          <div class="tabx-bar">
+            <a class="AdvancedMenuIcon" href="#" data-text="Twitch">
+              <img class="tab" src="./images/twitch.png" alt=" " />
+            </a>
+          </div>
+          <section id="content1">
+            <h1 class="titles">Moderators</h1>
+            <ul class="no-bullets" id="moderators"></ul>
+            <h1 class="titles">Viewers</h1>
+            <ul class="no-bullets" id="viewers"></ul>
+          </section>
+          <section id="content2">
+            <ul class="no-bullets">
+              <li>a</li>
+              <li>b</li>
+              <li>c</li>
+            </ul>
+          </section>
+          <section id="content3">
+            <ul class="no-bullets">
+              <li>1</li>
+              <li>2</li>
+              <li>3</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+      <div id="VIEWERS_PANEL" tip="Hide Viewers">
+        <div class="circle-right">
+          <i class="fa fa-eye hide" aria-hidden="true"></i>
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </body>
+  <!-- #region js scripts -->
+  <script src="./js/renderer.js"></script>
+  <!--#endregion -->
 </html>
