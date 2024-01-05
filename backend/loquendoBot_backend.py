@@ -236,11 +236,14 @@ def get_translation():
         request_data = request.json
         message = request_data.get("message", "")
         detectedLanguage = request_data.get("language", "")
-        translated = MyMemoryTranslator(
-            source=detectedLanguage, target=settings["LANGUAGE"]["TRANSLATE_TO"]
-        ).translate(message)
+        try:
+          translated = MyMemoryTranslator(
+              source=detectedLanguage, target=settings["LANGUAGE"]["TRANSLATE_TO"]
+          ).translate(message)
+        except Exception as e:
+          return jsonify({"error": str(e), "code":429 }), 429
     except Exception as e:
-        return jsonify({"error": "Could not translate, continuing with next language"}), 500
+        return jsonify({"error": str(e), "code":500 }), 500
     return jsonify({"translation": translated}), 200
 
 

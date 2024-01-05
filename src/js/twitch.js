@@ -1,4 +1,4 @@
-/* global client, playNotificationSound, messageId, addSingleTooltip, settingsPath, fs, ini, backend, main, path, resourcesPath, customEmojis, emojiPicker,config, settings, options, sound, showChatMessage, messageTemplates, getPostTime */
+/* global client, playNotificationSound, chat, replaceChatMessageWithCustomEmojis, messageId, addSingleTooltip, settingsPath, fs, ini, backend, main, path, resourcesPath, customEmojis, emojiPicker,config, settings, options, sound, showChatMessage, messageTemplates, getPostTime */
 
 const tmi = require('tmi.js');
 const axios = require('axios');
@@ -134,11 +134,13 @@ async function displayTwitchMessage(logoUrl, username, messageObject, filteredMe
     });
   }
 
-  showChatMessage(article);
+  await chat.replaceChatMessageWithCustomEmojis(formattedMessage.innerHTML).then(data => {
+    formattedMessage.innerHTML = data;
+    showChatMessage(article);
+  });
 
   if (settings.LANGUAGE.USE_DETECTION) {
     await backend.getDetectedLanguage({ message: filteredMessage, messageId, username, logoUrl, formattedMessage }).then(language => {
-      console.log(language);
       const languageElement = document.createElement('span');
       languageElement.classList = `fi fi-${language.ISO3166} fis language-icon flag-icon`;
       languageElement.setAttribute('tip', language.name);
@@ -248,6 +250,57 @@ function formatTwitchEmotes(channel) {
   });
   emojiPicker.customEmoji = customEmojis;
   saveTwitchEmotesToFile(customEmojis);
+}
+
+function saveBetterTtvEmotesToFile(BetterTtvEmotes) {
+  const data = JSON.stringify(BetterTtvEmotes);
+  const savePath =
+    main.isPackaged === true
+      ? path.join(resourcesPath, './betterttv-emotes.json')
+      : path.join(resourcesPath, './config/betterttv-emotes.json');
+  fs.writeFile(savePath, data, error => {
+    if (error) {
+      console.error(error);
+
+      throw error;
+    }
+  });
+}
+
+function formatBetterTtvEmotes(data) {
+  if (data.emotes.length === 0) {
+    return;
+  }
+
+  data.emotes.forEach(emote => {
+    const emojiToBeAdded = {
+      name: emote.code,
+      shortcodes: [emote.code],
+      url: `https://cdn.betterttv.net/emote/${emote.id}/1x.webp`,
+      category: data.name
+    };
+    customEmojis.push(emojiToBeAdded);
+  });
+  emojiPicker.customEmoji = customEmojis;
+  saveBetterTtvEmotesToFile(customEmojis);
+}
+
+function getBetterTtvGLobalEmotes() {
+  // Get user Logo with access token
+  options = {
+    method: 'GET',
+    url: 'https://api.betterttv.net/3/cached/emotes/global',
+    headers: {}
+  };
+
+  axios
+    .request(options)
+    .then(response => {
+      formatBetterTtvEmotes({ name: 'BetterTTV Global', emotes: response.data });
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 
 function getTwitchUserFollows(paginationToken) {
@@ -449,4 +502,13 @@ function getTwitchUserId() {
 // Reconnect 10s later
 // setTimeout(ws.reconnect, 10e3);
 
-module.exports = { sendMessage, ping, client, getUserAvailableTwitchEmotes, getTwitchChannelId, getTwitchUserId, checkIfTokenIsValid };
+module.exports = {
+  sendMessage,
+  ping,
+  client,
+  getBetterTtvGLobalEmotes,
+  getUserAvailableTwitchEmotes,
+  getTwitchChannelId,
+  getTwitchUserId,
+  checkIfTokenIsValid
+};

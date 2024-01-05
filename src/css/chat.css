@@ -541,6 +541,10 @@ h1 {
   margin: 20px 0px 0px 0px;
 }
 
+.translation-message.user {
+  margin: -20px 0px 0px 0px;
+}
+
 .translation-icon {
   position: relative;
   padding: 0px 0px 0px 0px;
@@ -557,4 +561,15 @@ h1 {
   width: 20px !important;
   height: 20px !important;
   left: 18px;
+}
+
+.flag-icon.user {
+  left: -18px;
+  top: -15px;
+}
+
+.user-flag {
+  left: unset;
+  right: 18px;
+  top: -65px;
 }

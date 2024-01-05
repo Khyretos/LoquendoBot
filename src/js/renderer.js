@@ -23,8 +23,12 @@ const settings = main.settings;
 const googleVoices = fs.readFileSync(path.join(__dirname, './config/googleVoices.txt')).toString().split('\r\n');
 // TODO: remove amazon voices txt and use api instead (sakura project has it)
 const amazonVoices = fs.readFileSync(path.join(__dirname, './config/amazonVoices.txt')).toString().split('\r\n');
-const emoteListSavePath =
+const twitchEmoteListSavePath =
   main.isPackaged === true ? path.join(resourcesPath, './twitch-emotes.json') : path.join(resourcesPath, './config/twitch-emotes.json');
+const betterTtvEmoteListSavePath =
+  main.isPackaged === true
+    ? path.join(resourcesPath, './betterttv-emotes.json')
+    : path.join(resourcesPath, './config/betterttv-emotes.json');
 
 // html elements
 const root = document.documentElement;
@@ -178,8 +182,16 @@ function setLanguagesinSelectx(languageSelector, language) {
   const languageSelectContent = languageSelect.querySelector('.pop-content');
 
   languageSelectContent.addEventListener('click', e => {
-    console.log(e.target);
+    const parent = e.target.parentElement.id;
     language = getLanguageProperties(e.target.getAttribute('value'));
+
+    if (parent === 'SEND_TRANSLATION_IN') {
+      settings.LANGUAGE.SEND_TRANSLATION_IN = language.IETF;
+    } else {
+      settings.LANGUAGE.SEND_TRANSLATION_OUT = language.IETF;
+    }
+
+    fs.writeFileSync(settingsPath, ini.stringify(settings));
     setSelectedLanguageinSelect(languageSelect, language);
   });
 
@@ -378,15 +390,22 @@ function setZoomLevel(currentZoom, zoomIn) {
   document.body.querySelector('#ZOOMLEVEL').value = (settings.GENERAL.ZOOMLEVEL * 100).toFixed(0);
 }
 
-if (fs.existsSync(emoteListSavePath)) {
-  fs.readFile(emoteListSavePath, 'utf8', (error, data) => {
-    if (error) {
-      console.log(error);
-      return;
-    }
-    const emotes = JSON.parse(data);
-    emojiPicker.customEmoji = emotes;
-  });
+// TODO: refactor
+let twitchEmotes = null;
+if (fs.existsSync(twitchEmoteListSavePath)) {
+  const xxx = fs.readFileSync(twitchEmoteListSavePath);
+  twitchEmotes = JSON.parse(xxx);
+  emojiPicker.customEmoji = [...twitchEmotes];
+}
+let betterTtvEmotes = null;
+if (fs.existsSync(betterTtvEmoteListSavePath)) {
+  const xxx = fs.readFileSync(betterTtvEmoteListSavePath);
+  betterTtvEmotes = JSON.parse(xxx);
+  emojiPicker.customEmoji = [...betterTtvEmotes];
+}
+
+if (twitchEmotes && betterTtvEmotes) {
+  emojiPicker.customEmoji = [...twitchEmotes, ...betterTtvEmotes];
 }
 
 function getLanguageProperties(languageToDetect) {

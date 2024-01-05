@@ -44,10 +44,46 @@ async function getInstalledVoices() {
   secondaryVoice.value = settings.TTS.SECONDARY_VOICE;
 }
 
+// TODO: refactor
+function setTranslatedUserMessage(message) {
+  const userMessage = document.getElementById(message.messageId);
+  const messageBox = userMessage.getElementsByClassName('msg-box')[0];
+
+  const languageElement = document.createElement('span');
+  languageElement.classList = `fi fi-${message.language.selectedLanguage.ISO3166} fis flag-icon user-flag`;
+  languageElement.setAttribute('tip', message.language.selectedLanguage.name);
+  userMessage.appendChild(languageElement);
+  addSingleTooltip(languageElement);
+
+  const translationHeader = document.createElement('div');
+  translationHeader.className = 'translation-header user';
+  translationHeader.innerText = 'Translation';
+  messageBox.appendChild(translationHeader);
+
+  const languageElement2 = document.createElement('span');
+  languageElement2.classList = `fi fi-${message.language.detectedLanguage.ISO3166} fis flag-icon user`;
+  languageElement2.setAttribute('tip', message.language.detectedLanguage.name);
+  addSingleTooltip(languageElement2);
+  messageBox.appendChild(languageElement2);
+
+  const translationMessage = document.createElement('div');
+  translationMessage.className = 'translation-message user';
+  translationMessage.innerText = message.translation;
+  messageBox.appendChild(translationMessage);
+}
+
 function setTranslatedMessage(message) {
+  // this determines if it is a message that is send by a user
+  const languageBox = document.getElementById(message.messageId).getElementsByClassName('language-icon flag-icon')[0];
+  if (!languageBox) {
+    twitch.sendMessage(
+      `[${message.language.detectedLanguage.name} ${message.language.detectedLanguage.ISO639} > ${message.language.selectedLanguage.name} ${message.language.selectedLanguage.ISO639}] @${message.username}: ${message.translation}`
+    );
+    return setTranslatedUserMessage(message);
+  }
+
   if (message.language.selectedLanguage.ISO639 !== message.language.detectedLanguage.ISO639) {
     const messageBox = document.getElementById(message.messageId).getElementsByClassName('msg-box')[0];
-    const languageBox = document.getElementById(message.messageId).getElementsByClassName('language-icon flag-icon')[0];
 
     languageBox.classList = `fi fi-${message.language.detectedLanguage.ISO3166} fis language-icon flag-icon`;
     languageBox.setAttribute('tip', message.language.detectedLanguage.name);
@@ -60,7 +96,6 @@ function setTranslatedMessage(message) {
     const translationIcon = document.createElement('div');
     translationIcon.className = 'translation-icon';
     const languageElement = document.createElement('span');
-    const language = getLanguageProperties(settings.LANGUAGE.TRANSLATE_TO);
     languageElement.classList = `fi fi-${message.language.selectedLanguage.ISO3166} fis flag-icon`;
     languageElement.setAttribute('tip', message.language.selectedLanguage.name);
     addSingleTooltip(languageElement);
@@ -95,7 +130,6 @@ async function getTranslatedMessage(message) {
     },
     body: JSON.stringify({
       message: message.message,
-      remainder: message.remainingDetectedLanguages,
       language: message.language.detectedLanguage.IETF
     }) // Convert the data to JSON and include it in the request body
   };
@@ -111,7 +145,6 @@ async function getTranslatedMessage(message) {
           `[${message.language.detectedLanguage.name} ${message.language.detectedLanguage.ISO639} > ${message.language.selectedLanguage.name} ${message.language.selectedLanguage.ISO639}] @${message.username}: ${responseData.translation}`
         );
       }
-
       setTranslatedMessage({
         originalMessage: message.message,
         translation: responseData.translation,
@@ -124,21 +157,42 @@ async function getTranslatedMessage(message) {
       return message.language.detectedLanguage;
     } else {
       console.error(responseData);
-      if (message.remainingDetectedLanguages.length > 0) {
-        message.language.detectedLanguage = getLanguageProperties(message.remainingDetectedLanguages[0]);
-        message.remainingDetectedLanguages.shift();
-        return getTranslatedMessage(message);
-      } else {
-        message.message = 'Error, Could not translate message';
+      if (responseData.code === 500) {
+        if (message.remainingDetectedLanguages.length > 0) {
+          message.language.detectedLanguage = getLanguageProperties(message.remainingDetectedLanguages[0]);
+          message.remainingDetectedLanguages.shift();
+          return getTranslatedMessage(message);
+        } else {
+          message.message = 'Error, Could not translate message';
+          message.language.detectedLanguage = getLanguageProperties('en-GB');
+          return getTranslatedMessage(message);
+        }
+      }
+      if (responseData.code === 429) {
         message.language.detectedLanguage = getLanguageProperties('en-GB');
-        return getTranslatedMessage(message);
+        setTranslatedMessage({
+          originalMessage: message.message,
+          translation: 'Rate limit exceeded, please change translation service.',
+          messageId: message.messageId,
+          language: message.language,
+          formattedMessage: message.formattedMessage,
+          username: message.username,
+          logoUrl: message.logoUrl
+        });
       }
     }
   } catch (error) {
     console.error('Error sending termination signal:', error);
-    message.message = 'Error, Could not translate message';
     message.language.detectedLanguage = getLanguageProperties('en-GB');
-    getTranslatedMessage(message);
+    setTranslatedMessage({
+      originalMessage: message.message,
+      translation: 'Error, could not translate message.',
+      messageId: message.messageId,
+      language: message.language,
+      formattedMessage: message.formattedMessage,
+      username: message.username,
+      logoUrl: message.logoUrl
+    });
   }
 }
 
@@ -363,4 +417,4 @@ ipcRenderer.on('quit-event', async () => {
   }
 });
 
-module.exports = { getInternalTTSAudio, getDetectedLanguage };
+module.exports = { getInternalTTSAudio, getDetectedLanguage, getTranslatedMessage };

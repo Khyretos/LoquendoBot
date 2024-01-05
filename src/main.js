@@ -143,7 +143,11 @@ async function createIniFile() {
       TRANSLATE_TO: 'none',
       LANGUAGE_INDEX: '0',
       BROADCAST_TRANSLATION: false,
-      OUTPUT_TO: false
+      OUTPUT_TO_TTS: false,
+      TRANSLATE_TO_INDEX: 0,
+      SEND_TRANSLATION: true,
+      SEND_TRANSLATION_IN: 'none',
+      SEND_TRANSLATION_OUT: 'none'
     },
     TTS: {
       USE_TTS: false,

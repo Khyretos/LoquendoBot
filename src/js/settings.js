@@ -16,6 +16,7 @@ function getGeneralSettings() {
   // Language detection
   document.body.querySelector('#USE_DETECTION').checked = settings.LANGUAGE.USE_DETECTION;
   document.body.querySelector('#OUTPUT_TO_TTS').checked = settings.LANGUAGE.OUTPUT_TO_TTS;
+  document.body.querySelector('#SEND_TRANSLATION').checked = settings.LANGUAGE.SEND_TRANSLATION;
   document.body.querySelector('#BROADCAST_TRANSLATION').checked = settings.LANGUAGE.BROADCAST_TRANSLATION;
 
   // TTS
@@ -323,6 +324,11 @@ document.body.querySelector('#Info_USERNAME').addEventListener('click', async ()
   createNotification('Saved OAuth token!', 'success');
 });
 
+document.body.querySelector('#GetBetterTtvEmotes').addEventListener('click', async () => {
+  twitch.getBetterTtvGLobalEmotes();
+  createNotification('Saved BetterTTV emotes!', 'success');
+});
+
 const hideInputToggleButton = document.body.querySelectorAll('.password-toggle-btn .password-toggle-icon .fa-eye-slash');
 hideInputToggleButton.forEach(item => {
   item.addEventListener('click', () => {
@@ -516,6 +522,23 @@ document.body.querySelector('#USE_STT').addEventListener('change', () => {
   const inputs = document.getElementsByClassName('inputSTT');
   toggleRadio(toggle, inputs);
   createNotification(`${toggle ? 'Enabled' : 'Disabled'} speech to text!`, 'success');
+});
+
+function toggleSendTranslation() {
+  const toggle = settings.LANGUAGE.SEND_TRANSLATION;
+  const inputs = document.getElementsByClassName('send-translation');
+  toggleRadio(toggle, inputs);
+}
+
+toggleSendTranslation();
+
+document.body.querySelector('#SEND_TRANSLATION').addEventListener('change', () => {
+  const toggle = document.getElementById('SEND_TRANSLATION').checked;
+  settings.LANGUAGE.SEND_TRANSLATION = toggle;
+  fs.writeFileSync(settingsPath, ini.stringify(settings));
+  const inputs = document.getElementsByClassName('send-translation');
+  toggleRadio(toggle, inputs);
+  createNotification(`${toggle ? 'Enabled' : 'Disabled'} Sending translations!`, 'success');
 });
 
 document.body.querySelector('#OUTPUT_TO_TTS').addEventListener('change', () => {

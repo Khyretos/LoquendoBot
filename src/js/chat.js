@@ -1,4 +1,4 @@
-/* global messageTemplates, emojiPicker, settings, getPostTime, showChatMessage, twitch */
+/* global messageTemplates,getLanguageProperties, backend, messageId emojiPicker, settings, getPostTime, showChatMessage, twitch */
 
 async function getResponse() {
   const userText = document.querySelector('#textInput').value;
@@ -8,8 +8,11 @@ async function getResponse() {
     return;
   }
 
+  messageId++;
+
   // Create chat message from received data
   const article = document.createElement('article');
+  article.setAttribute('id', messageId);
   article.className = 'msg-container user';
 
   article.innerHTML = messageTemplates.userTemplate;
@@ -29,15 +32,30 @@ async function getResponse() {
 
   const msg = article.querySelector('.msg-box');
   if (msg) {
-    console.log(0);
     await replaceChatMessageWithCustomEmojis(userText).then(data => {
-      // console.log(data);
       msg.innerHTML = data;
 
       // Appends the message to the main chat box (shows the message)
       showChatMessage(article);
 
       twitch.sendMessage(userText);
+
+      if (settings.LANGUAGE.SEND_TRANSLATION) {
+        const selectedLanguage = getLanguageProperties(settings.LANGUAGE.SEND_TRANSLATION_IN);
+        const detectedLanguage = getLanguageProperties(settings.LANGUAGE.SEND_TRANSLATION_OUT);
+        backend.getTranslatedMessage({
+          message: data,
+          messageId: messageId,
+          remainingDetectedLanguages: [],
+          language: {
+            selectedLanguage,
+            detectedLanguage
+          },
+          formattedMessage: data,
+          username: 'You',
+          logoUrl: settings.TWITCH.USER_LOGO_URL
+        });
+      }
 
       // Empty input box after sending message
       document.body.querySelector('#textInput').value = '';
@@ -167,3 +185,7 @@ displayPanelX('.item', '#btnChatCreator', '#btnChatCreator');
 // #region Show/Hide Theme Creator
 
 // #endregion
+
+module.exports = {
+  replaceChatMessageWithCustomEmojis
+};

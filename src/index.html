@@ -294,6 +294,16 @@
                       tip="All translated messages will be send to primary TTS voice but if message is detected in Secondary TTS language it will output it to the Secondary TTS voice"
                     ></i>
                   </div>
+                  <div class="AdvancedMenuRow languageDetectionInput">
+                    <div class="AdvancedMenuLabel">Send translated messages</div>
+                    <input type="checkbox" id="SEND_TRANSLATION" class="checkbox" />
+                    <label for="SEND_TRANSLATION" class="toggle-small" style="margin-right: 260px"></label>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_SEND_TRANSLATION"
+                      tip="Enable sending translated messages to the chat."
+                    ></i>
+                  </div>
                 </fieldset>
 
                 <fieldset id="NotificationMenu" class="AdvancedMenu">
@@ -368,6 +378,17 @@
                     <i
                       class="fa fa-question-circle fa-2x SmallButton option-icon-container"
                       id="Info_TWITCH_TEST_CREDENTIALS"
+                      tip="Test Twitch credentials"
+                    ></i>
+                  </div>
+                  <div class="AdvancedMenuRow inputTwitch">
+                    <div class="AdvancedMenuLabel">Get BetterTTV emotes</div>
+                    <button type="text" class="AdvancedMenuButton" id="GetBetterTtvEmotes">
+                      <img src="https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/3x.webp" width="30px" height="30px" />
+                    </button>
+                    <i
+                      class="fa fa-question-circle fa-2x SmallButton option-icon-container"
+                      id="Info_BETTERTTV_EMOTES"
                       tip="Test Twitch credentials"
                     ></i>
                   </div>
@@ -583,19 +604,19 @@
               </button>
               <emoji-picker class="dark"></emoji-picker>
             </div>
-            <div class="pop in">
+            <div class="pop in send-translation">
               <div class="miniText">In</div>
               <button class="SmallButton">
                 <i class="fa-solid fa-globe fa-2x" aria-hidden="true"></i>
               </button>
-              <div class="pop-content"></div>
+              <div class="pop-content" id="SEND_TRANSLATION_IN"></div>
             </div>
-            <div class="pop out">
+            <div class="pop out send-translation">
               <div class="miniText">Out</div>
               <button class="SmallButton">
                 <i class="fa-solid fa-globe fa-2x" aria-hidden="true"></i>
               </button>
-              <div class="pop-content"></div>
+              <div class="pop-content" id="SEND_TRANSLATION_OUT"></div>
             </div>
             <!-- User text input-->
             <input id="textInput" class="input-box" type="text" name="msg" placeholder="Tap 'Enter' to send a message" />
