@@ -109,3 +109,4 @@ backend/loquendoBot_backend.exe
 src/config/twitch-emotes.json
 dist/*
 src/config/betterttv-emotes.json
+test.py
