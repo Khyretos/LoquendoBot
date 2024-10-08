@@ -297,12 +297,12 @@ h1 {
   align-self: start;
 }
 .post-time.sender {
-  padding: 5px 5px 0px 15px;
+  padding: 5px 5px 5px 15px;
   margin: 0px 0px 0px 50px;
 }
 
 .post-time.user {
-  padding: 5px 15px 0px 5px;
+  padding: 5px 15px 5px 5px;
   margin: 0px 50px 0px 0px;
 }
 
@@ -572,4 +572,9 @@ h1 {
   left: unset;
   right: 18px;
   top: -65px;
+}
+
+.emote {
+  width: 28px;
+  height: 28px;
 }
